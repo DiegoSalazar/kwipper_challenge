@@ -1,16 +1,21 @@
 module Kwipper
   class HttpServer < TCPServer
+    DEFAULT_PORT = 80
+    attr_reader :host
+
     def initialize(bind = '127.0.0.1', port = 7335)
       @bind, @port = bind, port
-      super @bind, @port
+      @host = "#@bind#{":#@port" unless port.to_i == DEFAULT_PORT}"
+      log.debug "Starting server on #@host"
+      super
     end
 
     def serve(application)
-      log.debug "Starting server on #{@bind}:#{@port}"
+      parser = HttpParser.new self
 
       while socket = accept
         begin
-          request = HttpParser.parse socket
+          request = parser.parse socket
           log.info request.info
 
           response = Response.new request, application

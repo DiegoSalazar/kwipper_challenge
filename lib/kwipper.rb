@@ -1,14 +1,17 @@
 require "socket"
+require "uri"
 require "sqlite3"
 require "erb"
 require "logger"
-require 'pry'
+require "pry"
 
 require "kwipper/version"
 require "kwipper/http_parser"
 require "kwipper/http_server"
 require "kwipper/response"
+require "kwipper/request"
 require "kwipper/view_renderer"
+require "kwipper/view_helpers"
 require "kwipper/action_responders"
 require "kwipper/application"
 require "kwipper/model"

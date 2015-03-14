@@ -2,31 +2,30 @@ module Kwipper
   class Application
     include ActionResponders
     include ViewRenderer
+    include ViewHelpers
 
-    attr_reader :status_code, :status_message, :body
+    attr_reader :status_code, :status_message, :body, :request
 
     def respond_to(request)
-      @request = request
-      @body = process!
-      set_status :ok
-      self
-    rescue NotFoundError => e
-      set_status :not_found
-      log.warn response_info
-      self
-    rescue => e
-      set_status :server_error
-      @body = [e.class, e.message, *e.backtrace].join("\n") + "\n"
-      log.fatal response_info
+      begin
+        @body = process! request
+        set_status :ok
+      rescue NotFoundError => e
+        set_status :not_found
+        # TODO: respond with 404 page
+        log.warn response_info
+      rescue => e
+        set_status :server_error
+        @body = [e.class, e.message, *e.backtrace].join("\n") + "\n"
+        log.fatal response_info
+      end
       self
     end
 
-    def process!
-      action = ROUTES[
-        [@request.request_method.to_sym, @request.path]
-      ] || raise(NotFoundError)
-
-      @view = send action
+    def process!(request)
+      @request = request
+      @action = ROUTES[@request.route_key] || raise(NotFoundError)
+      @view = send @action
       render :layout
     end
 

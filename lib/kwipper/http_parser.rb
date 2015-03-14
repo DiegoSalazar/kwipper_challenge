@@ -1,28 +1,34 @@
 module Kwipper
   class HttpParser
     HEADER_DELIMITER = "\r\n"
-    attr_reader :request_method, :path, :query, :headers, :post_data
+    
+    attr_reader :http_method, :path, :query, :headers, :post_data
 
-    def self.parse(request)
-      new(request).parse
+    def initialize(server)
+      @server = server
     end
 
-    def initialize(raw_request)
+    def parse(raw_request)
       @raw_request = raw_request
-    end
-
-    def parse
-      @first_line     = @raw_request.gets
-      @request_method = parse_method
-      @path           = parse_path
-      @query          = parse_query
-      @headers        = parse_headers
-      @post_data      = parse_post_data if accept_post_data?
+      @first_line  = @raw_request.gets
+      @http_method = parse_method
+      @path        = parse_path
+      @query       = parse_query
+      @request     = parse_request
+      @post_data   = parse_post_data if post_data?
       self
     end
 
     def info
-      "#{request_method} #{@full_path}"
+      "#{http_method} #{@full_path}"
+    end
+
+    def host
+      @server.host
+    end
+
+    def route_key
+      [http_method.to_sym, path]
     end
 
     private
@@ -39,25 +45,25 @@ module Kwipper
       get_path.split('?').last.chomp
     end
 
-    def parse_headers
+    def parse_request
       lines = []
 
       while (line = @raw_request.gets) != HEADER_DELIMITER
         lines << line.chomp
       end
 
-      lines.each_with_object({}) do |line, headers|
+      lines.each_with_object Request.new do |line, request|
         key, val = line.split(/:\s?/)
-        headers.merge! normalize_key(key) => val.chomp
+        request[normalize_key(key)] = val.chomp
       end
     end
 
-    def accept_post_data?
-      @request_method == 'POST' && @headers.key?('CONTENT_LENGTH')
+    def post_data?
+      @http_method == 'POST' && @request['CONTENT_LENGTH'].present?
     end
 
     def parse_post_data
-      @raw_request.read @headers['CONTENT_LENGTH'].to_i
+      @raw_request.read @request['CONTENT_LENGTH'].to_i
     end
 
     def get_path

@@ -1,27 +1,26 @@
 module Kwipper
   class Model
-    DB_FILE_NAME = 'kwipper.db'
     DB_NAME = 'kwipper'
+    DB_FILE_NAME = "#{DB_NAME}.db"
 
-    def self.db
-      @db ||= begin
-        db_file = File.join Kwipper::ROOT, 'db', DB_FILE_NAME
+    class << self
+      def db
+        @db ||= SQLite3::Database.open File.join(Kwipper::ROOT, 'db', DB_FILE_NAME)
+      end
 
-        SQLite3::Database.new(db_file).tap do |db|
-          db.execute "CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, username CHAR(255), email CHAR(255), hashed_password CHAR(255))"
-          db.execute "INSERT INTO users VALUES(1, 'diego', 'diego@greyrobot.com', '123')" rescue nil
+      def sql(cmd)
+        db.execute cmd
+      end
+
+      def all(table_name)
+        sql("SELECT * FROM #{table_name}").each_with_object([]) do |attrs, models|
+          models << new(*attrs)
         end
       end
-    end
 
-    def self.sql(cmd)
-      db.execute(cmd).each_with_object([]) do |attr_array, model_array|
-        model_array << new(*attr_array)
+      def find(id, table_name)
+        new sql("SELECT * FROM #{table_name} WHERE id = #{id}")
       end
     end
   end
 end
-
-# CREATE TABLE users(id INT PRIMARY KEY NOT NULL, username CHAR(255) NOT NULL, email CHAR(255) NOT NULL, hashed_password CHAR(255));
-
-# INSERT INTO users VALUES (1, 'diego', 'diego@greyrobot.com', '123');

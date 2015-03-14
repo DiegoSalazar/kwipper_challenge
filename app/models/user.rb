@@ -1,7 +1,7 @@
 module Kwipper
   class User < Model
     def self.all
-      sql "SELECT * FROM users"
+      super "users"
     end
 
     attr_reader :id, :username, :email, :hashed_password
