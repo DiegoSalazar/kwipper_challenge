@@ -5,23 +5,14 @@ module Kwipper
       [:POST, '/'] => 'answer'
     }
 
-    include TinyHtmlBuilder
-
     def home
-      document "Kwipper" do
-        h1('Kwipper') +
-        hr +
-        ul do
-          li("hello 1") +
-          li("hello 2")
-        end
-      end
+      @msg = "hello HOME!"
+      render :home
     end
 
     def answer
-      html "Kwipper" do
-        p "hello from answer"
-      end
+      @msg = "hello ANS BODY!"
+      render :answer
     end
   end
 end

@@ -1,10 +1,11 @@
 require "kwipper/version"
 require "socket"
+require "erb"
 require "logger"
 require "kwipper/http_parser"
 require "kwipper/http_server"
 require "kwipper/response"
-require "kwipper/tiny_html_builder"
+require "kwipper/view_renderer"
 require "kwipper/action_responders"
 require "kwipper/application"
 
@@ -15,6 +16,8 @@ def log
 end
 
 module Kwipper
+  ROOT = Dir.pwd
+
   def self.run
     server = HttpServer.new
     application = Application.new
