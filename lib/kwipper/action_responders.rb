@@ -7,6 +7,7 @@ module Kwipper
 
     def home
       @msg = "hello HOME!"
+      @users = User.all
       render :home
     end
 

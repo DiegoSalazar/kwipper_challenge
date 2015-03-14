@@ -6,8 +6,16 @@
 <p><%= @msg %></p>
 
 <ul>
-    <li>Thing 1</li>
-    <li>Thing 2</li>
+  <% @users.each do |user| %>
+    <li>
+      <h2><%= user.username %></h2>
+      <p><%= user.email %></p>
+      <pre>
+        ID: <%= user.id %>
+        HASHED_PASSWORD: <%= user.hashed_password %>
+      </pre>
+    </li>
+  <% end %>
 </ul>
 
 <hr>
