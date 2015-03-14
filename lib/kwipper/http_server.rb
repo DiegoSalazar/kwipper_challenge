@@ -9,13 +9,18 @@ module Kwipper
       log.debug "Starting server on #{@bind}:#{@port}"
 
       while socket = accept
-        request = HttpParser.parse socket
-        log.info request.info
+        begin
+          request = HttpParser.parse socket
+          log.info request.info
 
-        response = Response.new request, application
-        
-        socket.write response.to_http
-        socket.close
+          response = Response.new request, application
+          socket.write response.to_http_response
+
+        rescue Errno::ECONNRESET, Errno::EPIPE => e
+          log.info e.message
+        ensure
+          socket.close
+        end
       end
 
     rescue Interrupt

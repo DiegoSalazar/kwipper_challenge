@@ -4,11 +4,15 @@ module Kwipper
       @request, @application = request, application
     end
 
-    def to_http
+    def to_http_response
+      response = @application.respond_to @request
+
       <<-HTTP
-Hello
-#{@request.inspect}
-Goobye
+HTTP/1.1 #{response.status_code} #{response.status_message}
+Content-Length: #{response.size}
+Content-Type: #{response.content_type}
+
+#{response.body}
       HTTP
     end
   end

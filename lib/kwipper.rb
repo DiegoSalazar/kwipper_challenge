@@ -4,6 +4,8 @@ require "logger"
 require "kwipper/http_parser"
 require "kwipper/http_server"
 require "kwipper/response"
+require "kwipper/tiny_html_builder"
+require "kwipper/action_responders"
 require "kwipper/application"
 
 require 'pry'
