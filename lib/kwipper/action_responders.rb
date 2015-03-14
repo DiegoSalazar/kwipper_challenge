@@ -8,8 +8,13 @@ module Kwipper
     include TinyHtmlBuilder
 
     def home
-      html "Kwipper" do
-        p "hello from home"
+      document "Kwipper" do
+        h1('Kwipper') +
+        hr +
+        ul do
+          li("hello 1") +
+          li("hello 2")
+        end
       end
     end
 

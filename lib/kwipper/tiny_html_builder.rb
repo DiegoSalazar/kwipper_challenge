@@ -1,10 +1,9 @@
 module Kwipper
   module TinyHtmlBuilder
-    def html(title = '')
+    def document(title = '')
       tag 'html' do
         tag('head') { tag 'title', title } +
         tag('body') do
-          tag('h1', title) +
           yield.to_s
         end
       end
@@ -17,7 +16,7 @@ module Kwipper
     private
     
     def tag(name, text = nil, attrs = {})
-      "<#{name}#{html_attrs(text.is_a?(Hash) ? text : attrs)}>#{text || yield}</#{name}>"
+      "<#{name}#{html_attrs(text.is_a?(Hash) ? text : attrs)}>#{text || (yield if block_given?)}</#{name}>"
     end
     
     def html_attrs(attrs)

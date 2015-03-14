@@ -21,7 +21,7 @@ module Kwipper
       self
     rescue => e
       set_error_response
-      @body = e.message
+      @body = e.message + "\n"
       log.fatal response_info
       self
     end
