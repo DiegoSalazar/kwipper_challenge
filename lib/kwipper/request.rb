@@ -11,5 +11,13 @@ module Kwipper
     def [](name)
       @headers[name]
     end
+
+    def content_length
+      @headers['CONTENT_LENGTH'].to_i
+    end
+
+    def has_content?
+      content_length > 0
+    end
   end
 end

@@ -12,7 +12,8 @@ module Kwipper
         set_status :ok
       rescue NotFoundError => e
         set_status :not_found
-        # TODO: respond with 404 page
+        @status_message = "#{@status_message} #{@request.info}"
+        @body = '404 Not Found'
         log.warn response_info
       rescue => e
         set_status :server_error
@@ -24,13 +25,20 @@ module Kwipper
 
     def process!(request)
       @request = request
-      @action = ROUTES[@request.route_key] || raise(NotFoundError)
-      @view = send @action
-      render :layout
+
+      if (@action = ROUTES[@request.route_key])
+        @view = send @action
+        render :layout
+      elsif (file = public_file_request?)
+        set_content_type file
+        File.read file
+      else
+        raise NotFoundError
+      end
     end
 
     def content_type
-      'text/html'
+      @content_type || 'text/html'
     end
 
     def size
@@ -38,7 +46,7 @@ module Kwipper
     end
 
     def response_info
-      "#{status_code} #{status_message}\n#{body}\n"
+      "#{status_code} #{status_message}"
     end
 
     private
@@ -51,6 +59,22 @@ module Kwipper
 
     def set_status(status)
       @status_code, @status_message = STATUSES[status]
+    end
+
+    def public_file_request?
+      file = File.join(Kwipper::ROOT, 'public', @request.path)
+      File.exists?(file) && file
+    end
+
+    def set_content_type(file_name)
+      mime = MIME::Types.of(file_name).first
+
+      @content_type = if mime
+        mime.content_type
+      else
+        log.warn "Unknown content type for file: #{file_name}"
+        'text/plain'
+      end
     end
   end
 

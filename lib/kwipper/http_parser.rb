@@ -4,14 +4,10 @@ module Kwipper
     
     attr_reader :http_method, :path, :query, :headers, :post_data
 
-    def initialize(server)
-      @server = server
-    end
-
     def parse(raw_request)
       @raw_request = raw_request
       @first_line  = @raw_request.gets
-      @http_method = parse_method
+      @http_method = @first_line.split(' ').first.dup
       @path        = parse_path
       @query       = parse_query
       @request     = parse_request
@@ -20,11 +16,7 @@ module Kwipper
     end
 
     def info
-      "#{http_method} #{@full_path}"
-    end
-
-    def host
-      @server.host
+      "#{http_method} #{@path}"
     end
 
     def route_key
@@ -33,16 +25,14 @@ module Kwipper
 
     private
 
-    def parse_method
-      @first_line.split(' ').first
-    end
-
     def parse_path
-      get_path.split('?').first
+      path = @first_line.split(' ')[1]
+      path ? path.split('?').first : '/'
     end
 
     def parse_query
-      get_path.split('?').last.chomp
+      path = @first_line.split(' ')[1]
+      path && !path['?'].nil? ? path.split('?').last.chomp : nil
     end
 
     def parse_request
@@ -59,15 +49,11 @@ module Kwipper
     end
 
     def post_data?
-      @http_method == 'POST' && @request['CONTENT_LENGTH'].present?
+      @http_method == 'POST' && @request.has_content?
     end
 
     def parse_post_data
-      @raw_request.read @request['CONTENT_LENGTH'].to_i
-    end
-
-    def get_path
-      @full_path ||= @first_line.split(' ')[1].to_s
+      @raw_request.read @request.content_length
     end
 
     def normalize_key(key)

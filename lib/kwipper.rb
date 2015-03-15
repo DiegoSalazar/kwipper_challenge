@@ -3,6 +3,7 @@ require "uri"
 require "sqlite3"
 require "erb"
 require "logger"
+require "mime-types"
 require "pry"
 
 require "kwipper/version"

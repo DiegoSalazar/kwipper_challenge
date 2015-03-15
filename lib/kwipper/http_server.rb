@@ -11,7 +11,7 @@ module Kwipper
     end
 
     def serve(application)
-      parser = HttpParser.new self
+      parser = HttpParser.new
 
       while socket = accept
         begin
