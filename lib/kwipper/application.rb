@@ -27,6 +27,7 @@ module Kwipper
       @request = request
 
       if (@action = ROUTES[@request.route_key])
+        @content_type = 'text/html'
         @view = send @action
         render :layout
       elsif (file = public_file_request?)
