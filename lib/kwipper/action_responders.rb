@@ -19,9 +19,11 @@ module Kwipper
       user = User.new @request.post_data
 
       if user.save
-        binding.pry # debug
+        @redirect = '/'
+        set_status :moved
       else
-        binding.pry # debug
+        @redirect = '/users/new'
+        set_status :bad_request
       end
     end
   end

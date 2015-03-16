@@ -24,10 +24,10 @@ module Kwipper
         value = send name
         value = generate_id if name == ID_COLUMN && value.nil?
         attrs[name] = normalize_value_for_db(value, type) unless value.nil?
-      end.compact
+      end
 
       s = if @id # TODO: test this
-        key_vals = attrs.inject [] { |a, (k, v)| "#{k}=#{v}" }.join ', '
+        key_vals = attrs.inject([]) { |a, (k, v)| "#{k}=#{v}" }.join ', '
         "UPDATE #{table_name} SET #{key_vals} WHERE id=#{@id}"
       else
         "INSERT INTO #{table_name} VALUES(#{attrs.values.join ', '})"

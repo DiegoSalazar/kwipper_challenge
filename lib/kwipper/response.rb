@@ -9,8 +9,7 @@ module Kwipper
 
       <<-HTTP
 HTTP/1.1 #{response.status_code} #{response.status_message}
-Content-Length: #{response.size}
-Content-Type: #{response.content_type}
+#{response.headers_for_response}
 
 #{response.body}
       HTTP
