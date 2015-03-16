@@ -1,13 +1,15 @@
 module Kwipper
   class User < Model
+    column 'username', :to_s
+    column 'email', :to_s
+    column 'password', :to_s
+
     def self.all
-      super "users"
+      super 'users'
     end
 
-    attr_reader :id, :username, :email, :hashed_password
-
-    def initialize(*args)
-      @id, @username, @email, @hashed_password = args
+    def save
+      super 'users'
     end
   end
 end

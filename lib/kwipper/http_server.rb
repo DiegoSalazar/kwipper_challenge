@@ -30,6 +30,7 @@ module Kwipper
 
     rescue Interrupt
       socket.close if socket && !socket.closed?
+      Model.db.close
       log.debug "Ok bye."
     end
   end

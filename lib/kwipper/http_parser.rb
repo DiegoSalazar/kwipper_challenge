@@ -53,7 +53,8 @@ module Kwipper
     end
 
     def parse_post_data
-      @raw_request.read @request.content_length
+      data = @raw_request.read @request.content_length
+      Rack::Utils.parse_nested_query data.to_s
     end
 
     def normalize_key(key)

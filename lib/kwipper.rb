@@ -4,6 +4,7 @@ require "sqlite3"
 require "erb"
 require "logger"
 require "mime-types"
+require "rack/utils"
 require "pry"
 
 require "kwipper/version"

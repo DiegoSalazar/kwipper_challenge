@@ -2,18 +2,27 @@ module Kwipper
   module ActionResponders
     ROUTES = {
       [:GET, '/'] => 'home',
-      [:POST, '/'] => 'answer'
+      [:GET, '/users/new'] => 'new_user',
+      [:POST, '/users/create'] => 'create_user'
     }
 
     def home
-      @msg = "hello HOME!"
       @users = User.all
       render :home
     end
 
-    def answer
-      @msg = "hello ANS BODY!"
-      render :answer
+    def new_user
+      render :new_user
+    end
+
+    def create_user
+      user = User.new @request.post_data
+
+      if user.save
+        binding.pry # debug
+      else
+        binding.pry # debug
+      end
     end
   end
 end
