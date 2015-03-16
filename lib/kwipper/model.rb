@@ -6,6 +6,7 @@ module Kwipper
 
     attr_accessor :id
 
+    # Takes a hash of model attributes and sets them via accessors if they exists
     def initialize(attrs = {})
       attrs.keys.each do |name|
         if self.class.columns.keys.include? name
@@ -17,14 +18,22 @@ module Kwipper
       end
     end
 
+    # Saves model instance to the database
     def save(table_name)
-      attr_vals = self.class.columns.each_with_object [] do |(name, type), attrs|
+      attrs = self.class.columns.each_with_object({}) do |(name, type), attrs|
         value = send name
         value = generate_id if name == ID_COLUMN && value.nil?
-        attrs << normalize_value_for_db(value, type) unless value.nil?
+        attrs[name] = normalize_value_for_db(value, type) unless value.nil?
       end.compact
 
-      self.class.sql "INSERT INTO #{table_name} VALUES(#{attr_vals.join ', '})"
+      s = if @id # TODO: test this
+        key_vals = attrs.inject [] { |a, (k, v)| "#{k}=#{v}" }.join ', '
+        "UPDATE #{table_name} SET #{key_vals} WHERE id=#{@id}"
+      else
+        "INSERT INTO #{table_name} VALUES(#{attrs.values.join ', '})"
+      end
+
+      self.class.sql s
       true
     rescue SQLite3::SQLException => e
       log.warn e.message
