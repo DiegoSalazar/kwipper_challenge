@@ -1,10 +1,18 @@
 module Kwipper
   class Application
-    include ActionResponders
+    NotFoundError = Class.new RuntimeError
+
+    include Controllers
     include ViewRenderer
     include ViewHelpers
 
     attr_reader :status_code, :status_message, :body, :request
+
+    def initialize
+      Dir[File.join(Kwipper::ROOT, 'app/models/**/*.rb')].each do |model|
+        require model
+      end
+    end
 
     def respond_to(request)
       begin
@@ -55,6 +63,15 @@ module Kwipper
       headers.map { |k, v| "#{k}: #{v}" }.join "\r\n"
     end
 
+    def params
+      @request.params
+    end
+
+    def redirect(path, status = :moved)
+      @redirect = path
+      set_status status
+    end
+
     private
 
     STATUSES = {
@@ -84,6 +101,4 @@ module Kwipper
       end
     end
   end
-
-  NotFoundError = Class.new RuntimeError
 end

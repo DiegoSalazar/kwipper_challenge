@@ -8,8 +8,20 @@ module Kwipper
       super 'users'
     end
 
+    def self.find(id)
+      super id, 'users'
+    end
+
     def save
       super 'users'
+    end
+
+    def update(params)
+      super params, 'users'
+    end
+
+    def destroy
+      super id, 'users'
     end
   end
 end

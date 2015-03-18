@@ -12,6 +12,7 @@ module Kwipper
 
     def serve(application)
       parser = HttpParser.new
+      Kwipper.log_startup_time
 
       while socket = accept
         begin
@@ -22,7 +23,9 @@ module Kwipper
           socket.write response.to_http_response
 
         rescue Errno::ECONNRESET, Errno::EPIPE => e
-          log.info e.message
+          log.info "#{e.class} #{e.message}"
+        rescue Kwipper::EmptyRequest => e
+          log.warn "#{e.class} #{e.message}"
         ensure
           socket.close
         end

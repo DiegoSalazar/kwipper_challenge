@@ -1,5 +1,5 @@
 module Kwipper
-  class Request
+  class RequestHeaders
     def initialize
       @headers = {}
     end
