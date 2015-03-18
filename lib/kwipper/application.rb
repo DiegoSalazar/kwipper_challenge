@@ -1,6 +1,7 @@
 module Kwipper
   class Application
-    NotFoundError = Class.new RuntimeError
+    USER_COOKIE_NAME = 'kwipper_user'
+    SESSION_COOKIE_NAME = 'kwipper_session'
 
     include Controllers
     include ViewRenderer
@@ -17,8 +18,10 @@ module Kwipper
     def respond_to(request)
       begin
         set_status :ok
+        start_time = Time.now.to_f
         process! request
-      rescue NotFoundError => e
+        log.debug "Processed #{@request.info} in #{sprintf '%2.f', Time.now.to_f - start_time}s"
+      rescue Kwipper::NotFoundError => e
         set_status :not_found
         @status_message = "#{@status_message} #{@request.info}"
         @body = '404 Not Found'
@@ -42,7 +45,7 @@ module Kwipper
         @content_type = get_content_type file
         @body = File.read file
       else
-        raise NotFoundError
+        raise Kwipper::NotFoundError
       end
     end
 
@@ -56,6 +59,7 @@ module Kwipper
         'Content-Type' => @content_type
       }.tap do |h|
         h['Location'] = @redirect if @redirect
+        h['Set-Cookie'] = session_cookie unless session_established?
       end
     end
 
@@ -99,6 +103,14 @@ module Kwipper
         log.warn "Unknown content type for file: #{file_name}"
         'text/plain'
       end
+    end
+
+    def session_established?
+      @request.cookies.key? SESSION_COOKIE_NAME
+    end
+
+    def session_cookie
+      "#{SESSION_COOKIE_NAME}=#{SecureRandom.urlsafe_base64}; HttpOnly"
     end
   end
 end

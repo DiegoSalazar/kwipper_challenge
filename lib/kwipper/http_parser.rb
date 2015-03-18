@@ -2,7 +2,13 @@ module Kwipper
   class HttpParser
     HEADER_DELIMITER = "\r\n"
     
-    attr_reader :http_method, :path, :query, :headers, :post_data, :params
+    attr_reader :http_method,
+      :path,
+      :query,
+      :headers,
+      :post_data,
+      :params,
+      :cookies
 
     def parse(raw_request)
       @raw_request = raw_request
@@ -14,32 +20,33 @@ module Kwipper
         @http_method = @first_line.split(' ').first
       end
 
-      @path        = parse_path
-      @query       = parse_query
-      @request     = parse_headers
-      @post_data   = parse_post_data if post_data?
-      @params      = @query.merge @post_data || {}
+      @path      = parse_path
+      @query     = parse_query
+      @headers   = parse_headers
+      @post_data = parse_post_data if post_data?
+      @params    = @query.merge @post_data || {}
+      @cookies   = @headers.cookies
       self
     end
 
     def info
-      "#{http_method} #{@path}"
+      "#{http_method} #{path}"
     end
 
     def route_key
-      [http_method.to_sym, path]
+      [@http_method.to_sym, @path]
     end
 
     private
 
     def parse_path
-      path = @first_line.split(' ')[1]
-      path ? path.split('?').first : '/'
+      p = @first_line.split(' ')[1]
+      p ? p.split('?').first : '/'
     end
 
     def parse_query
-      path = @first_line.split(' ')[1]
-      q = path && !path['?'].nil? ? path.split('?').last.chomp : nil
+      p = @first_line.split(' ')[1]
+      q = p && !p['?'].nil? ? p.split('?').last.chomp : nil
       parse_query_string q
     end
 
@@ -50,26 +57,22 @@ module Kwipper
         lines << line.chomp
       end
 
-      lines.each_with_object RequestHeaders.new do |line, request|
+      lines.each_with_object RequestHeaders.new do |line, request_headers|
         key, val = line.split(/:\s?/)
-        request[normalize_key(key)] = val.chomp
+        request_headers[key] = val
       end
     end
 
     def post_data?
-      @http_method == 'POST' && @request.has_content?
+      @http_method == 'POST' && @headers.has_content?
     end
 
     def parse_post_data
-      parse_query_string @raw_request.read(@request.content_length)
+      parse_query_string @raw_request.read(@headers.content_length)
     end
 
     def parse_query_string(s)
       Rack::Utils.parse_nested_query s.to_s
-    end
-
-    def normalize_key(key)
-      key.upcase.gsub '-', '_'
     end
   end
 end

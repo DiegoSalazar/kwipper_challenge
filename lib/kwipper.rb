@@ -2,6 +2,7 @@ $START_TIME = Time.now.to_f
 
 require "socket"
 require "uri"
+require "securerandom"
 require "sqlite3"
 require "erb"
 require "logger"

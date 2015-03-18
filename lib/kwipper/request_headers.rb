@@ -4,12 +4,12 @@ module Kwipper
       @headers = {}
     end
 
-    def []=(name, val)
-      @headers[name] = val
+    def []=(key, val)
+      @headers[normalize_key(key)] = val.chomp
     end
 
-    def [](name)
-      @headers[name]
+    def [](key)
+      @headers[key]
     end
 
     def content_length
@@ -18,6 +18,19 @@ module Kwipper
 
     def has_content?
       content_length > 0
+    end
+
+    def cookies
+      @cookies ||= begin
+        c = @headers['COOKIE'].to_s.split(/;\s?/).map { |c| c.split '=' }
+        c.size.even? ? Hash[c] : {}
+      end
+    end
+
+    private
+
+    def normalize_key(key)
+      key.upcase.gsub '-', '_'
     end
   end
 end
