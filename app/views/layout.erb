@@ -30,6 +30,7 @@
         </button>
         <a class="navbar-brand" href="/">Kwipper</a>
       </div>
+
       <div id="navbar" class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
           <li class="active"><a href="/users">Users</a></li>
@@ -46,6 +47,16 @@
               <li><a href="#">Separated link</a></li>
               <li><a href="#">One more separated link</a></li>
             </ul>
+          </li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <% if logged_in? %>
+              <a href="/users/logout">Logout</a>
+            <% else %>
+              <a href="/users/login">Login</a>
+            <% end %>
           </li>
         </ul>
       </div>

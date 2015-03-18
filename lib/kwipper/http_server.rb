@@ -25,7 +25,7 @@ module Kwipper
           request = parser.parse socket
           log.info request.info
 
-          response = application.respond_to request, Response.new(request)
+          response = application.respond_to request
           socket.write response.to_http_response
 
         rescue Errno::ECONNRESET, Errno::EPIPE => e

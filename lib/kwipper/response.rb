@@ -8,18 +8,11 @@ module Kwipper
       not_found:    [404, 'Not Found'],
       server_error: [500, 'Server Error']
     }
-    USER_COOKIE_NAME = 'kwipper_user'
-    SESSION_COOKIE_NAME = 'kwipper_session'
 
-    attr_accessor :status_code,
-      :status_message,
-      :headers,
-      :content_type,
-      :redirect,
-      :body
+    attr_accessor :status_code, :status_message, :content_type, :redirect, :body
 
-    def initialize(request)
-      @request = request
+    def initialize(headers = {})
+      @headers = headers
     end
 
     def to_http_response
@@ -36,12 +29,11 @@ HTTP
     end
 
     def headers
-      {
+      @headers.merge({
         'Content-Length' => body.size,
         'Content-Type' => content_type
-      }.tap do |h|
-        h['Location']   = redirect if redirect
-        h['Set-Cookie'] = session_cookie unless session_established?
+      }).tap do |h|
+        h['Location'] = redirect if redirect
       end
     end
 
@@ -51,16 +43,6 @@ HTTP
 
     def set_status(status)
       @status_code, @status_message = STATUSES[status]
-    end
-
-    private
-
-    def session_established?
-      @request.cookies.key? SESSION_COOKIE_NAME
-    end
-
-    def session_cookie
-      "#{SESSION_COOKIE_NAME}=#{SecureRandom.urlsafe_base64}; HttpOnly"
     end
   end
 end

@@ -2,14 +2,20 @@ module Kwipper
   class User < Model
     column 'username', :to_s
     column 'email', :to_s
-    column 'password', :to_s
+    column 'hashed_password', :to_s
 
-    def self.all
-      super 'users'
-    end
+    class << self
+      def all
+        super 'users'
+      end
 
-    def self.find(id)
-      super id, 'users'
+      def find(id)
+        super id, 'users'
+      end
+
+      def where(attrs, table_name = 'users')
+        super attrs, table_name
+      end
     end
 
     def save

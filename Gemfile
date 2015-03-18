@@ -5,3 +5,4 @@ gemspec
 
 gem 'pry'
 gem 'sqlite3'
+gem 'colorize'

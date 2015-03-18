@@ -6,7 +6,9 @@ module Kwipper
       [:POST, '/users/create']  => 'create_user',
       [:GET, '/users/edit']     => 'edit_user',
       [:POST, '/users/update']  => 'update_user',
-      [:POST, '/users/destroy'] => 'destroy_user'
+      [:POST, '/users/destroy'] => 'destroy_user',
+      [:GET, '/users/login']    => 'login_user',
+      [:GET, '/users/logout']   => 'logout_user'
     })
     Application.send :include, UsersController
 
@@ -39,10 +41,8 @@ module Kwipper
 
       if user.update params
         redirect '/users'
-        set_status :moved
       else
-        redirect '/users/new'
-        set_status :bad_request
+        redirect '/users/new', :bad_request
       end
     end
 
@@ -50,6 +50,20 @@ module Kwipper
       user = User.find params['id']
       user.destroy
       redirect '/users'
+    end
+
+    def login
+      user = User.where(username: params['username']).first
+
+      if user
+
+      else
+
+      end
+    end
+
+    def logout
+      
     end
   end
 end

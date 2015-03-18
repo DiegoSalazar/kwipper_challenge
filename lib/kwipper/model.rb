@@ -22,38 +22,38 @@ module Kwipper
       attr_reader :columns
 
       def sql(cmd)
+        log.info cmd.green
         db.execute cmd
       end
 
       def all(table_name)
-        sql("SELECT * FROM #{table_name};").each_with_object([]) do |attrs, models|
-          models << new(attr_array_to_hash(attrs))
+        results = sql "SELECT * FROM #{table_name}"
+        results.each_with_object [] do |attrs, models|
+          models << new(attr_array_to_hash attrs)
         end
       end
 
       def find(id, table_name)
-        attrs = sql("SELECT * FROM #{table_name} WHERE id = #{id}").first
-        new attr_array_to_hash attrs
+        where({ id: id }, table_name).first
+      end
+
+      def where(attrs, table_name)
+        results = sql "SELECT * FROM #{table_name} WHERE #{hash_to_key_vals attrs}"
+        results.each_with_object [] do |attrs, models|
+          models << new(attr_array_to_hash attrs)
+        end
       end
 
       def create(attrs, table_name)
-        sql "INSERT INTO #{table_name} VALUES(#{attrs.values.join ', '});"
+        sql "INSERT INTO #{table_name} VALUES(#{attrs.values.join ', '})"
       end
 
       def update(id, attrs, table_name)
-        sql "UPDATE #{table_name} SET #{hash_to_key_vals attrs} WHERE id=#{id};"
+        sql "UPDATE #{table_name} SET #{hash_to_key_vals attrs} WHERE id=#{id}"
       end
 
       def destroy(id, table_name)
         sql "DELETE FROM #{table_name} WHERE id=#{id}"
-      end
-
-      private
-
-      def attr_array_to_hash(attrs)
-        attrs.each_with_index.inject({}) do |hash, (attr_val, i)|
-          hash.merge! @columns.keys[i] => attr_val
-        end
       end
     end
 
@@ -86,11 +86,7 @@ module Kwipper
     end
 
     def update(params, table_name)
-      attrs = params.each_with_object({}) do |(k, v), attrs|
-        type = self.class.columns.fetch k
-        attrs[k] = normalize_value_for_db v, type
-      end
-
+      attrs = params.each_with_object({}) { |(k, v), a| a[k] = v }
       self.class.update id, attrs, table_name
       true
     rescue KeyError => e
@@ -104,22 +100,10 @@ module Kwipper
     private
 
     def attrs_for_db
-      self.class.columns.each_with_object({}) do |(name, type), attrs|
+      self.class.columns.each_with_object({}) do |(name, _), attrs|
         value = send name
         value = generate_id if name == ID_COLUMN && value.nil?
-        attrs[name] = normalize_value_for_db(value, type) unless value.nil?
-      end
-    end
-
-    def hash_to_key_vals(hash)
-      hash.inject([]) { |a, (k, v)| a << "#{k}=#{v}" }.join ', '
-    end
-
-    def normalize_value_for_db(value, type)
-      case type when :to_i
-        value.to_i
-      else
-        "\"#{value}\""
+        attrs[name] = value unless value.nil?
       end
     end
 
@@ -127,6 +111,30 @@ module Kwipper
       max_id_plus_1 = "SELECT (id + 1) as id FROM users ORDER BY id DESC LIMIT 1"
       result = self.class.sql(max_id_plus_1).first
       result && result.first ? result.first : 1
+    end
+
+    class << self
+      def attr_array_to_hash(attrs)
+        attrs.each_with_index.inject({}) do |hash, (attr_val, i)|
+          hash.merge! @columns.keys[i] => attr_val
+        end
+      end
+
+      def hash_to_key_vals(hash)
+        hash.inject [] do |a, (k, v)|
+          type = columns[k]
+          v = normalize_value_for_db v, type
+          a << "#{k}=#{v}"
+        end.join ', '
+      end
+
+      def normalize_value_for_db(value, type)
+        case type when :to_i
+          value.to_i
+        else
+          "\"#{value}\""
+        end
+      end
     end
   end
 end

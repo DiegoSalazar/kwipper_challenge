@@ -1,19 +1,23 @@
 module Kwipper
   class Application
     include Controllers
+    include SessionHelpers
     include ViewRenderer
     include ViewHelpers
 
     attr_reader :request, :response, :action
 
-    def respond_to(request, response)
+    def respond_to(request)
+      @request = request
+      @response = Response.new session_header
+
       begin
         start_time = Time.now.to_f
 
         response.set_status :ok
         process! request, response
 
-        log.debug "Processed #{request.info} in #{sprintf '%.8f', Time.now.to_f - start_time}s"
+        log.debug "Processed #{request.info} in #{sprintf '%.8f', Time.now.to_f - start_time}s".green
       rescue Kwipper::NotFoundError => e
         response.set_status :not_found
         response.status_message = "#{response.status_message} #{request.info}"
@@ -21,17 +25,13 @@ module Kwipper
 
         log.warn response.info
       rescue => e
-        response.set_status :server_error
-        response.body = [e.class, e.message, *e.backtrace].join("\n") + "\n"
-
-        log.fatal response.info
+        render_error e
+        log.fatal response.info.red
       end
       response
     end
 
     def process!(request, response)
-      @request, @response = request, response
-
       if (@action = ROUTES[request.route_key])
         response.content_type = 'text/html'
 
@@ -69,6 +69,13 @@ module Kwipper
         log.warn "Unknown content type for file: #{file_name}"
         'text/plain'
       end
+    end
+
+    def render_error(e)
+      @error = e
+      response.set_status :server_error
+      @view = render :server_error
+      response.body = render :layout
     end
   end
 end

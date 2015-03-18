@@ -1,0 +1,17 @@
+<h1><%= response.info %></h1>
+
+<p>
+  <code>
+    <%= @error.class %> <%= CGI.escapeHTML @error.message %>
+  </code>
+</p>
+
+<pre>
+<%= @error.backtrace.map { |line| CGI.escapeHTML line }.join "\n" %>
+</pre>
+
+<p>Params:</p>
+
+<pre>
+<%= params.pretty_inspect %>
+</pre>
