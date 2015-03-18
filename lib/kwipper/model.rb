@@ -22,7 +22,7 @@ module Kwipper
       attr_reader :columns
 
       def sql(cmd)
-        log.info cmd.green
+        log.info cmd.red
         db.execute cmd
       end
 

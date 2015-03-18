@@ -17,13 +17,10 @@ module Kwipper
         response.set_status :ok
         process! request, response
 
-        log.debug "Processed #{request.info} in #{sprintf '%.8f', Time.now.to_f - start_time}s".green
-      rescue Kwipper::NotFoundError => e
-        response.set_status :not_found
-        response.status_message = "#{response.status_message} #{request.info}"
-        response.body = '404 Not Found'
-
-        log.warn response.info
+        log.debug "Processed #{request.info} in #{sprintf '%.8f', Time.now.to_f - start_time}s".blue
+      rescue Kwipper::NotFoundError
+        render_not_found
+        log.warn response.info.yellow
       rescue => e
         render_error e
         log.fatal response.info.red
@@ -69,6 +66,12 @@ module Kwipper
         log.warn "Unknown content type for file: #{file_name}"
         'text/plain'
       end
+    end
+
+    def render_not_found
+      response.set_status :not_found
+      @view = render :not_found
+      response.body = render :layout
     end
 
     def render_error(e)

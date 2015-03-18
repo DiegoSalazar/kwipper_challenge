@@ -23,15 +23,15 @@ module Kwipper
       while socket = accept
         begin
           request = parser.parse socket
-          log.info request.info
+          log.info "#{request.info} #{request.params.inspect unless request.params.empty?}".strip.green
 
           response = application.respond_to request
           socket.write response.to_http_response
 
         rescue Errno::ECONNRESET, Errno::EPIPE => e
-          log.info "#{e.class} #{e.message}"
+          log.info "#{e.class} #{e.message}".yellow
         rescue Kwipper::EmptyRequest => e
-          log.warn "#{e.class} #{e.message}"
+          log.warn "#{e.class} #{e.message}".yellow
         ensure
           socket.close
         end
