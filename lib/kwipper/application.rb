@@ -45,7 +45,7 @@ module Kwipper
       request.params
     end
 
-    def redirect(path, status = :moved)
+    def redirect(path, status = :found)
       response.redirect = path
       response.set_status status
     end

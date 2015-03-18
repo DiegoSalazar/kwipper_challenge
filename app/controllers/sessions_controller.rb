@@ -2,7 +2,7 @@ module Kwipper
   module SessionsController
     Application.add_routes self, {
       [:POST, '/sessions/create']  => :create_session,
-      [:GET, '/sessions/destroy'] => :destroy_session
+      [:GET, '/logout'] => :logout
     }
 
     def create_session
@@ -20,9 +20,8 @@ module Kwipper
       end
     end
 
-    def destroy_session
-      binding.pry # debug
-      current_session.destroy
+    def logout
+      current_session && current_session.destroy
       redirect '/'
     end
   end

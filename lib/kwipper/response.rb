@@ -3,7 +3,7 @@ module Kwipper
     STATUSES = {
       ok:           [200, 'OK'],
       created:      [201, 'Created'],
-      moved:        [301, 'Moved'],
+      found:        [302, 'Found'],
       bad_request:  [400, 'Bad Request'],
       not_found:    [404, 'Not Found'],
       server_error: [500, 'Server Error']

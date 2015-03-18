@@ -7,7 +7,7 @@ module Kwipper
       [:GET, '/users/edit']     => :edit_user,
       [:POST, '/users/update']  => :update_user,
       [:POST, '/users/destroy'] => :destroy_user,
-      [:GET, '/users/login']    => :login
+      [:GET, '/login']    => :login
     }
 
     def users
