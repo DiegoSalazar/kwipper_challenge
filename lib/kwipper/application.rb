@@ -1,7 +1,6 @@
 module Kwipper
   class Application
     include Controllers
-    include SessionHelpers
     include ViewRenderer
     include ViewHelpers
 
@@ -9,7 +8,7 @@ module Kwipper
 
     def respond_to(request)
       @request = request
-      @response = Response.new session_header
+      @response = Response.new request
 
       begin
         start_time = Time.now.to_f
@@ -31,7 +30,6 @@ module Kwipper
     def process!(request, response)
       if (@action = ROUTES[request.route_key])
         response.content_type = 'text/html'
-
         @view = send @action
         response.body = render :layout
 
@@ -52,6 +50,14 @@ module Kwipper
       response.set_status status
     end
 
+    def current_user
+      response.current_user
+    end
+
+    def current_session
+      response.current_session
+    end
+
     private
 
     def public_file_request?
@@ -70,6 +76,7 @@ module Kwipper
 
     def render_not_found
       response.set_status :not_found
+      response.status_message = "#{response.status_message}: #{request.info}"
       @view = render :not_found
       response.body = render :layout
     end

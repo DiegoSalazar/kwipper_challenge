@@ -16,6 +16,11 @@ module Kwipper
       def where(attrs, table_name = 'users')
         super attrs, table_name
       end
+
+      def authenticate(username, password)
+        user = where(username: username).first
+        user && user.hashed_password == password && user
+      end
     end
 
     def save

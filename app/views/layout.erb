@@ -51,13 +51,20 @@
         </ul>
 
         <ul class="nav navbar-nav navbar-right">
-          <li>
-            <% if logged_in? %>
-              <a href="/users/logout">Logout</a>
-            <% else %>
+          <% if current_user %>
+            <li>
+              <a href="/users/edit?id=<%= current_user.id %>">
+                <%= current_user.username %>
+              </a>
+            </li>
+            <li>
+              <a href="/sessions/destroy">Logout</a>
+            </li>
+          <% else %>
+            <li>
               <a href="/users/login">Login</a>
-            <% end %>
-          </li>
+            </li>
+          <% end %>
         </ul>
       </div>
     </div>

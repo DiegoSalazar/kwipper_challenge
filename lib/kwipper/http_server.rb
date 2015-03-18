@@ -17,7 +17,6 @@ module Kwipper
     def serve
       load_models
       parser = HttpParser.new
-      application = Application.new
       Kwipper.log_startup_time
 
       while socket = accept
@@ -25,7 +24,7 @@ module Kwipper
           request = parser.parse socket
           log.info "#{request.info} #{request.params.inspect unless request.params.empty?}".strip.green
 
-          response = application.respond_to request
+          response = Application.new.respond_to request
           socket.write response.to_http_response
 
         rescue Errno::ECONNRESET, Errno::EPIPE => e

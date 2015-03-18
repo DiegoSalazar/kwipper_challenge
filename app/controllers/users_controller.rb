@@ -1,16 +1,14 @@
 module Kwipper
   module UsersController
-    Application::ROUTES.merge!({
-      [:GET, '/users']          => 'users',
-      [:GET, '/users/new']      => 'new_user',
-      [:POST, '/users/create']  => 'create_user',
-      [:GET, '/users/edit']     => 'edit_user',
-      [:POST, '/users/update']  => 'update_user',
-      [:POST, '/users/destroy'] => 'destroy_user',
-      [:GET, '/users/login']    => 'login_user',
-      [:GET, '/users/logout']   => 'logout_user'
-    })
-    Application.send :include, UsersController
+    Application.add_routes self, {
+      [:GET, '/users']          => :users,
+      [:GET, '/users/new']      => :new_user,
+      [:POST, '/users/create']  => :create_user,
+      [:GET, '/users/edit']     => :edit_user,
+      [:POST, '/users/update']  => :update_user,
+      [:POST, '/users/destroy'] => :destroy_user,
+      [:GET, '/users/login']    => :login
+    }
 
     def users
       @users = User.all
@@ -53,17 +51,7 @@ module Kwipper
     end
 
     def login
-      user = User.where(username: params['username']).first
-
-      if user
-
-      else
-
-      end
-    end
-
-    def logout
-      
+      render :login_user
     end
   end
 end
