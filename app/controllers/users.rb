@@ -38,10 +38,10 @@ module Kwipper
       user = User.find params['id']
 
       if user.update params
-        @redirect = '/users'
+        redirect '/users'
         set_status :moved
       else
-        @redirect = '/users/new'
+        redirect '/users/new'
         set_status :bad_request
       end
     end
