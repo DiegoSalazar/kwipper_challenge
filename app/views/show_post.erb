@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-sm-2"></div>
+
+  <div class="col-sm-8">
+    <h1>
+      <%= @post.username %> @ <%= @post.created_at %>
+    </h1>
+
+    <div class="well">
+      <%= @post.content %>
+    </div>
+
+    <a href="/kwips/comments/new?id=<%= @post.id %>" class="btn btn-xs btn-success pull-right">
+      Reply
+    </a>
+
+    <% if @comments.empty? %>
+      <h2>No Comments</h2>
+    <% else %>
+      <h2>Comments</h2>
+
+      <ul class="list-unstyled">
+        <% @comments.each do |comment| %>
+          <li>
+            <p>
+              <%= comment.username %> @ <%= comment.created_at %>
+            </p>
+
+            <div class="well well-xs">
+              <%= comment.content %>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+
+  <div class="col-sm-2"></div>
+</div>

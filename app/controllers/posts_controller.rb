@@ -1,14 +1,21 @@
 module Kwipper
   class PostsController < Controller
     add_routes self, {
-      [:GET, '/kwips']         => :posts,
+      [:GET, '/kwips']         => :index,
+      [:GET, '/kwips/show']    => :show,
       [:GET, '/kwips/new']     => :new,
       [:POST, '/kwips/create'] => :create
     }
 
-    def posts
-      @posts = Post.all
+    def index
+      @posts = Post.recent
       render :posts
+    end
+
+    def show
+      @post = Post.find params['id']
+      @comments = @post.comments
+      render :show_post
     end
 
     def new

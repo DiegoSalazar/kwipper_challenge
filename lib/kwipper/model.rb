@@ -22,13 +22,12 @@ module Kwipper
       attr_reader :columns
 
       def sql(cmd)
-        log.info cmd.red
+        log.debug cmd.red
         db.execute cmd
       end
 
-      def all
-        results = sql "SELECT * FROM #{table_name}"
-        results.each_with_object [] do |attrs, models|
+      def all(statement = "SELECT * FROM #{table_name}")
+        sql(statement).each_with_object [] do |attrs, models|
           models << new(attr_array_to_hash attrs)
         end
       end
@@ -91,7 +90,8 @@ module Kwipper
       if id
         self.class.update id, attrs_for_db
       else
-        self.class.create attrs_for_db
+        self.class.create a = attrs_for_db
+        @id ||= a['id']
       end
 
       true
@@ -110,6 +110,10 @@ module Kwipper
 
     def destroy(id)
       self.class.destroy id
+    end
+
+    def sql(statement)
+      self.class.sql statement
     end
 
     private

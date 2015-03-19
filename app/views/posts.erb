@@ -15,6 +15,23 @@
             <div class="well">
               <%= post.content %>
             </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="btn-group pull-right">
+                  <a href="/kwips/show?id=<%= post.id %>" class="btn btn-xs btn-info">
+                    Comments 
+                    <span class="badge">
+                      <%= post.comments_count %>
+                    </span>
+                  </a>
+                  <a href="/kwips/comments/new?id=<%= post.id %>" class="btn btn-xs btn-primary">
+                    Reply
+                  </a>
+                </div>
+              </div>
+            </div>
+
             <hr>
           </li>
         <% end %>

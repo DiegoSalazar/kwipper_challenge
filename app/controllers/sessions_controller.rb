@@ -12,7 +12,7 @@ module Kwipper
         Session.create({
           'id'         => response.session_cookie_value,
           'user_id'    => @user.id,
-          'created_at' => Time.now.to_s
+          'created_at' => Time.now.httpdate
         })
 
         redirect '/users'
