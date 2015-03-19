@@ -29,10 +29,10 @@ require "kwipper/http_server"
 require "kwipper/request"
 require "kwipper/request_headers"
 require "kwipper/response"
-require "kwipper/view_renderer"
-require "kwipper/view_helpers"
+require "kwipper/renders_views"
+require "kwipper/controller_helpers"
 require "kwipper/model"
-require "kwipper/controllers"
+require "kwipper/controller"
 require "kwipper/application"
 
 Kwipper::HttpServer.run if __FILE__ == $0

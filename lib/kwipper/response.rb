@@ -15,7 +15,9 @@ module Kwipper
 
     def initialize(request)
       @request = request
-      @headers = session_header
+      @headers = {}.tap do |h|
+        h['Set-Cookie'] = session_cookie unless has_session?
+      end
     end
 
     def to_http_response
@@ -46,16 +48,20 @@ HTTP
 
     # Session helpers
 
-    def session_header
-      {}.tap { |h| h['Set-Cookie'] = session_cookie unless has_session? }
-    end
-
     def has_session?
       request.cookies.key? SESSION_COOKIE_NAME
     end
 
-    def session_cookie
-      "#{SESSION_COOKIE_NAME}=#{session_cookie_value}; HttpOnly"
+    def session_cookie(value = "#{session_cookie_value}; HttpOnly")
+      "#{SESSION_COOKIE_NAME}=#{value}"
+    end
+
+    # For the server to remove a browser cookie we need to set a cookie of the 
+    # same name with an expires value to now (or in the past) so that the browser
+    # will expire it and remove it. The value is also voided.
+    def remove_session_cookie
+      cookie = session_cookie "deleted; expires=#{Time.now.httpdate}"
+      headers['Set-Cookie'] = cookie
     end
 
     def session_cookie_value

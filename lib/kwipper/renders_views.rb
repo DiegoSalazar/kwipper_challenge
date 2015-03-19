@@ -1,5 +1,5 @@
 module Kwipper
-  module ViewRenderer
+  module RendersViews
     VIEWS_PATH = 'app/views'
     VIEW_EXT = '.erb'
 

@@ -49,7 +49,7 @@ module Kwipper
 
         unless attrs.key? 'id'
           id = generate_id
-          attrs = attrs.merge 'id' => id
+          attrs['id'] = id
           db_attrs = [id, *db_attrs]
         end
 

@@ -16,6 +16,7 @@ module Kwipper
 
     def serve
       load_models
+      load_controllers
       parser = HttpParser.new
       Kwipper.log_startup_time
 
@@ -52,6 +53,12 @@ module Kwipper
     def load_models
       Dir[File.join(Kwipper::ROOT, 'app/models/**/*.rb')].each do |model|
         require model
+      end
+    end
+
+    def load_controllers
+      Dir[File.join(Kwipper::ROOT, 'app/controllers/**/*.rb')].each do |controller|
+        require controller
       end
     end
   end

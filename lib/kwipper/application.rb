@@ -1,10 +1,9 @@
 module Kwipper
   class Application
-    include Controllers
-    include ViewRenderer
-    include ViewHelpers
+    include RendersViews
+    include ControllerHelpers
 
-    attr_reader :request, :response, :action
+    attr_reader :request, :response
 
     def respond_to(request)
       @request = request
@@ -12,9 +11,7 @@ module Kwipper
 
       begin
         start_time = Time.now.to_f
-
-        response.set_status :ok
-        process! request, response
+        process!
 
         log.debug "Processed #{request.info} in #{sprintf '%.8f', Time.now.to_f - start_time}s".blue
       rescue Kwipper::NotFoundError
@@ -27,10 +24,16 @@ module Kwipper
       response
     end
 
-    def process!(request, response)
-      if (@action = ROUTES[request.route_key])
+    def process!
+      response.set_status :ok
+      controller_class, action = Controller::ROUTES[request.route_key]
+
+      if controller_class
         response.content_type = 'text/html'
-        @view = send @action
+
+        controller = controller_class.new self, request, response
+        @view = controller.send action
+
         response.body = render :layout
 
       elsif (file_name = public_file_request?)
@@ -39,23 +42,6 @@ module Kwipper
       else
         raise Kwipper::NotFoundError
       end
-    end
-
-    def params
-      request.params
-    end
-
-    def redirect(path, status = :found)
-      response.redirect = path
-      response.set_status status
-    end
-
-    def current_user
-      response.current_user
-    end
-
-    def current_session
-      response.current_session
     end
 
     private

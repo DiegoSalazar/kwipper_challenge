@@ -1,13 +1,13 @@
 module Kwipper
-  module UsersController
-    Application.add_routes self, {
+  class UsersController < Controller
+    add_routes self, {
       [:GET, '/users']          => :users,
       [:GET, '/users/new']      => :new_user,
       [:POST, '/users/create']  => :create_user,
       [:GET, '/users/edit']     => :edit_user,
       [:POST, '/users/update']  => :update_user,
       [:POST, '/users/destroy'] => :destroy_user,
-      [:GET, '/login']    => :login
+      [:GET, '/login']          => :login
     }
 
     def users
