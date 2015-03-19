@@ -3,7 +3,7 @@ module Kwipper
     include RendersViews
     include ControllerHelpers
 
-    attr_reader :request, :response
+    attr_reader :request, :response, :action
 
     def respond_to(request)
       @request = request
@@ -31,15 +31,15 @@ module Kwipper
       if Controller::ROUTES.key? request.route_key
         response.set_status :ok
         response.content_type = 'text/html'
-        
-        controller_class, action = Controller::ROUTES[request.route_key]
+
+        controller_class, @action = Controller::ROUTES[request.route_key]
         controller = controller_class.new self, request, response
 
-        if controller.respond_to? action
-          @view = controller.send action
+        if controller.respond_to? @action
+          @view = controller.process @action
           response.body = render :layout
         else
-          raise Kwipper::NotFoundError, "#{self} does not know #{action}"
+          raise Kwipper::NotFoundError, "#{self} does not know #{@action}"
         end
       elsif (file_name = public_file_request?)
         response.set_status :ok

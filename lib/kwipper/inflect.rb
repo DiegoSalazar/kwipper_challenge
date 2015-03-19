@@ -1,5 +1,9 @@
 module Kwipper
   class Inflect < String
+    def self.plural(count, word)
+      "#{count} #{count > 1 ? new(word).pluralize : word}"
+    end
+
     def demodulize
       Inflect.new split('::').last
     end

@@ -14,10 +14,14 @@ module Kwipper
       ROUTES.merge! routes
     end
 
-    attr_reader :app, :request, :response
+    attr_reader :app, :request, :response, :action
 
     def initialize(app, request, response)
       @app, @request, @response = app, request, response
+    end
+
+    def process(action)
+      send @action = action
     end
 
     def home

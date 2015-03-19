@@ -5,8 +5,12 @@
     <% if @posts.empty? %>
       <h1>No Kwips!</h1>
     <% else %>
+      <h1>Kwips</h1>
+
       <ul class="list-unstyled">
         <% @posts.each do |post| %>
+          <% faved = current_user.favorite? post %>
+
           <li>
             <p>
               <strong><%= post.username %></strong> @ <%= post.created_at %>
@@ -18,9 +22,15 @@
 
             <div class="row">
               <div class="col-sm-12">
+              <div class="btn-group pull-left">
+                <span class="badge">
+                  <%= Inflect.plural post.faves_count, 'Fave' %>
+                </span>
+              </div>
+
                 <div class="btn-group pull-right">
                   <form action="/favorites/create?id=<%= post.id %>" method="post" class="pull-left">
-                    <input type="submit" value="Fave" class="btn btn-xs btn-<%= current_user.favorite?(post) ? 'success' : 'default' %>"<%= current_user.favorite?(post) ? ' disabled="disabled"' : nil %>>
+                    <input type="submit" value="<%= faved ? "Fave'd" : 'Fave' %>" class="btn btn-xs btn-<%= faved ? 'success' : 'default' %>"<%= faved ? ' disabled="disabled"' : nil %>>
                   </form>
 
                   <a href="/kwips/show?id=<%= post.id %>" class="btn btn-xs btn-info">
