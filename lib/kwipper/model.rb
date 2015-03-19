@@ -11,9 +11,9 @@ module Kwipper
         @db ||= SQLite3::Database.open File.join(Kwipper::ROOT, 'db', DB_FILE_NAME)
       end
 
-      # Declare columns in the model class in the same order the columns
+      # Declare columns in the model subclass in the same order the columns
       # were created in the table. This lets us instantiate model objects
-      # from arrays of field values from the db.
+      # from arrays of field values from the db. ID columns is defaulted.
       def column(name, type)
         @columns ||= { ID_COLUMN => :to_i }
         @columns[name] = type
@@ -21,11 +21,13 @@ module Kwipper
       end
       attr_reader :columns
 
+      # Executes SQL statements
       def sql(cmd)
         log.debug cmd.red
         db.execute cmd
       end
 
+      # Get records from a single table and instantiate them
       def all(statement = "SELECT * FROM #{table_name}")
         sql(statement).each_with_object [] do |attrs, models|
           models << new(attr_array_to_hash attrs)
@@ -37,10 +39,7 @@ module Kwipper
       end
 
       def where(attrs)
-        results = sql "SELECT * FROM #{table_name} WHERE #{hash_to_key_vals attrs}"
-        results.each_with_object [] do |attrs, models|
-          models << new(attr_array_to_hash attrs)
-        end
+        all "SELECT * FROM #{table_name} WHERE #{hash_to_key_vals attrs}"
       end
 
       def create(attrs)
@@ -67,7 +66,7 @@ module Kwipper
       def exists?(id)
         id = normalize_value_for_db id, columns['id']
         result = sql "SELECT id FROM #{table_name} WHERE id = #{id} LIMIT 1"
-        result && result.first && result.first.any?
+        result.first && result.first.any?
       end
     end
 
@@ -100,8 +99,7 @@ module Kwipper
       false
     end
 
-    def update(params)
-      attrs = params.each_with_object({}) { |(k, v), a| a[k] = v }
+    def update(attrs)
       self.class.update id, attrs
       true
     rescue KeyError => e
@@ -132,7 +130,7 @@ module Kwipper
 
     class << self
       def table_name
-        Inflect.new(name).demodulize.pluralize.downcase
+        Inflect.new(name).demodulize.pluralize.underscore
       end
 
       def generate_id
@@ -147,10 +145,12 @@ module Kwipper
         end
       end
 
+      # Turn a hash of attributes into a comma separated string that's
+      # safe to use in a SQL statement (non int values are quoted).
+      # TODO: add SQL sanitation.
       def hash_to_key_vals(hash)
         hash.inject [] do |a, (k, v)|
-          type = columns[k]
-          v = normalize_value_for_db v, type
+          v = normalize_value_for_db v, columns[k]
           a << "#{k}=#{v}"
         end.join ', '
       end

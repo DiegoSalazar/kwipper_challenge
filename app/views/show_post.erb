@@ -10,9 +10,15 @@
       <%= @post.content %>
     </div>
 
-    <a href="/kwips/comments/new?id=<%= @post.id %>" class="btn btn-xs btn-success pull-right">
-      Reply
-    </a>
+    <div class="btn-group pull-right">
+      <form action="/favorites/create?id=<%= @post.id %>" method="post" class="pull-left">
+        <input type="submit" value="Fave" class="btn btn-xs btn-<%= current_user.favorite?(@post) ? 'success' : 'default' %>"<%= current_user.favorite?(@post) ? ' disabled="disabled"' : nil %>>
+      </form>
+
+      <a href="/kwips/comments/new?id=<%= @post.id %>" class="btn btn-xs btn-success pull-right">
+        Reply
+      </a>
+    </div>
 
     <% if @comments.empty? %>
       <h2>No Comments</h2>

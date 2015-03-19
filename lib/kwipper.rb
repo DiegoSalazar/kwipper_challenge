@@ -39,5 +39,4 @@ require "kwipper/model"
 require "kwipper/controller"
 require "kwipper/application"
 
-
 Kwipper::HttpServer.run if __FILE__ == $0

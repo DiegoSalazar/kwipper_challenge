@@ -21,8 +21,7 @@ module Kwipper
     end
 
     def comments_count
-      result = sql("SELECT COUNT(id) FROM comments WHERE post_id = #{id}").first
-      result && result.first ? result.first : 0
+      sql("SELECT COUNT(id) FROM comments WHERE post_id = #{id}").first.pop || 0
     end
   end
 end

@@ -8,5 +8,10 @@ module Kwipper
       user = where(username: username).first
       user && user.hashed_password == password && user
     end
+
+    def favorite?(post)
+      result = sql("SELECT COUNT(id) FROM post_favorites WHERE user_id = #{id} AND post_id = #{post.id} LIMIT 1").first
+      result.first && result.first > 0
+    end
   end
 end
