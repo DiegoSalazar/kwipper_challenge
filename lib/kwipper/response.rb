@@ -5,6 +5,7 @@ module Kwipper
       created:      [201, 'Created'],
       found:        [302, 'Found'],
       bad_request:  [400, 'Bad Request'],
+      unauthorized: [401, 'Unauthorized'],
       not_found:    [404, 'Not Found'],
       server_error: [500, 'Server Error']
     }
@@ -18,6 +19,7 @@ module Kwipper
       @headers = {}.tap do |h|
         h['Set-Cookie'] = session_cookie unless has_session?
       end
+      @body = ''
     end
 
     def to_http_response

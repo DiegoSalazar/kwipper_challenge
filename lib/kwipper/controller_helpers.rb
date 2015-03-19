@@ -1,5 +1,7 @@
 module Kwipper
   module ControllerHelpers
+    protected
+    
     def params
       request.params
     end

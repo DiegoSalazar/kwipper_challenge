@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-sm-2"></div>
+
+  <div class="col-sm-8">
+    <% if @posts.empty? %>
+      <h1>No Kwips!</h1>
+    <% else %>
+      <ul class="list-unstyled">
+        <% @posts.each do |post| %>
+          <li>
+            <p>
+              <%= post.username %> @ <%= post.created_at %>
+            </p>
+
+            <div class="well">
+              <%= post.content %>
+            </div>
+            <hr>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+
+  <div class="col-sm-2"></div>
+</div>

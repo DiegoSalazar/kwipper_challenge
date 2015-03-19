@@ -26,25 +26,25 @@ module Kwipper
         db.execute cmd
       end
 
-      def all(table_name)
+      def all
         results = sql "SELECT * FROM #{table_name}"
         results.each_with_object [] do |attrs, models|
           models << new(attr_array_to_hash attrs)
         end
       end
 
-      def find(id, table_name)
-        where({ id: id }, table_name).first
+      def find(id)
+        where(id: id).first
       end
 
-      def where(attrs, table_name)
+      def where(attrs)
         results = sql "SELECT * FROM #{table_name} WHERE #{hash_to_key_vals attrs}"
         results.each_with_object [] do |attrs, models|
           models << new(attr_array_to_hash attrs)
         end
       end
 
-      def create(attrs, table_name)
+      def create(attrs)
         db_attrs = attrs.map { |k, v| normalize_value_for_db v, columns[k] }
 
         unless attrs.key? 'id'
@@ -57,15 +57,15 @@ module Kwipper
         new attrs
       end
 
-      def update(id, attrs, table_name)
+      def update(id, attrs)
         sql "UPDATE #{table_name} SET #{hash_to_key_vals attrs} WHERE id=#{id}"
       end
 
-      def destroy(id, table_name)
+      def destroy(id)
         sql "DELETE FROM #{table_name} WHERE id=#{id}"
       end
 
-      def exists?(id, table_name)
+      def exists?(id)
         id = normalize_value_for_db id, columns['id']
         result = sql "SELECT id FROM #{table_name} WHERE id = #{id} LIMIT 1"
         result && result.first && result.first.any?
@@ -87,11 +87,11 @@ module Kwipper
     end
 
     # Saves model instance to the database
-    def save(table_name)
+    def save
       if id
-        self.class.update id, attrs_for_db, table_name
+        self.class.update id, attrs_for_db
       else
-        self.class.create attrs_for_db, table_name
+        self.class.create attrs_for_db
       end
 
       true
@@ -100,16 +100,16 @@ module Kwipper
       false
     end
 
-    def update(params, table_name)
+    def update(params)
       attrs = params.each_with_object({}) { |(k, v), a| a[k] = v }
-      self.class.update id, attrs, table_name
+      self.class.update id, attrs
       true
     rescue KeyError => e
       false
     end
 
-    def destroy(id, table_name)
-      self.class.destroy id, table_name
+    def destroy(id)
+      self.class.destroy id
     end
 
     private
@@ -127,8 +127,12 @@ module Kwipper
     end
 
     class << self
+      def table_name
+        Inflect.new(name).demodulize.pluralize.downcase
+      end
+
       def generate_id
-        max_id_plus_1 = "SELECT (id + 1) as id FROM users ORDER BY id DESC LIMIT 1"
+        max_id_plus_1 = "SELECT (id + 1) as id FROM #{table_name} ORDER BY id DESC LIMIT 1"
         result = sql(max_id_plus_1).first
         result && result.first ? result.first : 1
       end

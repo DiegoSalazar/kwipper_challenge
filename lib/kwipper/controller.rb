@@ -23,5 +23,11 @@ module Kwipper
     def home
       render :home
     end
+
+    protected
+
+    def require_login!
+      raise Kwipper::AuthenticationRequired unless current_session
+    end
   end
 end

@@ -2,24 +2,27 @@ module Kwipper
   class UsersController < Controller
     add_routes self, {
       [:GET, '/users']          => :users,
-      [:GET, '/users/new']      => :new_user,
-      [:POST, '/users/create']  => :create_user,
-      [:GET, '/users/edit']     => :edit_user,
-      [:POST, '/users/update']  => :update_user,
-      [:POST, '/users/destroy'] => :destroy_user,
+      [:GET, '/users/new']      => :new,
+      [:POST, '/users/create']  => :create,
+      [:GET, '/users/edit']     => :edit,
+      [:POST, '/users/update']  => :update,
+      [:POST, '/users/destroy'] => :destroy,
       [:GET, '/login']          => :login
     }
 
     def users
+      require_login!
       @users = User.all
       render :users
     end
 
-    def new_user
+    def new
+      require_login!
       render :new_user
     end
 
-    def create_user
+    def create
+      require_login!
       user = User.new params
 
       if user.save
@@ -29,12 +32,14 @@ module Kwipper
       end
     end
 
-    def edit_user
+    def edit
+      require_login!
       @user = User.find params['id']
       render :edit_user
     end
 
-    def update_user
+    def update
+      require_login!
       user = User.find params['id']
 
       if user.update params
@@ -44,7 +49,8 @@ module Kwipper
       end
     end
 
-    def destroy_user
+    def destroy
+      require_login!
       user = User.find params['id']
       user.destroy
       redirect '/users'

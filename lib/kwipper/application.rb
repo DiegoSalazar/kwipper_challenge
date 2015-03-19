@@ -14,29 +14,35 @@ module Kwipper
         process!
 
         log.debug "Processed #{request.info} in #{sprintf '%.8f', Time.now.to_f - start_time}s".blue
+      rescue Kwipper::AuthenticationRequired
+        redirect '/'
+        log.debug "401 Not Authorized".yellow
       rescue Kwipper::NotFoundError
         render_not_found
-        log.warn response.info.yellow
+        log.warn @response.info.yellow
       rescue => e
         render_error e
-        log.fatal response.info.red
+        log.fatal @response.info.red
       end
-      response
+      @response
     end
 
     def process!
-      response.set_status :ok
-      controller_class, action = Controller::ROUTES[request.route_key]
-
-      if controller_class
+      if Controller::ROUTES.key? request.route_key
+        response.set_status :ok
         response.content_type = 'text/html'
-
+        
+        controller_class, action = Controller::ROUTES[request.route_key]
         controller = controller_class.new self, request, response
-        @view = controller.send action
 
-        response.body = render :layout
-
+        if controller.respond_to? action
+          @view = controller.send action
+          response.body = render :layout
+        else
+          raise Kwipper::NotFoundError, "#{self} does not know #{action}"
+        end
       elsif (file_name = public_file_request?)
+        response.set_status :ok
         response.content_type = get_content_type file_name
         response.body = File.read file_name
       else

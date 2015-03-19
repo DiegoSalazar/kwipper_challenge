@@ -1,11 +1,11 @@
 module Kwipper
   class SessionsController < Controller
     add_routes self, {
-      [:POST, '/sessions/create']  => :create_session,
-      [:GET, '/logout'] => :logout
+      [:POST, '/sessions/create']  => :create,
+      [:GET, '/logout'] => :destroy
     }
 
-    def create_session
+    def create
       @user = User.authenticate params['username'], params['password']
 
       if @user
@@ -21,7 +21,7 @@ module Kwipper
       end
     end
 
-    def logout
+    def destroy
       if current_session
         current_session.destroy
         response.remove_session_cookie
