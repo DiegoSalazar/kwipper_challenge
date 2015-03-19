@@ -9,7 +9,7 @@
         <% @posts.each do |post| %>
           <li>
             <p>
-              <%= post.username %> @ <%= post.created_at %>
+              <strong><%= post.username %></strong> @ <%= post.created_at %>
             </p>
 
             <div class="well">

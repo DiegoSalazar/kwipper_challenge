@@ -2,9 +2,8 @@
   <div class="col-sm-2"></div>
 
   <div class="col-sm-8">
-    <p>
-      <%= @post.username %> @ <%= @post.created_at %>
-    </p>
+    <h1><%= @post.username %></h1>
+    <p>@ <%= @post.created_at %></p>
 
     <div class="well">
       <%= @post.content %>
