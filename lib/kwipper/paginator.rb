@@ -10,14 +10,13 @@ module Kwipper
       @per = 1 if @per < 1
     end
 
-    def get(scope)
-      statement = "SELECT * FROM #{@model_class.table_name} LIMIT #{@per} OFFSET #{calc_offset}"
-      @records = @model_class.send scope, statement
+    def get(statement)
+      @records = @model_class.all "#{statement} LIMIT #{@per} OFFSET #{calc_offset}"
     end
 
     def pages
       @pages ||= begin
-        (0..@model_class.count).step(@per).each_with_index.map do |_, num|
+        (0...@model_class.count).step(@per).each_with_index.map do |_, num|
           num += 1
           Page.new path_for(num), num, num == @page
         end

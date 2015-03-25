@@ -8,8 +8,8 @@ module Kwipper
     }
 
     def posts
-      @paginator = Paginator.new Post, page: params['page'], per: 3, path: '/kwips'
-      @posts = @paginator.get :recent
+      @paginator = Paginator.new Post, page: params['page'], per: 5, path: '/kwips'
+      @posts = @paginator.get "SELECT * FROM posts ORDER BY created_at DESC"
       render :posts
     end
 
