@@ -6,9 +6,9 @@ module Kwipper
     attr_reader :from, :to, :count
 
     def initialize(model_class, page: 1, per: 20, path: '')
-      @model_class, @page, @per, @path = model_class, page.to_i, per.to_i, path
-      @page  = [@page, 1].max
-      @per   = [@per, 1].max
+      @model_class, @path = model_class, path
+      @page  = [page.to_i, 1].max
+      @per   = [per.to_i, 1].max
       @count = @model_class.count
       @from  = calc_offset + 1
       @to    = [calc_offset + @per, @count].min
