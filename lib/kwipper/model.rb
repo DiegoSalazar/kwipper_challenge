@@ -70,6 +70,10 @@ module Kwipper
         result = sql "SELECT id FROM #{table_name} WHERE id = #{id} LIMIT 1"
         result.first && result.first.any?
       end
+
+      def count(statement = "SELECT COUNT(id) FROM #{table_name}")
+        sql(statement).first.first
+      end
     end
 
     attr_accessor :id

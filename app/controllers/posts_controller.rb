@@ -8,7 +8,8 @@ module Kwipper
     }
 
     def posts
-      @posts = Post.recent
+      @paginator = Paginator.new Post, page: params['page'], per: 3, path: '/kwips'
+      @posts = @paginator.get :recent
       render :posts
     end
 

@@ -3,6 +3,7 @@ require "socket"
 require "securerandom"
 require "sqlite3"
 require "erb"
+require "uri"
 require "logger"
 require "mime-types"
 require "rack/utils"
@@ -22,20 +23,22 @@ def log
 end
 
 require "kwipper/version"
-
+require "kwipper/errors"
+# Server
 require "kwipper/http_parser"
 require "kwipper/http_server"
 require "kwipper/request"
 require "kwipper/request_headers"
 require "kwipper/response"
-
-require "kwipper/errors"
+# Helpers
 require "kwipper/inflect"
 require "kwipper/renders_views"
 require "kwipper/controller_helpers"
-
-require "kwipper/model"
-require "kwipper/controller"
+# Micro framework
 require "kwipper/application"
+require "kwipper/controller"
+require "kwipper/model"
+# Extensions
+require "kwipper/paginator"
 
 Kwipper::HttpServer.run if __FILE__ == $0

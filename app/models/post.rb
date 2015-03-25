@@ -21,11 +21,11 @@ module Kwipper
     end
 
     def comments_count
-      sql("SELECT COUNT(id) FROM comments WHERE post_id = #{id}").first.pop || 0
+      Model.count "SELECT COUNT(id) FROM comments WHERE post_id = #{id}"
     end
 
     def faves_count
-      sql("SELECT COUNT(id) FROM post_favorites WHERE post_id = #{id}").first.pop || 0
+      Model.count "SELECT COUNT(id) FROM post_favorites WHERE post_id = #{id}"
     end
   end
 end
