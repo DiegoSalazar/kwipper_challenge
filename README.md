@@ -4,7 +4,7 @@ Kwipper is the reference example app for the Kwipper Programming Challenge. See 
 
 ## Installation
 
-    $ git clone repo
+    $ git clone git@github.com:DiegoSalazar/kwipper_challenge.git
 
 ## Usage
 
