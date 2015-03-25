@@ -21,10 +21,12 @@ module Kwipper
       end
       attr_reader :columns
 
-      # Executes SQL statements
+      # All SQL statements should be executed through this method
       def sql(cmd)
-        log.debug cmd.red
-        db.execute cmd
+        start_time = Time.now.to_f
+        db.execute(cmd).tap do
+          log.debug "#{cmd.red} in #{sprintf '%.8f', Time.now.to_f - start_time}s"
+        end
       end
 
       # Get records from a single table and instantiate them

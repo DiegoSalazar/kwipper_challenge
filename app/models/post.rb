@@ -4,8 +4,8 @@ module Kwipper
     column 'content', :to_s
     column 'created_at', :to_s
 
-    def self.recent
-      all "SELECT * FROM #{table_name} ORDER BY created_at DESC"
+    def self.recent(statement = "SELECT * FROM posts")
+      all(statement).sort_by { |post| Time.parse post.created_at }.reverse
     end
 
     def user

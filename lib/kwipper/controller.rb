@@ -4,7 +4,7 @@ module Kwipper
     include ControllerHelpers
 
     ROUTES = {
-      [:GET, '/'] => [self, 'home']
+      [:GET, '/'] => [self, :home]
     }
 
     def self.add_routes(actions, routes)
@@ -16,8 +16,8 @@ module Kwipper
 
     attr_reader :app, :request, :response, :action
 
-    def initialize(app, request, response)
-      @app, @request, @response = app, request, response
+    def initialize(request, response)
+      @request, @response = request, response
     end
 
     def process(action)

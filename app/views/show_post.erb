@@ -1,44 +1,37 @@
-<div class="row">
-  <div class="col-sm-2"></div>
+<h1><%= @post.username %></h1>
+<p>
+  <span class="fa fa-clock-o">&nbsp;</span>
+  <%= @post.created_at %>
+</p>
 
-  <div class="col-sm-8">
-    <h1><%= @post.username %></h1>
-    <p>@ <%= @post.created_at %></p>
-
-    <div class="well">
-      <%= @post.content %>
-    </div>
-
-    <div class="btn-group pull-right">
-      <form action="/favorites/create?id=<%= @post.id %>" method="post" class="pull-left">
-        <input type="submit" value="Fave" class="btn btn-xs btn-<%= current_user.favorite?(@post) ? 'success' : 'default' %>"<%= current_user.favorite?(@post) ? ' disabled="disabled"' : nil %>>
-      </form>
-
-      <a href="/kwips/comments/new?id=<%= @post.id %>" class="btn btn-xs btn-success pull-right">
-        Reply
-      </a>
-    </div>
-
-    <% if @comments.empty? %>
-      <h2>No Comments</h2>
-    <% else %>
-      <h2>Comments</h2>
-
-      <ul class="list-unstyled">
-        <% @comments.each do |comment| %>
-          <li>
-            <p>
-              <%= comment.username %> @ <%= comment.created_at %>
-            </p>
-
-            <div class="well well-xs">
-              <%= comment.content %>
-            </div>
-          </li>
-        <% end %>
-      </ul>
-    <% end %>
-  </div>
-
-  <div class="col-sm-2"></div>
+<div class="well">
+  <%= @post.content %>
 </div>
+
+<div class="btn-group pull-right">
+  <% if current_user %>
+    <%= render :fave_button, post: @post %>
+    <%= render :reply_button, post: @post %>
+  <% end %>
+</div>
+
+<% if @comments.empty? %>
+  <h2>No Comments</h2>
+<% else %>
+  <h2>Comments</h2>
+
+  <ul class="list-unstyled">
+    <% @comments.each do |comment| %>
+      <li>
+        <p>
+          <span class="fa fa-comments">&nbsp;</span>
+          <%= comment.username %> @ <%= comment.created_at %>
+        </p>
+
+        <div class="well well-xs">
+          <%= comment.content %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+<% end %>

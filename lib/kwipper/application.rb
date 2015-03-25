@@ -13,7 +13,7 @@ module Kwipper
         start_time = Time.now.to_f
         process!
 
-        log.debug "Processed #{request.info} in #{sprintf '%.8f', Time.now.to_f - start_time}s".blue
+        log.debug "#{"Processed #{request.info}".blue} in #{sprintf '%.8f', Time.now.to_f - start_time}s"
       rescue Kwipper::AuthenticationRequired
         redirect '/'
         log.debug "401 Not Authorized".yellow
@@ -22,7 +22,7 @@ module Kwipper
         log.warn @response.info.yellow
       rescue => e
         render_error e
-        log.fatal @response.info.red
+        log.fatal "#{@response.info.red}\n#{verbose_error(e)}"
       end
       @response
     end
@@ -33,7 +33,7 @@ module Kwipper
         response.content_type = 'text/html'
 
         controller_class, @action = Controller::ROUTES[request.route_key]
-        controller = controller_class.new self, request, response
+        controller = controller_class.new request, response
 
         if controller.respond_to? @action
           @view = controller.process @action
@@ -78,6 +78,10 @@ module Kwipper
       response.set_status :server_error
       @view = render :server_error
       response.body = render :layout
+    end
+
+    def verbose_error(e)
+      "#{e.class} #{e.message}\n#{e.backtrace.join "\n"}".red
     end
   end
 end

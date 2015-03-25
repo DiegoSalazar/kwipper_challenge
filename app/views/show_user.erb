@@ -1,0 +1,11 @@
+<h1><%= @user.username %></h1>
+<p>
+  <span class="fa fa-envelope">&nbsp;</span>
+  <%= @user.email %>
+</p>
+
+<hr>
+
+<h2>Kwips</h2>
+
+<%= render :posts_list %>

@@ -1,7 +1,127 @@
-<div class="row">
-  <div class="col-sm-10">
-    <div class="page-header">
-      <h1>Welcome to Kwipper</h1>
-    </div>
-  </div>
+<div class="jumbotron">
+  <h1>Kwipper</h1>
+  
+  <p>
+    This web app is a Twitter clone that was created as a reference example for a programming challenge designed to teach the fundamentals of web development in Ruby. Kwipper is a self contained app that uses no web application frameworks, ORMs or Active gems, and no third party server. 
+    <a href="#rules">Read more</a> about the challenge below.
+  </p>
+</div>
+
+<p class="alert alert-info">
+  <span class="fa fa-github fa-lg">&nbsp;</span>
+  You can see the complete source code for this app on 
+  <a href="#soon">Github (soon)</a>.
+</p>
+
+<h2>Components that were built from scratch:</h2>
+
+<ul>
+  <li>HTTP Server: using Ruby's TCPServer class</li>
+  <li>HTTP Parser: plain old Ruby</li>
+  <li>Request class: represents the parsed HTTP request and headers</li>
+  <li>Response class: holds response headers and renders HTTP responses to the socket</li>
+  <li>View Rendering module: using ERB</li>
+  <li>Model base class: Implements interaction with SQLite</li>
+  <li>Controller base class: implements routing and authentication</li>
+  <li>Session management: cookies, sessions, logins</li>
+  <li>App micro framework: app directory with views, models and controllers that are automatically loaded on startup</li>
+</ul>
+
+<hr>
+
+<h2 id="rules">Challenge Rules</h2>
+
+<div class="well">
+  <h3>Write a Twitter clone without using any frameworks or Active* gems. </h3>
+
+  <p>
+    The purpose of this challenge is to increase your knowledge of the fundamentals of web development and to understand what happens “under the hood” of the frameworks we use such as Rack and Rails. How you build the app is not important, just that it satisfies the Required Features and follows the Rules. This challenge was designed to encourage you to learn the fundamental concepts that a web developer should know. Once these ideas are grokked you will be closer to obtaining the skills necessary to freely move between web-based technologies. 
+  </p>
+
+  <p>
+    Our trade evolves at an exponentially increasing rate. So too, must we constantly increase our understanding of our tools and techniques in order to keep up with the pace of advancement and innovation. By reaching for the forefront of our craft we can better hope to contribute our own innovations.
+  </p>
+
+  <p>The challenge will be divided into two phases, which are described in the phase sections below.</p>
+
+  <h3>Things To Learn:</h3>
+  <ul>
+    <li>Write a basic HTTP server (for example: using Ruby’s TCPServer class)</li>
+    <li>Parse the HTTP protocol (similar to how CSV is parsed but more complex)</li>
+    <li>Handle HTTP headers to set cookies and manage sessions</li>
+    <li>Handle GET and POST data in requests</li>
+    <li>Abstract away the HTTP layer so your app can focus on its own domain logic</li>
+    <li>Connect to a database without using ActiveRecord</li>
+    <li>Write SQL statements to perform CRUD operations</li>
+    <li>Manually validate and sanitize user input before inserting into the database</li>
+    <li>Generate HTML with dynamic content</li>
+  </ul>
+
+  <h2>Kwipper: A witty Twitter Clone</h2>
+
+  <h3>Required Features</h3>
+  <ul>
+    <li>User sign up, login, and logout using cookie based sessions</li>
+    <li>User can create, edit, delete their own text Posts</li>
+    <li>Users can favorite other Posts</li>
+    <li>Index page displays timeline of Posts by all Users</li>
+    <li>Pagination of timeline</li>
+    <li>Server logs requests to STDOUT</li>
+  </ul>
+
+  <h3>Rules</h3>
+
+  <ul>
+    <li>The App must be run by executing `ruby app.rb`</li>
+    <li>The App logs requests to STDOUT (the console)</li>
+    <li>The App must be plain Ruby and HTML</li>
+    <li>Must not use any app frameworks (e.g. Rack, Rails, Sinatra)</li>
+    <li>Must not use any of the Active* gems (e.g. ActiveRecord, ActiveSupport)</li>
+  </ul>
+
+  <h3>Phase 1</h3>
+  <p>
+    Complete the HTTP server, database connection, and user signup, login and logout. These basic features form the foundation of every web application and require knowledge of HTTP, SQL, HTTP headers and the concept of session management.
+  </p>
+
+  <h3>Phase 2</h3>
+  <p>Complete the app to meet the required features.</p>
+
+  <h3>Bonus Features</h3>
+  <p>If you’re looking for more of a challenge you can optionally add:</p>
+
+  <ul>
+    <li>Users can comment on posts</li>
+    <li>Users can tag posts</li>
+    <li>Users can favorite posts</li>
+    <li>Add a tag cloud to the homepage</li>
+    <li>Make it look good on mobile</li>
+  </ul>
+
+  <h3>Deeper Concepts to Learn</h3>
+  <p>
+    Through completing the challenge you’ll maybe come to understand deeper concepts underlying what you’re building and the technology and protocols you’ll be using. Take these points as a source of motivation for further learning.
+  </p>
+
+  <p>In diving deeper into the ideas touched on by the points in the Things To Learn section:</p>
+
+  <ul>
+    <li>
+      The difference between TCP and HTTP and how they fit together. Why was a text protocol chosen for HTTP but a binary protocol for TCP? What exactly is TCP? What is HTTP?
+    </li>
+    <li>
+      What are sessions? What are cookies? Why are they necessary? How are they stored in memory on the server? How does the server know which users correspond with which sessions?
+    </li>
+    <li>
+      What are the differences between GET and POST data? When it is appropriate to use each and why do we get the “resubmit form data” warning in some apps?
+    </li>
+    <li>
+      What is the point of ActiveRecord? Why doesn’t it cover all use cases? What is the difference between modeling data, a data model, and a Model?
+      Where should validation be implemented? Why should we sanitize input? Why was this an important point?
+    </li>
+    <li>
+      How can we generate dynamic content without templating frameworks like ERB or HAML? At what point does a web page become a web app? What is HTML and what does it do?
+    </li>
+  </ul>
+
 </div>

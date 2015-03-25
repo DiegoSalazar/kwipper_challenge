@@ -2,6 +2,7 @@ module Kwipper
   class UsersController < Controller
     add_routes self, {
       [:GET, '/users']          => :users,
+      [:GET, '/users/show']     => :show,
       [:GET, '/users/new']      => :new,
       [:POST, '/users/create']  => :create,
       [:GET, '/users/edit']     => :edit,
@@ -14,6 +15,12 @@ module Kwipper
       require_login!
       @users = User.all
       render :users
+    end
+
+    def show
+      @user = User.find params['id']
+      @posts = @user.posts
+      render :show_user
     end
 
     def new

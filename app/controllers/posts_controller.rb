@@ -1,13 +1,13 @@
 module Kwipper
   class PostsController < Controller
     add_routes self, {
-      [:GET, '/kwips']         => :index,
+      [:GET, '/kwips']         => :posts,
       [:GET, '/kwips/show']    => :show,
       [:GET, '/kwips/new']     => :new,
       [:POST, '/kwips/create'] => :create
     }
 
-    def index
+    def posts
       @posts = Post.recent
       render :posts
     end

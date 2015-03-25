@@ -3,8 +3,9 @@ module Kwipper
     VIEWS_PATH = 'app/views'
     VIEW_EXT = '.erb'
 
-    def render(view)
+    def render(view, vars = {})
       template = File.read file_path_of_view(view)
+      vars.each { |name, val| instance_variable_set "@#{name}", val }
       ERB.new(template).result binding
     end
 

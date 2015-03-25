@@ -1,26 +1,18 @@
-<div class="row">
-  <div class="col-sm-2"></div>
+<h1><%= @post.username %></h1>
+<p>@ <%= @post.created_at %></p>
 
-  <div class="col-sm-8">
-    <h1><%= @post.username %></h1>
-    <p>@ <%= @post.created_at %></p>
+<div class="well">
+  <%= @post.content %>
+</div>
 
-    <div class="well">
-      <%= @post.content %>
-    </div>
+<h2>New Comment</h2>
 
-    <h2>New Comment</h2>
-
-    <form action="/kwips/comments/create?id=<%= @post.id %>" method="post">
-      <div class="form-group">
-        <textarea name="content" class="form-control" rows="5"></textarea>
-      </div>
-
-      <div class="form-group">
-        <input type="submit" value="Submit" class="btn btn-xs btn-success">
-      </div>
-    </form>
+<form action="/kwips/comments/create?id=<%= @post.id %>" method="post">
+  <div class="form-group">
+    <textarea name="content" class="form-control" rows="5"></textarea>
   </div>
 
-  <div class="col-sm-2"></div>
-</div>
+  <div class="form-group">
+    <input type="submit" value="Submit" class="btn btn-xs btn-success">
+  </div>
+</form>

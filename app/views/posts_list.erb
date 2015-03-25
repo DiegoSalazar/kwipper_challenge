@@ -1,0 +1,42 @@
+<ul class="list-unstyled">
+  <% @posts.each do |post| %>
+    <li>
+      <p>
+        <a href="/users/show?id=<%= post.user_id %>">
+          <strong><%= post.username %></strong> 
+        </a>
+        @ <%= post.created_at %>
+      </p>
+
+      <div class="well">
+        <%= post.content %>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+        <div class="btn-group pull-left">
+          <span class="badge">
+            <%= Inflect.plural post.faves_count, 'Fave' %>
+          </span>
+        </div>
+
+          <div class="btn-group pull-right">
+            <%= render :fave_button, post: post if current_user %>
+
+            <a href="/kwips/show?id=<%= post.id %>" class="btn btn-xs btn-info">
+              <span class="fa fa-comments-o">&nbsp;</span>
+              Comments 
+              <span class="badge">
+                <%= post.comments_count %>
+              </span>
+            </a>
+
+            <%= render :reply_button, post: post if current_user %>
+          </div>
+        </div>
+      </div>
+
+      <hr>
+    </li>
+  <% end %>
+</ul>

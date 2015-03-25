@@ -1,58 +1,7 @@
-<div class="row">
-  <div class="col-sm-2"></div>
+<% if @posts.empty? %>
+  <h1>No Kwips!</h1>
+<% else %>
+  <h1>Kwips</h1>
 
-  <div class="col-sm-8">
-    <% if @posts.empty? %>
-      <h1>No Kwips!</h1>
-    <% else %>
-      <h1>Kwips</h1>
-
-      <ul class="list-unstyled">
-        <% @posts.each do |post| %>
-          <% faved = current_user.favorite? post %>
-
-          <li>
-            <p>
-              <strong><%= post.username %></strong> @ <%= post.created_at %>
-            </p>
-
-            <div class="well">
-              <%= post.content %>
-            </div>
-
-            <div class="row">
-              <div class="col-sm-12">
-              <div class="btn-group pull-left">
-                <span class="badge">
-                  <%= Inflect.plural post.faves_count, 'Fave' %>
-                </span>
-              </div>
-
-                <div class="btn-group pull-right">
-                  <form action="/favorites/create?id=<%= post.id %>" method="post" class="pull-left">
-                    <input type="submit" value="<%= faved ? "Fave'd" : 'Fave' %>" class="btn btn-xs btn-<%= faved ? 'success' : 'default' %>"<%= faved ? ' disabled="disabled"' : nil %>>
-                  </form>
-
-                  <a href="/kwips/show?id=<%= post.id %>" class="btn btn-xs btn-info">
-                    Comments 
-                    <span class="badge">
-                      <%= post.comments_count %>
-                    </span>
-                  </a>
-
-                  <a href="/kwips/comments/new?id=<%= post.id %>" class="btn btn-xs btn-primary">
-                    Reply
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <hr>
-          </li>
-        <% end %>
-      </ul>
-    <% end %>
-  </div>
-
-  <div class="col-sm-2"></div>
-</div>
+  <%= render :posts_list %>
+<% end %>

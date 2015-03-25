@@ -1,0 +1,8 @@
+<% faved = current_user && current_user.favorite?(@post) %>
+<form action="/favorites/create?id=<%= @post.id %>" method="post" class="pull-left">
+  <span class="fa fa-thumb-o-up">&nbsp;</span>
+  <button type="submit" class="btn btn-xs btn-<%= faved ? 'success' : 'default' %>"<%= faved ? ' disabled="disabled"' : nil %>>
+    <span class="fa fa-thumbs-<%= faved ? 'up' : 'o-up' %>">&nbsp;</span>
+    <%= faved ? "Fave'd" : 'Fave' %>
+  </button
+</form>

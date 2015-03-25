@@ -13,5 +13,9 @@ module Kwipper
       result = sql("SELECT COUNT(id) FROM post_favorites WHERE user_id = #{id} AND post_id = #{post.id} LIMIT 1").first
       result.first && result.first > 0
     end
+
+    def posts
+      Post.recent "SELECT * FROM posts WHERE user_id = #{id}"
+    end
   end
 end
