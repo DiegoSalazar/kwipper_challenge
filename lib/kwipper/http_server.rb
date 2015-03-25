@@ -22,10 +22,6 @@ module Kwipper
 
       while socket = accept
         begin
-          # TODO: can't figure out why some request paths come through
-          # blank. e.g. clicking on a link with href "/sessions/destroy"
-          # comes through here as just "/". But it comes through ok if 
-          # I change it to "/logout". Could it be string length?
           request = parser.parse socket
 
           log.info "#{request.info} #{request.params.inspect unless request.params.empty?}".strip.green
