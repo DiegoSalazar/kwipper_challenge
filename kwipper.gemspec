@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Kwipper::VERSION
   spec.authors       = ["Diego Salazar"]
   spec.email         = ["diego@greyrobot.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{Kwipper is the reference example app for the Kwipper Programming Challenge}
+  spec.description   = %q{Kwipper is the reference example app for the Kwipper Programming Challenge to build an app and server from scratch.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
@@ -18,6 +18,10 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
+  spec.add_dependency 'sqlite3'
+  spec.add_dependency 'colorize'
+
   spec.add_development_dependency "bundler", "~> 1.7"
   spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "pry"
 end
