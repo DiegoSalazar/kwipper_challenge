@@ -5,6 +5,7 @@
         <span aria-hidden="true">&laquo;</span>
       </a>
     </li>
+
     <% @paginator.pages.each do |page| %>
       <li class="<%= 'active' if page.current? %>">
         <a href="<%= page.path %>">
@@ -12,6 +13,7 @@
         </a>
       </li>
     <% end %>
+    
     <li class="<%= 'disabled' if @paginator.on_last_page? %>">
       <a href="<%= @paginator.next_page_path %>" aria-label="Next">
         <span aria-hidden="true">&raquo;</span>

@@ -3,14 +3,15 @@ module Kwipper
     PAGE_PARAM_NAME = 'page'
     Page = Struct.new :path, :num, :current?
 
-    attr_reader :count
+    attr_reader :from, :to, :count
 
     def initialize(model_class, page: 1, per: 20, path: '')
-      @model_class, @page, @per = model_class, page.to_i, per.to_i
+      @model_class, @page, @per, @path = model_class, page.to_i, per.to_i, path
+      @page  = [@page, 1].max
+      @per   = [@per, 1].max
       @count = @model_class.count
-      @path = path
-      @page = 1 if @page < 1
-      @per = 1 if @per < 1
+      @from  = calc_offset + 1
+      @to    = [calc_offset + @per, @count].min
     end
 
     def get(statement)
@@ -19,20 +20,11 @@ module Kwipper
 
     def pages
       @pages ||= begin
-        (0...count).step(@per).each_with_index.map do |_, num|
+        (0...@count).step(@per).each_with_index.map do |_, num|
           num += 1
           Page.new path_for(num), num, num == @page
         end
       end
-    end
-
-    def from
-      calc_offset + 1
-    end
-
-    def to
-      t = calc_offset + @per
-      t > count ? count : t
     end
 
     def on_first_page?
@@ -45,13 +37,13 @@ module Kwipper
 
     def prev_page_path
       prev_page = current_page.num - 1
-      prev_page = 1 if prev_page <= 0
-      pages[prev_page-1].path
+      prev_page = [prev_page, 1].max
+      pages[prev_page - 1].path
     end
 
     def next_page_path
       next_page = current_page.num
-      next_page = pages.size - 1 if next_page >= pages.size-1
+      next_page = [next_page, pages.size - 1].min
       pages[next_page].path
     end
 
