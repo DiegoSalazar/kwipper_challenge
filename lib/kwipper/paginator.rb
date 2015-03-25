@@ -3,24 +3,36 @@ module Kwipper
     PAGE_PARAM_NAME = 'page'
     Page = Struct.new :path, :num, :current?
 
+    attr_reader :count
+
     def initialize(model_class, page: 1, per: 20, path: '')
       @model_class, @page, @per = model_class, page.to_i, per.to_i
+      @count = @model_class.count
       @path = path
       @page = 1 if @page < 1
       @per = 1 if @per < 1
     end
 
     def get(statement)
-      @records = @model_class.all "#{statement} LIMIT #{@per} OFFSET #{calc_offset}"
+      @model_class.all "#{statement} LIMIT #{@per} OFFSET #{calc_offset}"
     end
 
     def pages
       @pages ||= begin
-        (0...@model_class.count).step(@per).each_with_index.map do |_, num|
+        (0...count).step(@per).each_with_index.map do |_, num|
           num += 1
           Page.new path_for(num), num, num == @page
         end
       end
+    end
+
+    def from
+      calc_offset + 1
+    end
+
+    def to
+      t = calc_offset + @per
+      t > count ? count : t
     end
 
     def on_first_page?
