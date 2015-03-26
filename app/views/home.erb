@@ -10,21 +10,21 @@
 <p class="alert alert-info">
   <span class="fa fa-github fa-lg">&nbsp;</span>
   You can see the complete source code for this app on 
-  <a href="#soon">Github (soon)</a>.
+  <a href="https://github.com/DiegoSalazar/kwipper_challenge">Github</a>.
 </p>
 
 <h2>Components that were built from scratch:</h2>
 
 <ul>
-  <li>HTTP Server: using Ruby's TCPServer class</li>
-  <li>HTTP Parser: plain old Ruby</li>
-  <li>Request class: represents the parsed HTTP request and headers</li>
-  <li>Response class: holds response headers and renders HTTP responses to the socket</li>
-  <li>View Rendering module: using ERB</li>
-  <li>Model base class: Implements interaction with SQLite</li>
-  <li>Controller base class: implements routing and authentication</li>
-  <li>Session management: cookies, sessions, logins</li>
-  <li>App micro framework: app directory with views, models and controllers that are automatically loaded on startup</li>
+  <li>[HTTP Server](https://github.com/DiegoSalazar/kwipper_challenge/blob/master/lib/kwipper/http_server.rb): using Ruby's TCPServer class</li>
+  <li>[HTTP Parser](https://github.com/DiegoSalazar/kwipper_challenge/blob/master/lib/kwipper/http_parser.rb): plain old Ruby</li>
+  <li>[Request class](https://github.com/DiegoSalazar/kwipper_challenge/blob/master/lib/kwipper/request.rb): represents the parsed HTTP request and headers</li>
+  <li>[Response class](https://github.com/DiegoSalazar/kwipper_challenge/blob/master/lib/kwipper/response.rb): holds response headers and renders HTTP responses to the socket. Sets the session.</li>
+  <li>[View Rendering module](https://github.com/DiegoSalazar/kwipper_challenge/blob/master/lib/kwipper/renders_views.rb): using ERB</li>
+  <li>[Model base class](https://github.com/DiegoSalazar/kwipper_challenge/blob/master/lib/kwipper/model.rb): The most complex class, it implements interaction with SQLite and defines ORM-like methods.</li>
+  <li>[Controller base class](https://github.com/DiegoSalazar/kwipper_challenge/blob/master/lib/kwipper/controller.rb): implements routing and authentication</li>
+  <li>[App micro framework](https://github.com/DiegoSalazar/kwipper_challenge/blob/master/lib/kwipper/application.rb): app directory with views, models and controllers that are automatically loaded on startup</li>
+  <li>[Paginator class](https://github.com/DiegoSalazar/kwipper_challenge/blob/master/lib/kwipper/paginator.rb): SQL based pagination</li>
 </ul>
 
 <hr>

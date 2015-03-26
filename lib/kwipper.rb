@@ -19,7 +19,9 @@ module Kwipper
 end
 
 def log
-  @logger ||= Logger.new STDOUT
+  @logger ||= Logger.new(STDOUT).tap do |logger|
+    logger.datetime_format = '%Y-%m-%d %H:%M:%S '
+  end
 end
 
 require "kwipper/version"

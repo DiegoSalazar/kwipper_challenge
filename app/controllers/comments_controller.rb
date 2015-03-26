@@ -1,9 +1,9 @@
 module Kwipper
   class CommentsController < Controller
-    add_routes self, {
+    add_routes({
       [:GET, '/kwips/comments/new']     => :new,
       [:POST, '/kwips/comments/create'] => :create
-    }
+    })
 
     def new
       require_login!

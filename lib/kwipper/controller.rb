@@ -7,11 +7,10 @@ module Kwipper
       [:GET, '/'] => [self, :home]
     }
 
-    def self.add_routes(actions, routes)
-      routes = routes.each_with_object({}) do |(route_key, action), r|
-        r[route_key] = [self, action]
+    def self.add_routes(routes)
+      routes.each do |route_key, action|
+        ROUTES.merge! route_key => [self, action]
       end
-      ROUTES.merge! routes
     end
 
     attr_reader :app, :request, :response, :action

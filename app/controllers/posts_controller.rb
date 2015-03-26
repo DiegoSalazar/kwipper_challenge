@@ -1,11 +1,11 @@
 module Kwipper
   class PostsController < Controller
-    add_routes self, {
+    add_routes({
       [:GET, '/kwips']         => :posts,
       [:GET, '/kwips/show']    => :show,
       [:GET, '/kwips/new']     => :new,
       [:POST, '/kwips/create'] => :create
-    }
+    })
 
     def posts
       @paginator = Paginator.new Post, page: params['page'], per: 10, path: '/kwips'
