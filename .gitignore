@@ -14,3 +14,4 @@
 mkmf.log
 db/*.db
 *.db
+*.gem

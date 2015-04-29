@@ -15,7 +15,7 @@ module Kwipper
 
         log.debug "#{"Processed #{request.info}".blue} in #{sprintf '%.8f', Time.now.to_f - start_time}s"
       rescue Kwipper::AuthenticationRequired
-        redirect '/'
+        redirect '/', :unauthorized
         log.debug "401 Not Authorized".yellow
       rescue Kwipper::NotFoundError
         render_not_found
@@ -26,6 +26,8 @@ module Kwipper
       end
       @response
     end
+
+    private
 
     def process!
       if Controller::ROUTES.key? request.route_key
@@ -49,8 +51,6 @@ module Kwipper
         raise Kwipper::NotFoundError
       end
     end
-
-    private
 
     def public_file_request?
       file = File.join(Kwipper::ROOT, 'public', request.path)

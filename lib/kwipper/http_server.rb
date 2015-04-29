@@ -7,7 +7,7 @@ module Kwipper
       HttpServer.new(bind, port).serve
     end
 
-    def initialize(bind = '127.0.0.1', port = 7335)
+    def initialize(bind, port)
       @bind, @port = bind, port
       @host = "#@bind#{":#@port" unless port.to_i == DEFAULT_PORT}"
       log.debug "Starting server on #@host"
@@ -15,8 +15,8 @@ module Kwipper
     end
 
     def serve
-      load_models
-      load_controllers
+      Kwipper.load_models
+      Kwipper.load_controllers
       parser = HttpParser.new
       Kwipper.log_startup_time
 
@@ -42,20 +42,6 @@ module Kwipper
       socket.close if socket && !socket.closed?
       Model.db.close
       log.debug "Ok bye."
-    end
-
-    private
-
-    def load_models
-      Dir[File.join(Kwipper::ROOT, 'app/models/**/*.rb')].each do |model|
-        require model
-      end
-    end
-
-    def load_controllers
-      Dir[File.join(Kwipper::ROOT, 'app/controllers/**/*.rb')].each do |controller|
-        require controller
-      end
     end
   end
 end
