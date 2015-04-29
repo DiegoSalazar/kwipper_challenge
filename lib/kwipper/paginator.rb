@@ -3,7 +3,7 @@ module Kwipper
     PAGE_PARAM_NAME = 'page'
     Page = Struct.new :path, :num, :current?
 
-    attr_reader :from, :to, :count
+    attr_reader :from, :to, :count, :page, :per, :path
 
     def initialize(model_class, page: 1, per: 20, path: '')
       @model_class, @path = model_class, path
