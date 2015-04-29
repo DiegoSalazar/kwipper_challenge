@@ -2,7 +2,7 @@ require "spec_helper"
 require "kwipper/http_parser"
 
 describe Kwipper::HttpParser do
-  let(:http_parser) { Kwipper::HttpParser.new }
+  let(:http_parser) { described_class.new }
 
   context '#parse' do
     it "raises empty request error when request is nil" do

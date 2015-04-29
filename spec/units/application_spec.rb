@@ -2,7 +2,7 @@ require "spec_helper"
 require "kwipper/application"
 
 describe Kwipper::Application do
-  let(:app) { Kwipper::Application.new }
+  let(:app) { described_class.new }
   let(:request) { Fixtures.request }
 
   context "#respond_to" do

@@ -2,23 +2,22 @@ require "spec_helper"
 require "kwipper/controller"
 
 describe Kwipper::Controller do
-  let(:c) { Kwipper::Controller }
   let(:controller) do
     request = Fixtures.request
-    c.new request, Kwipper::Response.new(request)
+    described_class.new request, Kwipper::Response.new(request)
   end
 
   context ".add_routes" do
     it "merges the hash argument with the ROUTES constant hash" do
-      c.add_routes [:GET, "/test"] => :test
+      described_class.add_routes [:GET, "/test"] => :test
 
-      expect(c::ROUTES.keys.last).to eq [:GET, "/test"]
+      expect(described_class::ROUTES.keys.last).to eq [:GET, "/test"]
     end
 
     it "sets the values of the ROUTES hash to an array of the controller class and action name" do
-      c.add_routes [:GET, "/test"] => :test
+      described_class.add_routes [:GET, "/test"] => :test
 
-      expect(c::ROUTES.values.last).to eq [Kwipper::Controller, :test]
+      expect(described_class::ROUTES.values.last).to eq [Kwipper::Controller, :test]
     end
   end
 

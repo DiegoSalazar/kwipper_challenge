@@ -3,7 +3,7 @@ require "kwipper/http_server"
 
 describe Kwipper::HttpServer do
   let :http_server do
-    server = Kwipper::HttpServer.new 'localhost', 9000
+    server = described_class.new 'localhost', 9000
     expect(server).to receive(:accept).and_return false
     server
   end

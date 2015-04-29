@@ -4,56 +4,55 @@ ENV['DB_NAME'] = 'test'
 require "kwipper/model"
 
 describe Kwipper::Model do
-  let(:model_class) { Kwipper::Model }
   let(:user_class) { Kwipper::User }
   let(:statement) { "SELECT * FROM users" }
   let(:existing_id) { user_class.all.last.id }
 
   context '.db' do
     it "opens a sqlite database and memoizes the value" do
-      expect(model_class.db).to be_a SQLite3::Database
-      expect(model_class.db.object_id).to be model_class.db.object_id
+      expect(described_class.db).to be_a SQLite3::Database
+      expect(described_class.db.object_id).to be described_class.db.object_id
     end
   end
 
   context '.column' do
     it "adds an id column by default the first time its called" do
-      expect(model_class.columns).to be nil
-      model_class.column :name, :to_s # 
+      expect(described_class.columns).to be nil
+      described_class.column :name, :to_s # 
 
-      expect(model_class.columns).to eq "id" => :to_i, :name => :to_s
+      expect(described_class.columns).to eq "id" => :to_i, :name => :to_s
     end
 
     it "adds the column name and type to the columns property" do
-      model_class.column :name, :to_s
+      described_class.column :name, :to_s
 
-      expect(model_class.columns.keys.last).to be :name
+      expect(described_class.columns.keys.last).to be :name
     end
 
     it "creates attr accessors with the column name" do
-      expect(model_class.new).to_not respond_to :test_attr
-      model_class.column :test_attr, :to_s
+      expect(described_class.new).to_not respond_to :test_attr
+      described_class.column :test_attr, :to_s
 
-      expect(model_class.new).to respond_to :test_attr      
+      expect(described_class.new).to respond_to :test_attr      
     end
   end
 
   context '.sql' do
     it "executes the command in the database" do
-      expect(model_class.db).to receive(:execute).with statement
+      expect(described_class.db).to receive(:execute).with statement
 
-      model_class.sql statement
+      described_class.sql statement
     end
 
     it "returns raw results as an array of arrays" do
-      results = model_class.sql statement
+      results = described_class.sql statement
 
       expect(results).to be_an Array
       expect(results).to_not be_empty
     end
 
     it "raises a SQL error when an invalid statement is given" do
-      expect { model_class.sql "nope" }.to raise_error SQLite3::SQLException
+      expect { described_class.sql "nope" }.to raise_error SQLite3::SQLException
     end
   end
 

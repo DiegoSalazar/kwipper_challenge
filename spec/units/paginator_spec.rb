@@ -3,19 +3,18 @@ require "kwipper/paginator"
 
 describe Kwipper::Paginator do
   let(:user_class) { Kwipper::User }
-  let(:paginator_class) { Kwipper::Paginator }
-  let(:paginator) { paginator_class.new user_class, path: '/test' }
+  let(:paginator) { described_class.new user_class, path: '/test' }
   let(:page_count) { paginator.pages.size }
 
   context "#initialize" do
     it "sets @page to 1 if a lower value is given" do
-      paginator = paginator_class.new user_class, page: 0
+      paginator = described_class.new user_class, page: 0
 
       expect(paginator.page).to be 1
     end
 
     it "sets @per to 1 if a lower value is given" do
-      paginator = paginator_class.new user_class, per: 0
+      paginator = described_class.new user_class, per: 0
 
       expect(paginator.per).to be 1
     end
@@ -25,14 +24,14 @@ describe Kwipper::Paginator do
     end
 
     it "sets @from to the calculated offset" do
-      paginator = paginator_class.new user_class, page: 7, per: 5
+      paginator = described_class.new user_class, page: 7, per: 5
 
       expect(paginator.from).to be ((paginator.page - 1) * paginator.per) + 1
     end
 
     it "sets @to a value no higher than @count" do
       count = user_class.count
-      paginator = paginator_class.new user_class, page: count + 100
+      paginator = described_class.new user_class, page: count + 100
 
       expect(paginator.to).to be count
     end
@@ -57,7 +56,7 @@ describe Kwipper::Paginator do
 
   context "#pages" do
     it "returns an array of Page structs" do
-      expect(paginator.pages.first).to be_a paginator_class::Page
+      expect(paginator.pages.first).to be_a described_class::Page
     end
   end
   
@@ -67,26 +66,26 @@ describe Kwipper::Paginator do
     end
 
     it "returns false when not on page 1" do
-      paginator = paginator_class.new user_class, page: page_count
+      paginator = described_class.new user_class, page: page_count
       expect(paginator.on_first_page?).to be false
     end
   end
   
   context "#on_last_page?" do
     it "returns true when on the last page is current" do
-      paginator = paginator_class.new user_class, page: page_count
+      paginator = described_class.new user_class, page: page_count
       expect(paginator.on_last_page?).to be true
     end
 
     it "returns false when the last page is not current" do
-      paginator = paginator_class.new user_class, page: 1
+      paginator = described_class.new user_class, page: 1
       expect(paginator.on_last_page?).to be false
     end
   end
   
   context "#prev_page_path" do
     it "returns the path of the page previous to the current page" do
-      paginator = paginator_class.new user_class, page: page_count
+      paginator = described_class.new user_class, page: page_count
       pages = paginator.pages
       prev_page = pages[pages.size - 2]
 
@@ -104,7 +103,7 @@ describe Kwipper::Paginator do
     end
 
     it "returns the path of the last page when on the last page" do
-      paginator = paginator_class.new user_class, page: page_count
+      paginator = described_class.new user_class, page: page_count
 
       expect(paginator.next_page_path).to eq paginator.pages.last.path
     end
