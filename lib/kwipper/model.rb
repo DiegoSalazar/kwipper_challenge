@@ -1,6 +1,6 @@
 module Kwipper
   class Model
-    DB_NAME = 'kwipper'
+    DB_NAME = ENV.fetch 'DB_NAME', 'kwipper'
     DB_FILE_NAME = "#{DB_NAME}.db"
     ID_COLUMN = 'id'
 
@@ -22,10 +22,10 @@ module Kwipper
       attr_reader :columns
 
       # All SQL statements should be executed through this method
-      def sql(cmd)
+      def sql(statement)
         start_time = Time.now.to_f
-        db.execute(cmd).tap do
-          log.debug "#{cmd.red} in #{sprintf '%.8f', Time.now.to_f - start_time}s"
+        db.execute(statement).tap do
+          log.debug "#{statement.red} in #{sprintf '%.8f', Time.now.to_f - start_time}s"
         end
       end
 
@@ -45,16 +45,11 @@ module Kwipper
       end
 
       def create(attrs)
-        db_attrs = attrs.map { |k, v| normalize_value_for_db v, columns[k] }
+        db_attrs = attrs.map(&:first).join ', '
+        db_values = attrs.map { |k, v| normalize_value_for_db v, columns[k] }.join ', '
 
-        unless attrs.key? 'id'
-          id = generate_id
-          attrs['id'] = id
-          db_attrs = [id, *db_attrs]
-        end
-
-        sql "INSERT INTO #{table_name} VALUES(#{db_attrs.join ', '})"
-        new attrs
+        sql "INSERT INTO #{table_name} (#{db_attrs}) VALUES(#{db_values})"
+        new attrs.merge id: db.last_insert_row_id
       end
 
       def update(id, attrs)
@@ -68,7 +63,7 @@ module Kwipper
       def exists?(id)
         id = normalize_value_for_db id, columns['id']
         result = sql "SELECT id FROM #{table_name} WHERE id = #{id} LIMIT 1"
-        result.first && result.first.any?
+        !!(result.first && result.first.any?)
       end
 
       def count(statement = "SELECT COUNT(id) FROM #{table_name}")
@@ -80,13 +75,10 @@ module Kwipper
 
     # Takes a hash of model attributes and sets them via accessors if they exists
     def initialize(attrs = {})
-      attrs.keys.each do |name|
-        if self.class.columns.keys.include? name
-          type = self.class.columns[name]
-          send "#{name}=", attrs[name].send(type)
-        else
-          raise UnknownAttribute, "#{name} for #{self}"
-        end
+      attrs.each do |name, value|
+        name = name.to_s
+        type = self.class.columns[name] || raise(UnknownAttribute, "#{name} for #{self}")
+        send "#{name}=", value.send(type)
       end
     end
 
@@ -95,8 +87,8 @@ module Kwipper
       if id
         self.class.update id, attrs_for_db
       else
-        self.class.create a = attrs_for_db
-        @id ||= a['id']
+        self.class.create attrs_for_db
+        @id ||= self.class.db.last_insert_row_id
       end
 
       true
@@ -108,13 +100,16 @@ module Kwipper
     def update(attrs)
       self.class.update id, attrs
       true
-    rescue KeyError => e
+    rescue SQLite3::SQLException, KeyError => e
+      log.warn "Error: \"#{e.class} #{e.message}\" in #{self}"
       false
     end
 
-    def destroy(id)
+    def destroy
       self.class.destroy id
     end
+
+    protected
 
     def sql(statement)
       self.class.sql statement
@@ -125,24 +120,13 @@ module Kwipper
     def attrs_for_db
       self.class.columns.each_with_object({}) do |(name, _), attrs|
         value = send name
-        value = generate_id if name == ID_COLUMN && value.nil?
         attrs[name] = value unless value.nil?
       end
-    end
-
-    def generate_id
-      self.class.generate_id
     end
 
     class << self
       def table_name
         Inflect.new(name).demodulize.pluralize.underscore
-      end
-
-      def generate_id
-        max_id_plus_1 = "SELECT (id + 1) as id FROM #{table_name} ORDER BY id DESC LIMIT 1"
-        result = sql(max_id_plus_1).first
-        result && result.first ? result.first : 1
       end
 
       def attr_array_to_hash(attrs)
@@ -162,6 +146,7 @@ module Kwipper
       end
 
       # Non int values should be quoted when putting in a SQL statement
+      # TODO: we should probably do SQL sanitation here too
       def normalize_value_for_db(value, type)
         case type when :to_i
           value.to_i

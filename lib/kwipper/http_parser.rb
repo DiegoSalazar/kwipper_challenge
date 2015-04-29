@@ -6,7 +6,7 @@ module Kwipper
       @first_line = raw_request.gets
 
       if @first_line.nil?
-        raise Kwipper::EmptyRequest, 'could not get first line'
+        raise Kwipper::EmptyRequestError, 'could not get first line'
       else
         Request.new do |r|
           r.http_method = @first_line.split(' ').first

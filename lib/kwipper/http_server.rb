@@ -31,10 +31,10 @@ module Kwipper
 
         rescue Errno::ECONNRESET, Errno::EPIPE => e
           log.info "#{e.class} #{e.message}".yellow
-        rescue Kwipper::EmptyRequest => e
+        rescue Kwipper::EmptyRequestError => e
           log.warn "#{e.class} #{e.message}".yellow
         ensure
-          socket.close
+          socket.close unless socket.closed?
         end
       end
 
