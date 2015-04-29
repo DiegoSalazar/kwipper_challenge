@@ -43,7 +43,7 @@ module Kwipper
         else
           raise Kwipper::NotFoundError, "#{self} does not know #{@action}"
         end
-      elsif (file_name = public_file_request?)
+      elsif (file_name = get_file_name)
         response.set_status :ok
         response.content_type = get_content_type file_name
         response.body = File.read file_name
@@ -52,7 +52,9 @@ module Kwipper
       end
     end
 
-    def public_file_request?
+    private
+
+    def get_file_name
       file = File.join(Kwipper::ROOT, 'public', request.path)
       File.exists?(file) && file
     end

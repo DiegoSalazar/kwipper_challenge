@@ -1,7 +1,6 @@
 module Kwipper
   class Request
     attr_accessor :http_method, :path, :query, :headers, :post_data
-    attr_reader :params, :cookies
 
     def initialize
       @post_data = {}
