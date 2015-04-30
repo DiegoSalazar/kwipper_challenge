@@ -1,5 +1,4 @@
 require "spec_helper"
-require "kwipper/inflect"
 
 describe Kwipper::Inflect do
   subject { "Kwipper::UserStuff" }

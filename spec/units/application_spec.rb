@@ -1,5 +1,4 @@
 require "spec_helper"
-require "kwipper/application"
 
 describe Kwipper::Application do
   let(:app) { described_class.new }

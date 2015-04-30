@@ -1,18 +1,21 @@
 module Fixtures
   module_function
 
+  # The values listed here are required and normally assigned by the http_parser
   def request(attrs = {})
-    @request ||= Kwipper::Request.new do |r|
-      r.http_method = attrs.fetch :method, 'GET'
-      r.path      = attrs.fetch :path, '/'
-      r.query     = attrs.fetch :query, {}
-      r.headers   = attrs.fetch :headers, request_headers
-      r.post_data = attrs.fetch :post_data, {}
+    Kwipper::Request.new do |r|
+      r.http_method    = attrs.fetch :method, 'GET'
+      r.path           = attrs.fetch :path, '/test'
+      r.query          = attrs.fetch :query, query: :hash
+      r.headers        = attrs.fetch :headers, request_headers
+      r.cookies        = attrs.fetch :cookies, r.headers.cookies
+      r.content_length = attrs.fetch :content_length, r.headers.content_length
+      r.post_data      = attrs.fetch :post_data, post_data: :hash
     end
   end
 
   def request_headers
-    @request_headers ||= Kwipper::RequestHeaders.new.tap do |r|
+    Kwipper::RequestHeaders.new.tap do |r|
       r["HOST"] ="localhost"
       r["CONNECTION"] = "keep-alive"
       r["CACHE_CONTROL"] = "max-age=0"

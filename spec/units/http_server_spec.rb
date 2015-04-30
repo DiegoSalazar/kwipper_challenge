@@ -1,5 +1,4 @@
 require "spec_helper"
-require "kwipper/http_server"
 
 describe Kwipper::HttpServer do
   let :http_server do

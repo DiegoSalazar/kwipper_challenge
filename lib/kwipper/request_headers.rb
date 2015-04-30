@@ -16,13 +16,10 @@ module Kwipper
       @headers['CONTENT_LENGTH'].to_i
     end
 
-    def has_content?
-      content_length > 0
-    end
-
     def cookies
       @cookies ||= begin
-        c = @headers['COOKIE'].to_s.split(/;\s?/).map { |c| c.split '=' }
+        c = @headers['COOKIE'].to_s.split(/;\s?/)
+        c = c.map { |c| c.split '=' }
         c.size.even? ? Hash[c] : {}
       end
     end

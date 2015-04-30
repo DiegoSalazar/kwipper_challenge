@@ -1,5 +1,4 @@
 require "spec_helper"
-require "kwipper/controller"
 
 describe Kwipper::Controller do
   let(:controller) do

@@ -1,7 +1,5 @@
-require "spec_helper"
-
 ENV['DB_NAME'] = 'test'
-require "kwipper/model"
+require "spec_helper"
 
 describe Kwipper::Model do
   let(:user_class) { Kwipper::User }

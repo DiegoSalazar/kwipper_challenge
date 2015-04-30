@@ -3,17 +3,18 @@ module Kwipper
     HEADER_DELIMITER = "\r\n"
 
     def parse(raw_request)
-      @first_line = raw_request.gets
+      @first_line = raw_request.gets || raise(Kwipper::EmptyRequestError)
+      
+      Request.new do |r|
+        r.http_method    = @first_line.split(' ').first
+        r.path           = parse_path
+        r.query          = parse_query
+        r.headers        = parse_headers raw_request
+        r.cookies        = r.headers.cookies
+        r.content_length = r.headers.content_length
 
-      if @first_line.nil?
-        raise Kwipper::EmptyRequestError, 'could not get first line'
-      else
-        Request.new do |r|
-          r.http_method = @first_line.split(' ').first
-          r.path      = parse_path
-          r.query     = parse_query
-          r.headers   = parse_headers raw_request
-          r.post_data = parse_query_string raw_request.read(r.content_length) if r.post_data?
+        if r.content_length > 0
+          r.post_data = read_body raw_request, r.content_length
         end
       end
     end
@@ -42,6 +43,10 @@ module Kwipper
         key, val = line.split(/:\s?/)
         request_headers[key] = val
       end
+    end
+
+    def read_body(raw_request, content_length)
+      parse_query_string raw_request.read(content_length)
     end
 
     def parse_query_string(s)

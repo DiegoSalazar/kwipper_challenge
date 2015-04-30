@@ -1,10 +1,11 @@
 module Kwipper
   class Request
     attr_accessor :http_method, :path, :query, :headers, :post_data
+    attr_accessor :content_length, :cookies, :has_post_data
 
     def initialize
       @post_data = {}
-      yield self
+      yield self if block_given?
     end
 
     def info
@@ -17,18 +18,6 @@ module Kwipper
 
     def params
       @params ||= query.merge post_data
-    end
-
-    def cookies
-      headers.cookies
-    end
-
-    def content_length
-      headers.content_length
-    end
-
-    def post_data?
-      http_method == 'POST' && headers.has_content?
     end
   end
 end
