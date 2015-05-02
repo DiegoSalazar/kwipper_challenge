@@ -4,16 +4,12 @@ module Kwipper
       @headers = {}
     end
 
-    def []=(key, val)
-      @headers[normalize_key(key)] = val.chomp
-    end
-
     def [](key)
       @headers[key]
     end
 
-    def content_length
-      @headers['CONTENT_LENGTH'].to_i
+    def []=(key, val)
+      @headers[normalize_key(key)] = val.to_s.chomp
     end
 
     def cookies
@@ -24,10 +20,14 @@ module Kwipper
       end
     end
 
+    def content_length
+      @headers['CONTENT_LENGTH'].to_i
+    end
+
     private
 
     def normalize_key(key)
-      key.upcase.gsub '-', '_'
+      key.to_s.upcase.gsub '-', '_'
     end
   end
 end

@@ -17,9 +17,6 @@ module Kwipper
       rescue Kwipper::AuthenticationRequired
         redirect '/', :unauthorized
         log.debug "401 Not Authorized".yellow
-      rescue Kwipper::NotFoundError
-        render_not_found
-        log.warn @response.info.yellow
       rescue => e
         render_error e
         log.fatal "#{@response.info.red}\n#{verbose_error(e)}"
@@ -31,9 +28,6 @@ module Kwipper
 
     def process!
       if Controller::ROUTES.key? request.route_key
-        response.set_status :ok
-        response.content_type = 'text/html'
-
         controller_class, @action = Controller::ROUTES[request.route_key]
         controller = controller_class.new request, response
 
@@ -44,11 +38,11 @@ module Kwipper
           raise Kwipper::NotFoundError, "#{self} does not know #{@action}"
         end
       elsif (file_name = get_file_name)
-        response.set_status :ok
         response.content_type = get_content_type file_name
         response.body = File.read file_name
       else
-        raise Kwipper::NotFoundError
+        render_not_found
+        log.warn @response.info.yellow
       end
     end
 

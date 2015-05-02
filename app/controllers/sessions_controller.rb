@@ -17,7 +17,8 @@ module Kwipper
 
         redirect '/users'
       else
-        redirect '/users/login', :bad_request
+        @flash = { danger: "Access Denied" }
+        render :login_user
       end
     end
 

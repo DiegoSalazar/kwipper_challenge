@@ -1,6 +1,6 @@
 module Kwipper
   class Model
-    DB_NAME = ENV.fetch 'DB_NAME', 'kwipper'
+    DB_NAME = ENV.fetch 'DB_NAME', 'development'
     DB_FILE_NAME = "#{DB_NAME}.db"
     ID_COLUMN = 'id'
 
@@ -49,7 +49,7 @@ module Kwipper
         db_values = attrs.map { |k, v| normalize_value_for_db v, columns[k] }.join ', '
 
         sql "INSERT INTO #{table_name} (#{db_attrs}) VALUES(#{db_values})"
-        new attrs.merge id: db.last_insert_row_id
+        new attrs.merge id: attrs.fetch(:id, db.last_insert_row_id)
       end
 
       def update(id, attrs)
@@ -105,7 +105,7 @@ module Kwipper
       false
     end
 
-    def destroy
+    def destroy(id = self.id)
       self.class.destroy id
     end
 
