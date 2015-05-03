@@ -13,7 +13,7 @@ module Kwipper
       end
     end
 
-    attr_reader :app, :request, :response, :action
+    attr_reader :request, :response, :action
 
     def initialize(request, response)
       @request, @response = request, response
@@ -30,7 +30,7 @@ module Kwipper
     protected
 
     def require_login!
-      raise Kwipper::AuthenticationRequired unless current_session
+      raise Kwipper::AuthenticationRequired unless current_user
     end
   end
 end

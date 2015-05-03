@@ -43,17 +43,10 @@ describe Kwipper::Controller do
   end
 
   context "#require_login!" do
-    it "raises an authentication required error if there is no current session" do
-      expect(controller.response).to receive(:has_session?).and_return false
+    it "raises an authentication required error if there is no current user" do
+      expect(controller.response).to receive(:current_user).and_return false
 
       expect { controller.send :require_login! }.to raise_error Kwipper::AuthenticationRequired
-    end
-
-    it "does nothing if there's a current session" do
-      expect(controller.response).to receive(:has_session?).and_return true
-      expect(Kwipper::Session).to receive(:find).and_return true
-
-      expect { controller.send :require_login! }.to_not raise_error
     end
   end
 end

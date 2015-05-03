@@ -1,14 +1,16 @@
 module Kwipper
   class Model
-    DB_NAME = ENV.fetch "KWIPPER_DB_NAME", "development"
-    DB_FILE_NAME = "#{DB_NAME}.db"
+    DEFAULT_DB = "development"
+    DB_NAME = ENV.fetch "KWIPPER_DB_NAME", DEFAULT_DB
     ID_COLUMN = "id"
 
-    UnknownAttribute = Class.new ArgumentError
-
     class << self
+      def db_file_name(name = DB_NAME, dir = "db")
+        File.join Kwipper::ROOT, dir, "#{name}.db"
+      end
+
       def db
-        @db ||= SQLite3::Database.open File.join(Kwipper::ROOT, "db", DB_FILE_NAME)
+        @db ||= SQLite3::Database.open db_file_name
       end
 
       # Declare columns in the model subclass in the same order the columns
@@ -25,7 +27,7 @@ module Kwipper
       def sql(statement)
         start_time = Time.now.to_f
         db.execute(statement).tap do
-          log.debug "#{statement.red} in #{sprintf '%.8f', Time.now.to_f - start_time}s"
+          log.debug "#{statement.red} #{sprintf '%.8f', Time.now.to_f - start_time}s"
         end
       end
 
@@ -77,8 +79,13 @@ module Kwipper
     def initialize(attrs = {})
       attrs.each do |name, value|
         name = name.to_s
-        type = self.class.columns[name] || raise(UnknownAttribute, "#{name} for #{self}")
-        send "#{name}=", value.send(type)
+
+        unless self.class.columns.key? name
+          log.warn "Unknown attribute #{name} for #{self}"
+          next
+        end
+
+        send "#{name}=", value
       end
     end
 
@@ -92,7 +99,7 @@ module Kwipper
       end
 
       true
-    rescue SQLite3::SQLException => e
+    rescue SQLite3::SQLException, SQLite3::ConstraintException => e
       log.warn e.message
       false
     end

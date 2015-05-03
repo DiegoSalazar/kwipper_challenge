@@ -14,8 +14,8 @@ describe Kwipper::Request do
   end
 
   context "#headers" do # see request_headers_spec for more info
-    it "is an instance of Kwipper::RequestHeaders" do
-      expect(subject.headers).to be_a Kwipper::RequestHeaders
+    it "is a Hash" do
+      expect(subject.headers).to be_a Hash
     end
   end
 

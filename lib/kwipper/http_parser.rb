@@ -6,12 +6,10 @@ module Kwipper
       @first_line = raw_request.gets || raise(Kwipper::EmptyRequestError)
       
       Request.new do |r|
-        r.http_method    = @first_line.split(' ').first
-        r.path           = parse_path
-        r.query          = parse_query
-        r.headers        = parse_headers raw_request
-        r.cookies        = r.headers.cookies
-        r.content_length = r.headers.content_length
+        r.http_method = @first_line.split(' ').first
+        r.path        = parse_path
+        r.query       = parse_query
+        r.headers     = parse_headers raw_request
 
         if r.content_length > 0
           r.post_data = read_body raw_request, r.content_length
@@ -39,9 +37,9 @@ module Kwipper
         lines << line.chomp
       end
 
-      lines.each_with_object RequestHeaders.new do |line, request_headers|
+      lines.each_with_object({}) do |line, request_headers|
         key, val = line.split(/:\s?/)
-        request_headers[key] = val
+        request_headers[normalize_key(key)] = val.to_s.chomp
       end
     end
 
@@ -51,6 +49,10 @@ module Kwipper
 
     def parse_query_string(s)
       Rack::Utils.parse_nested_query s.to_s
+    end
+
+    def normalize_key(key)
+      key.to_s.upcase.gsub '-', '_'
     end
   end
 end

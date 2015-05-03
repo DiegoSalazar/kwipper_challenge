@@ -4,7 +4,7 @@ module Kwipper
     attr_accessor :content_length, :cookies, :has_post_data
 
     def initialize
-      @post_data = {}
+      @post_data, @headers = {}, {}
       yield self if block_given?
     end
 
@@ -18,6 +18,17 @@ module Kwipper
 
     def params
       @params ||= query.merge post_data
+    end
+
+    def cookies
+      @cookies ||= begin
+        c = @headers['COOKIE'].to_s.split(/;\s?/)
+        Hash[c.map { |c| c.split '=' }]
+      end
+    end
+
+    def content_length
+      @headers['CONTENT_LENGTH'].to_i
     end
   end
 end

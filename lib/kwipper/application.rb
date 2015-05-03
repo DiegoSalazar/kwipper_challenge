@@ -33,6 +33,7 @@ module Kwipper
 
         @view = controller.process @action
         response.body = render :layout
+        
       elsif (file_name = get_file_name)
         response.content_type = get_content_type file_name
         response.body = File.read file_name

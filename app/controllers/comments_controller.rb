@@ -1,25 +1,26 @@
 module Kwipper
   class CommentsController < Controller
     add_routes({
-      [:GET, '/kwips/comments/new']     => :new,
-      [:POST, '/kwips/comments/create'] => :create
+      [:GET, "/kwips/comments/new"]     => :new,
+      [:POST, "/kwips/comments/create"] => :create
     })
 
     def new
       require_login!
-      @post = Post.find params['id']
+
+      @post = Post.find params["id"]
       render :new_comment
     end
 
     def create
       require_login!
 
-      post = Post.find params['id']
+      post = Post.find params["id"]
       comment = Comment.new({
-        'user_id'    => current_user.id,
-        'post_id'    => post.id,
-        'created_at' => Time.now.httpdate,
-        'content'    => params['content']
+        "user_id"    => current_user.id,
+        "post_id"    => post.id,
+        "created_at" => Time.now.httpdate,
+        "content"    => params.fetch("content", nil)
       })
 
       if comment.save

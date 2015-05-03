@@ -38,14 +38,15 @@ def log
   end
 end
 
+# Constants
 require "kwipper/version"
 require "kwipper/errors"
 # Server
 require "kwipper/http_parser"
 require "kwipper/http_server"
 require "kwipper/request"
-require "kwipper/request_headers"
 require "kwipper/response"
+
 # Helpers
 require "kwipper/inflect"
 require "kwipper/renders_views"
