@@ -1,8 +1,10 @@
-ENV['LOG_LEVEL'] = "5" # suppress kwipper logs
-ENV['DB_NAME'] = "test"
+ENV["LOG_LEVEL"] = "5" # suppress kwipper logs
+ENV["KWIPPER_DB_NAME"] = "test"
+
+require "simplecov"
+SimpleCov.start
 
 require "kwipper"
-
 Kwipper.load_models
 Kwipper.load_controllers # sets the routes
 

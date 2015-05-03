@@ -15,11 +15,11 @@ module Kwipper
 
         log.debug "#{"Processed #{request.info}".blue} in #{sprintf '%.8f', Time.now.to_f - start_time}s"
       rescue Kwipper::AuthenticationRequired
-        redirect '/', :unauthorized
         log.debug "401 Not Authorized".yellow
+        redirect '/', :unauthorized
       rescue => e
-        render_error e
         log.fatal "#{@response.info.red}\n#{verbose_error(e)}"
+        render_error e
       end
       @response
     end
@@ -31,18 +31,14 @@ module Kwipper
         controller_class, @action = Controller::ROUTES[request.route_key]
         controller = controller_class.new request, response
 
-        if controller.respond_to? @action
-          @view = controller.process @action
-          response.body = render :layout
-        else
-          raise Kwipper::NotFoundError, "#{self} does not know #{@action}"
-        end
+        @view = controller.process @action
+        response.body = render :layout
       elsif (file_name = get_file_name)
         response.content_type = get_content_type file_name
         response.body = File.read file_name
       else
-        render_not_found
         log.warn @response.info.yellow
+        render_not_found
       end
     end
 

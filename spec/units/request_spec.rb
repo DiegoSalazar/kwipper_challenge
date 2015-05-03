@@ -1,13 +1,6 @@
 require "spec_helper"
 
 describe Kwipper::Request do
-  let(:request_headers) do
-    Kwipper::RequestHeaders.new.tap do |r|
-      r["COOKIE"] = "a=1; b=2"
-      r["CONTENT_LENGTH"] = "0"
-    end
-  end
-
   subject { Fixtures.request }
 
   context "#initialize" do

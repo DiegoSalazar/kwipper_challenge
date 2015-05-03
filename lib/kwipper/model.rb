@@ -1,14 +1,14 @@
 module Kwipper
   class Model
-    DB_NAME = ENV.fetch 'DB_NAME', 'development'
+    DB_NAME = ENV.fetch "KWIPPER_DB_NAME", "development"
     DB_FILE_NAME = "#{DB_NAME}.db"
-    ID_COLUMN = 'id'
+    ID_COLUMN = "id"
 
     UnknownAttribute = Class.new ArgumentError
 
     class << self
       def db
-        @db ||= SQLite3::Database.open File.join(Kwipper::ROOT, 'db', DB_FILE_NAME)
+        @db ||= SQLite3::Database.open File.join(Kwipper::ROOT, "db", DB_FILE_NAME)
       end
 
       # Declare columns in the model subclass in the same order the columns
@@ -45,8 +45,8 @@ module Kwipper
       end
 
       def create(attrs)
-        db_attrs = attrs.map(&:first).join ', '
-        db_values = attrs.map { |k, v| normalize_value_for_db v, columns[k] }.join ', '
+        db_attrs = attrs.map(&:first).join ", "
+        db_values = attrs.map { |k, v| normalize_value_for_db v, columns[k] }.join ", "
 
         sql "INSERT INTO #{table_name} (#{db_attrs}) VALUES(#{db_values})"
         new attrs.merge id: attrs.fetch(:id, db.last_insert_row_id)
@@ -142,7 +142,7 @@ module Kwipper
         hash.inject [] do |a, (k, v)|
           v = normalize_value_for_db v, columns[k]
           a << "#{k}=#{v}"
-        end.join ', '
+        end.join ", "
       end
 
       # Non int values should be quoted when putting in a SQL statement

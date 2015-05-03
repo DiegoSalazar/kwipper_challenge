@@ -20,7 +20,7 @@ describe Kwipper::Controller do
     end
   end
 
-  context "process" do
+  context "#process" do
     it "sets the action" do
       controller.process :home
 
@@ -34,7 +34,7 @@ describe Kwipper::Controller do
     end
   end
 
-  context "home" do
+  context "#home" do
     it "renders the home view" do
       view = controller.home
 
@@ -42,7 +42,7 @@ describe Kwipper::Controller do
     end
   end
 
-  context "require_login!" do
+  context "#require_login!" do
     it "raises an authentication required error if there is no current session" do
       expect(controller.response).to receive(:has_session?).and_return false
 
