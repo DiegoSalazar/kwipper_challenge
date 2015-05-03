@@ -1,14 +1,14 @@
 module Kwipper
   class UsersController < Controller
     add_routes({
-      [:GET, '/users']          => :users,
-      [:GET, '/users/show']     => :show,
-      [:GET, '/users/new']      => :new,
-      [:POST, '/users/create']  => :create,
-      [:GET, '/users/edit']     => :edit,
-      [:POST, '/users/update']  => :update,
-      [:POST, '/users/destroy'] => :destroy,
-      [:GET, '/login']          => :login
+      [:GET, "/users"]          => :users,
+      [:GET, "/users/show"]     => :show,
+      [:GET, "/users/new"]      => :new,
+      [:POST, "/users/create"]  => :create,
+      [:GET, "/users/edit"]     => :edit,
+      [:POST, "/users/update"]  => :update,
+      [:POST, "/users/destroy"] => :destroy,
+      [:GET, "/login"]          => :login
     })
 
     def users
@@ -18,7 +18,7 @@ module Kwipper
     end
 
     def show
-      @user = User.find params['id']
+      @user = User.find params["id"]
       @posts = @user.posts
       render :show_user
     end
@@ -33,34 +33,34 @@ module Kwipper
       user = User.new params
 
       if user.save
-        redirect '/users'
+        redirect "/users"
       else
-        redirect '/users/new', :bad_request
+        redirect "/users/new", :bad_request
       end
     end
 
     def edit
       require_login!
-      @user = User.find params['id']
+      @user = User.find params["id"]
       render :edit_user
     end
 
     def update
       require_login!
-      user = User.find params['id']
+      user = User.find params["id"]
 
       if user.update params
-        redirect '/users'
+        redirect "/users"
       else
-        redirect '/users/new', :bad_request
+        redirect "/users/new", :bad_request
       end
     end
 
     def destroy
       require_login!
-      user = User.find params['id']
+      user = User.find params["id"]
       user.destroy
-      redirect '/users'
+      redirect "/users"
     end
 
     def login

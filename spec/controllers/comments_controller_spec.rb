@@ -43,8 +43,11 @@ describe Kwipper::CommentsController do
         user:   Fixtures.user,
         query:  { "id" => post.id, "content" => "stuff and things" },
       })
+      comment = Kwipper::Comment.all.last
 
       expect { controller.create }.to change { post.comments_count }.by 1
+      expect(comment.username).to eq user.username
+      expect(comment.post.id).to be post.id
     end
 
     it "redirects to the post" do
