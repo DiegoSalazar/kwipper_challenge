@@ -25,12 +25,6 @@ describe Kwipper::Request do
     end
   end
 
-  context "#route_key" do
-    it "returns an array of the HTTP method as a symbol and the path" do
-      expect(subject.route_key).to eq [:GET, "/test"]
-    end
-  end
-
   context "#params" do
     it "merges the query hash and post_data hash and memoizes it" do
       subject.post_data = { post_data: :hash }

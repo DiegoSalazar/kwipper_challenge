@@ -36,16 +36,19 @@ describe Kwipper::CommentsController do
 
   context "#create" do
     it "saves new comment" do
+      user = Fixtures.user
       post = Fixtures.post
       controller = Fixtures.controller_with_session({
         method: "POST",
         path:   "/kwips/comments/create",
-        user:   Fixtures.user,
+        user:   user,
         query:  { "id" => post.id, "content" => "stuff and things" },
       })
-      comment = Kwipper::Comment.all.last
 
       expect { controller.create }.to change { post.comments_count }.by 1
+
+      comment = Kwipper::Comment.all.last
+
       expect(comment.username).to eq user.username
       expect(comment.post.id).to be post.id
     end

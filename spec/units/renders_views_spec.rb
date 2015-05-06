@@ -7,7 +7,7 @@ end
 describe Kwipper::RendersViews do
   subject { MockApp.new }
   before :each do
-    view_path = File.join Kwipper::ROOT, "spec/fixtures/test.erb"
+    view_path = Kwipper.file "spec/fixtures/test.erb"
     expect(subject).to receive(:file_path_of_view).with(:test).and_return view_path
   end
 

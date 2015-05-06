@@ -17,5 +17,10 @@ module Kwipper
     def posts
       Post.recent "SELECT * FROM posts WHERE user_id = #{id}"
     end
+
+    # TODO
+    def admin?
+      false
+    end
   end
 end

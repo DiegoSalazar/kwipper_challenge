@@ -33,7 +33,7 @@ module Fixtures
   end
 
   def controller(request, response)
-    controller_class, _ = Kwipper::Controller::ROUTES[request.route_key]
+    controller_class, _ = Kwipper::Controller::ROUTES[request.info]
     controller_class.new request, response
   end
 

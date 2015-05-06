@@ -3,10 +3,10 @@ module Kwipper
     PER_PAGE = 10
 
     add_routes({
-      [:GET, "/kwips"]         => :posts,
-      [:GET, "/kwips/show"]    => :show,
-      [:GET, "/kwips/new"]     => :new,
-      [:POST, "/kwips/create"] => :create
+      "GET /kwips"         => :posts,
+      "GET /kwips/show"    => :show,
+      "GET /kwips/new"     => :new,
+      "POST /kwips/create" => :create
     })
 
     def posts

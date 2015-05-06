@@ -29,6 +29,10 @@ module Kwipper
   def log_startup_time
     log.debug "Started in #{sprintf '%.2f', Time.now.to_f - $START_TIME}s"
   end
+
+  def file(*args)
+    File.join Kwipper::ROOT, *args
+  end
 end
 
 def log

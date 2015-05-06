@@ -12,10 +12,6 @@ module Kwipper
       "#{http_method} #{path}"
     end
 
-    def route_key
-      [http_method.to_sym, path]
-    end
-
     def params
       @params ||= query.merge post_data
     end

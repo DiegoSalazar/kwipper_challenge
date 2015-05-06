@@ -1,4 +1,3 @@
-ENV['DB_NAME'] = 'test'
 require "spec_helper"
 
 describe Kwipper::Model do
@@ -6,14 +5,14 @@ describe Kwipper::Model do
   let(:statement) { "SELECT * FROM users" }
   let(:existing_id) { user_class.all.last.id }
 
-  context '.db' do
+  context ".db" do
     it "opens a sqlite database and memoizes the value" do
       expect(described_class.db).to be_a SQLite3::Database
       expect(described_class.db.object_id).to be described_class.db.object_id
     end
   end
 
-  context '.column' do
+  context ".column" do
     it "adds an id column by default the first time its called" do
       expect(described_class.columns).to be nil
       described_class.column :name, :to_s # 
@@ -35,7 +34,7 @@ describe Kwipper::Model do
     end
   end
 
-  context '.sql' do
+  context ".sql" do
     it "executes the command in the database" do
       expect(described_class.db).to receive(:execute).with statement
 
@@ -54,7 +53,7 @@ describe Kwipper::Model do
     end
   end
 
-  context '.all' do
+  context ".all" do
     it "constructs a select statement and returns models" do
       models = user_class.all statement
 
@@ -63,7 +62,7 @@ describe Kwipper::Model do
     end
   end
 
-  context '.find' do
+  context ".find" do
     it "returns a model from the database" do
       model = user_class.find 3 # id of a user from the kwipper db
 
@@ -77,7 +76,7 @@ describe Kwipper::Model do
     end
   end
 
-  context '.where' do
+  context ".where" do
     it "constructs a sql statement with a where clause and returns models" do
       sql_where = %q{SELECT * FROM users WHERE email="wall@ea.com"}
       expect(user_class.db).to receive(:execute).with(sql_where).and_return []
@@ -88,7 +87,7 @@ describe Kwipper::Model do
     end
   end
 
-  context '.create' do
+  context ".create" do
     it "constructs an insert statement" do
       sql_insert = %q{INSERT INTO users (email) VALUES("test@test.com")}
       expect(user_class.db).to receive(:execute).with sql_insert
@@ -106,7 +105,7 @@ describe Kwipper::Model do
     end
   end
 
-  context '.update' do
+  context ".update" do
     let(:sql) { %q{UPDATE users SET email="test@update.com" WHERE id=3} }
 
     it "constructs and executes an update statement" do
@@ -116,7 +115,7 @@ describe Kwipper::Model do
     end
   end
 
-  context '.destroy' do
+  context ".destroy" do
     let(:sql) { "DELETE FROM users WHERE id=3" }
 
     it "constructs and executes a delete statement" do
@@ -126,7 +125,7 @@ describe Kwipper::Model do
     end
   end
 
-  context '.exists?' do
+  context ".exists?" do
     it "constructs a select statement with where clause" do
       id = existing_id
       sql = "SELECT id FROM users WHERE id = #{id} LIMIT 1"
@@ -144,13 +143,13 @@ describe Kwipper::Model do
     end
   end
 
-  context '.count' do
+  context ".count" do
     it "returns the number of records given by the SQL statement" do
       expect(user_class.count).to be_a Fixnum
     end
   end
 
-  context '#save' do
+  context "#save" do
     let(:sql) { %q{INSERT INTO users (email) VALUES("testingsavenew@testing.com")} }
 
     it "updates the record if it already exists" do
@@ -182,7 +181,7 @@ describe Kwipper::Model do
     end
   end
 
-  context '#update' do
+  context "#update" do
     it "constructs an update statement for itself" do
       user = user_class.find existing_id
       email = "testingupdate-#{Time.now.to_i}@test.com"
@@ -214,7 +213,7 @@ describe Kwipper::Model do
     end
   end
 
-  context '#destroy' do
+  context "#destroy" do
     it "constructs a delete statement for itself" do
       user = user_class.find existing_id
       sql = "DELETE FROM users WHERE id=#{user.id}"

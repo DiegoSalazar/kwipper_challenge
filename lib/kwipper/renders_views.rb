@@ -1,7 +1,7 @@
 module Kwipper
   module RendersViews
     VIEWS_PATH = "app/views"
-    VIEW_EXT = ".erb"
+    VIEW_EXT = "erb"
 
     def render(view, vars = {})
       view_path = file_path_of_view view
@@ -16,7 +16,7 @@ module Kwipper
     private
 
     def file_path_of_view(view)
-      File.join Kwipper::ROOT, VIEWS_PATH, "#{view}#{VIEW_EXT}"
+      Kwipper.file VIEWS_PATH, "#{view}.#{VIEW_EXT}"
     end
   end
 end

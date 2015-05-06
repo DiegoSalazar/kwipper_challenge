@@ -6,7 +6,7 @@ module Kwipper
 
     class << self
       def db_file_name(name = DB_NAME, dir = "db")
-        File.join Kwipper::ROOT, dir, "#{name}.db"
+        Kwipper.file dir, "#{name}.db"
       end
 
       def db

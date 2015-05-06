@@ -1,7 +1,15 @@
+<div class="jumbotron">
+  <h1>Demo</h1>
+
+  <p>
+    This is the finished App. A Twitter-like clone with submission and pagination, commenting and favoriting. It requires a user to be logged in to submit, comment, or fave. You may use this section for general discussion. Try it out by submitting a new <a href="/kwips/new">Kwip here</a>.
+  </p>
+</div>
+
 <% if @posts.empty? %>
-  <h1>No Kwips!</h1>
+  <h2>No Kwips!</h2>
 <% else %>
-  <h1>Kwips</h1>
+  <h2>Kwips</h2>
 
   <%= render :posts_list %>
 <% end %>

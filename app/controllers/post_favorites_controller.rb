@@ -1,6 +1,6 @@
 module Kwipper
   class PostFavoritesController < Controller
-    add_routes [:POST, '/favorites/create'] => :create
+    add_routes "POST /favorites/create" => :create
 
     def create
       require_login!

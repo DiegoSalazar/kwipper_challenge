@@ -4,12 +4,12 @@ module Kwipper
     include ControllerHelpers
 
     ROUTES = {
-      [:GET, '/'] => [self, :home]
+      "GET /" => [self, :home]
     }
 
     def self.add_routes(routes)
-      routes.each do |route_key, action|
-        ROUTES.merge! route_key => [self, action]
+      routes.each do |info, action|
+        ROUTES.merge! info => [self, action]
       end
     end
 

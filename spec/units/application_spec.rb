@@ -46,7 +46,7 @@ describe Kwipper::Application do
 
     it "handles static file requests" do
       request.path ="/test.erb"
-      file_path = File.join Kwipper::ROOT, 'spec/fixtures', request.path
+      file_path = Kwipper.file 'spec/fixtures', request.path
 
       expect(subject).to receive(:get_file_name).and_return file_path
       response = subject.respond_to request
@@ -56,7 +56,7 @@ describe Kwipper::Application do
 
     it "sets the correct mime type for static file requests" do
       request.path ="/test.html"
-      file_path = File.join Kwipper::ROOT, 'spec/fixtures', request.path
+      file_path = Kwipper.file 'spec/fixtures', request.path
 
       expect(subject).to receive(:get_file_name).and_return file_path
       response = subject.respond_to request

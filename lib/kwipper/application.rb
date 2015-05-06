@@ -27,8 +27,8 @@ module Kwipper
     private
 
     def process!
-      if Controller::ROUTES.key? request.route_key
-        controller_class, @action = Controller::ROUTES[request.route_key]
+      if Controller::ROUTES.key? request.info
+        controller_class, @action = Controller::ROUTES[request.info]
         controller = controller_class.new request, response
 
         @view = controller.process @action

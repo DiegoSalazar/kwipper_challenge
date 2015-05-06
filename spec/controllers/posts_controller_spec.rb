@@ -30,7 +30,7 @@ describe Kwipper::PostsController do
         path:   "/kwips"
       })
     
-      expect(controller.posts).to match "<h1>Kwips</h1>"
+      expect(controller.posts).to match "<h2>Kwips</h2>"
     end
   end
 
