@@ -18,5 +18,9 @@ module Kwipper
     def current_session
       response.current_session
     end
+
+    def current_view?(view)
+      @request.path.split(?/).last.match view.to_s
+    end
   end
 end

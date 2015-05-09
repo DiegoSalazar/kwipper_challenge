@@ -11,6 +11,8 @@ module Kwipper
       vars.each { |name, val| instance_variable_set "@#{name}", val }
 
       ERB.new(template).result binding
+    rescue 
+      binding.pry # debug
     end
 
     private

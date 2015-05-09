@@ -30,7 +30,7 @@ module Kwipper
 
     def create
       require_login!
-      user = User.new params
+      user = User.new params["user"]
 
       if user.save
         redirect "/users"

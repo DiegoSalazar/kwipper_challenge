@@ -18,17 +18,17 @@ module Fixtures
 
   def user(attrs = {})
     Kwipper::User.create({
-      email:           attrs.fetch(:email, "test@test.com"),
-      username:        attrs.fetch(:username, "test"),
-      hashed_password: attrs.fetch(:hashed_password, "123")
+      email:           attrs.fetch(:email, "test-#{Time.now.to_f}@test.com"),
+      username:        attrs.fetch(:username, "test-#{Time.now.to_f}"),
+      hashed_password: attrs.fetch(:hashed_password, "123"),
+      created_at:      Time.now
     })
   end
 
   def session(attrs = {})
     Kwipper::Session.create({
-      id:         attrs.fetch(:id, SecureRandom.urlsafe_base64),
-      user_id:    attrs.fetch(:user_id, 0),
-      created_at: Time.now.httpdate
+      user_id: attrs.fetch(:user_id, 0),
+      created_at: Time.now
     })
   end
 
@@ -40,7 +40,7 @@ module Fixtures
   def controller_with_session(options = {})
     user = options.delete(:user) || Fixtures.user
     session = session(user_id: user.id)
-    session_cookie = "#{Kwipper::Response::SESSION_COOKIE_NAME}=#{session.id}"
+    session_cookie = "#{Kwipper::Response::SESSION_COOKIE_NAME}=#{session.session_id}"
     options = {
       header_attrs: { "COOKIE" => session_cookie }
     }.merge options

@@ -1,9 +1,20 @@
 require "spec_helper"
 
 describe Kwipper::Paginator do
+  before :all do
+    10.times do |i|
+      Kwipper::User.create({
+        username: "test#{i}",
+        email: "test#{i}@email.com",
+        hashed_password: "123",
+        created_at: Time.now  
+      })
+    end
+  end
+  after(:all) { Kwipper::User.delete_all }
+
   let(:user_class) { Kwipper::User }
   let(:paginator) { described_class.new user_class, path: '/test' }
-  let(:page_count) { paginator.pages.size }
 
   context "#initialize" do
     it "sets @page to 1 if a lower value is given" do
@@ -40,7 +51,7 @@ describe Kwipper::Paginator do
     it "takes a select statement and adds limit and offset" do
       p = paginator
       sql = "SELECT * FROM users LIMIT 20 OFFSET 0"
-      expect(user_class.db).to receive(:execute).with(sql).and_return []
+      expect(user_class.db).to receive(:exec).with(sql).and_return []
 
       p.get "SELECT * FROM users"
     end
@@ -65,26 +76,27 @@ describe Kwipper::Paginator do
     end
 
     it "returns false when not on page 1" do
-      paginator = described_class.new user_class, page: page_count
+      paginator = described_class.new user_class, page: 2, per: 5
+
       expect(paginator.on_first_page?).to be false
     end
   end
   
   context "#on_last_page?" do
     it "returns true when on the last page is current" do
-      paginator = described_class.new user_class, page: page_count
+      paginator = described_class.new user_class, page: 2, per: 5
       expect(paginator.on_last_page?).to be true
     end
 
     it "returns false when the last page is not current" do
-      paginator = described_class.new user_class, page: 1
+      paginator = described_class.new user_class, page: 1, per: 5
       expect(paginator.on_last_page?).to be false
     end
   end
   
   context "#prev_page_path" do
     it "returns the path of the page previous to the current page" do
-      paginator = described_class.new user_class, page: page_count
+      paginator = described_class.new user_class, page: 2, per: 5
       pages = paginator.pages
       prev_page = pages[pages.size - 2]
 
@@ -98,11 +110,12 @@ describe Kwipper::Paginator do
   
   context "#next_page_path" do
     it "returns the path of the page after the current page" do
+      paginator = described_class.new user_class, page: 2, per: 5
       expect(paginator.next_page_path).to eq paginator.path + '?page=2'
     end
 
     it "returns the path of the last page when on the last page" do
-      paginator = described_class.new user_class, page: page_count
+      paginator = described_class.new user_class, page: 2, per: 5
 
       expect(paginator.next_page_path).to eq paginator.pages.last.path
     end

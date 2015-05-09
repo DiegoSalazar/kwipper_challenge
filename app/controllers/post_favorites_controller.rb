@@ -5,10 +5,11 @@ module Kwipper
     def create
       require_login!
       
-      post = Post.find params['id']
+      post = Post.find params["id"]
       fave = PostFavorite.create({
-        'user_id' => current_user.id,
-        'post_id' => post.id
+        user_id: current_user.id,
+        post_id: post.id,
+        created_at: Time.now
       })
 
       redirect "/kwips/show?id=#{post.id}"

@@ -10,7 +10,7 @@ module Kwipper
     end
 
     def test_response_body
-      response.body = "Success!"
+      "Success!"
     end
   end
 end

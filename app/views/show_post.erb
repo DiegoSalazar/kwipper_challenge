@@ -10,8 +10,8 @@
 
 <div class="btn-group pull-right">
   <% if current_user %>
-    <%= render :fave_button, post: @post %>
-    <%= render :reply_button, post: @post %>
+    <%= render "shared/fave_button", post: @post %>
+    <%= render "shared/reply_button", post: @post %>
   <% end %>
 </div>
 

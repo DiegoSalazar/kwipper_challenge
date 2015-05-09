@@ -9,12 +9,11 @@ module Kwipper
       @user = User.authenticate params["username"], params["password"]
 
       if @user
-        Session.create({
-          "id"         => response.session_cookie_value,
-          "user_id"    => @user.id,
-          "created_at" => Time.now.httpdate
+        session = Session.create({
+          session_id: response.session_cookie_value,
+          user_id: @user.id,
+          created_at: Time.now
         })
-
         redirect "/users"
       else
         @flash = { danger: "Access Denied" }

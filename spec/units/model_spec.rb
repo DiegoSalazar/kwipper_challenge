@@ -1,13 +1,18 @@
 require "spec_helper"
 
 describe Kwipper::Model do
+  before :all do
+    Kwipper::User.create username: "test", email: "test@email.com", hashed_password: "123", created_at: Time.now
+  end
+  after(:all) { Kwipper::User.delete_all }
+
   let(:user_class) { Kwipper::User }
   let(:statement) { "SELECT * FROM users" }
   let(:existing_id) { user_class.all.last.id }
 
   context ".db" do
-    it "opens a sqlite database and memoizes the value" do
-      expect(described_class.db).to be_a SQLite3::Database
+    it "opens a Postgres database and memoizes the value" do
+      expect(described_class.db).to be_a PG::Connection
       expect(described_class.db.object_id).to be described_class.db.object_id
     end
   end
@@ -36,7 +41,7 @@ describe Kwipper::Model do
 
   context ".sql" do
     it "executes the command in the database" do
-      expect(described_class.db).to receive(:execute).with statement
+      expect(described_class.db).to receive(:exec).with statement
 
       described_class.sql statement
     end
@@ -44,12 +49,12 @@ describe Kwipper::Model do
     it "returns raw results as an array of arrays" do
       results = described_class.sql statement
 
-      expect(results).to be_an Array
-      expect(results).to_not be_empty
+      expect(results.values).to be_an Array
+      expect(results.values).to_not be_empty
     end
 
     it "raises a SQL error when an invalid statement is given" do
-      expect { described_class.sql "nope" }.to raise_error SQLite3::SQLException
+      expect { described_class.sql "nope" }.to raise_error PG::Error
     end
   end
 
@@ -64,7 +69,7 @@ describe Kwipper::Model do
 
   context ".find" do
     it "returns a model from the database" do
-      model = user_class.find 3 # id of a user from the kwipper db
+      model = user_class.find existing_id # id of a user from the kwipper db
 
       expect(model).to be_a user_class
     end
@@ -78,8 +83,8 @@ describe Kwipper::Model do
 
   context ".where" do
     it "constructs a sql statement with a where clause and returns models" do
-      sql_where = %q{SELECT * FROM users WHERE email="wall@ea.com"}
-      expect(user_class.db).to receive(:execute).with(sql_where).and_return []
+      sql_where = "SELECT * FROM users WHERE email='wall@ea.com'"
+      expect(user_class.db).to receive(:exec).with(sql_where).and_return []
 
       models = user_class.where email: "wall@ea.com"
 
@@ -89,29 +94,29 @@ describe Kwipper::Model do
 
   context ".create" do
     it "constructs an insert statement" do
-      sql_insert = %q{INSERT INTO users (email) VALUES("test@test.com")}
-      expect(user_class.db).to receive(:execute).with sql_insert
+      sql_insert = "INSERT INTO users (email) VALUES('test@test.com') RETURNING id"
+      expect(user_class.db).to receive(:exec).with sql_insert
 
       user_class.create email: 'test@test.com'
     end
 
     it "returns the created model" do
-      model = user_class.create email: 'test@test.com', username: 'test', hashed_password: '123'
+      model = user_class.create email: "test2@test.com", username: "test2", hashed_password: "123", created_at: Time.now
 
       expect(model).to be_a user_class
-      expect(model.id).to be user_class.db.last_insert_row_id
-      expect(model.email).to eq 'test@test.com'
-      expect(model.username).to eq 'test'
+      expect(model.id).to be user_class.all.last.id
+      expect(model.email).to eq "test2@test.com"
+      expect(model.username).to eq "test2"
     end
   end
 
   context ".update" do
-    let(:sql) { %q{UPDATE users SET email="test@update.com" WHERE id=3} }
+    let(:sql) { "UPDATE users SET email='test@update.com' WHERE id=3" }
 
     it "constructs and executes an update statement" do
-      expect(user_class.db).to receive(:execute).with sql
+      expect(user_class.db).to receive(:exec).with sql
 
-      user_class.update 3, email: 'test@update.com'
+      user_class.update 3, email: "test@update.com"
     end
   end
 
@@ -119,7 +124,7 @@ describe Kwipper::Model do
     let(:sql) { "DELETE FROM users WHERE id=3" }
 
     it "constructs and executes a delete statement" do
-      expect(user_class.db).to receive(:execute).with sql
+      expect(user_class.db).to receive(:exec).with sql
 
       user_class.destroy 3
     end
@@ -129,7 +134,7 @@ describe Kwipper::Model do
     it "constructs a select statement with where clause" do
       id = existing_id
       sql = "SELECT id FROM users WHERE id = #{id} LIMIT 1"
-      expect(user_class.db).to receive(:execute).with(sql).and_return []
+      expect(user_class.db).to receive(:exec).with(sql).and_return []
 
       user_class.exists? id
     end
@@ -150,26 +155,26 @@ describe Kwipper::Model do
   end
 
   context "#save" do
-    let(:sql) { %q{INSERT INTO users (email) VALUES("testingsavenew@testing.com")} }
-
     it "updates the record if it already exists" do
-      user = user_class.new id: existing_id, email: 'testingsave@testing.com'
+      user = user_class.new id: existing_id, email: "testingsave@testing.com"
       user.save
       user = user_class.find existing_id
 
-      expect(user.email).to eq 'testingsave@testing.com'
+      expect(user.email).to eq "testingsave@testing.com"
     end
 
     it "creates a new record if it doesn't exist" do
-      user = user_class.new email: 'testingsavenew@testing.com'
+      t = Time.now
+      sql = "INSERT INTO users (email, created_at) VALUES('testingsavenew@testing.com', '#{t}') RETURNING id"
+      user = user_class.new email: "testingsavenew@testing.com", created_at: t
 
-      expect(user_class.db).to receive(:execute).with sql
+      expect(user_class.db).to receive(:exec).with sql
 
       user.save
     end
 
     it "returns true when the SQL executed correctly" do
-      user = user_class.new id: existing_id, email: 'testingsave@testing.com'
+      user = user_class.new id: existing_id, email: "testingsave@testing.com"
       
       expect(user.save).to be true
     end
@@ -185,9 +190,9 @@ describe Kwipper::Model do
     it "constructs an update statement for itself" do
       user = user_class.find existing_id
       email = "testingupdate-#{Time.now.to_i}@test.com"
-      sql = "UPDATE users SET email=\"#{email}\" WHERE id=#{user.id}"
+      sql = "UPDATE users SET email='#{email}' WHERE id=#{user.id}"
 
-      expect(user_class.db).to receive(:execute).with sql
+      expect(user_class.db).to receive(:exec).with sql
 
       user.update email: email
     end
@@ -195,7 +200,7 @@ describe Kwipper::Model do
     it "returns true when the update was successful" do
       user = user_class.find existing_id
       email = "testingupdate-#{Time.now.to_i}@test.com"
-      sql = "UPDATE users SET email=\"#{email}\" WHERE id=#{user.id}"
+      sql = "UPDATE users SET email='#{email}' WHERE id=#{user.id}"
 
       result = user.update email: email
 
@@ -205,7 +210,7 @@ describe Kwipper::Model do
     it "returns false if an unknown attribute was passed in" do
       user = user_class.find existing_id
       email = "testingupdate-#{Time.now.to_i}@test.com"
-      sql = "UPDATE users SET email=\"#{email}\" WHERE id=#{user.id}"
+      sql = "UPDATE users SET email='#{email}' WHERE id=#{user.id}"
 
       result = user.update nope: 'wat'
 
@@ -217,7 +222,7 @@ describe Kwipper::Model do
     it "constructs a delete statement for itself" do
       user = user_class.find existing_id
       sql = "DELETE FROM users WHERE id=#{user.id}"
-      expect(user_class.db).to receive(:execute).with sql
+      expect(user_class.db).to receive(:exec).with sql
 
       user.destroy
     end

@@ -13,10 +13,10 @@ module Kwipper
         start_time = Time.now.to_f
         process!
 
-        log.debug "#{"Processed #{request.info}".blue} in #{sprintf '%.8f', Time.now.to_f - start_time}s"
+        log.info "#{"Processed #{request.info}".blue} in #{sprintf '%.8f', Time.now.to_f - start_time}s"
       rescue Kwipper::AuthenticationRequired
         log.debug "401 Not Authorized".yellow
-        redirect '/', :unauthorized
+        redirect ?/, :unauthorized
       rescue => e
         log.fatal "#{@response.info.red}\n#{verbose_error(e)}"
         render_error e
@@ -31,8 +31,7 @@ module Kwipper
         controller_class, @action = Controller::ROUTES[request.info]
         controller = controller_class.new request, response
 
-        @view = controller.process @action
-        response.body = render :layout
+        response.body = controller.process @action
         
       elsif (file_name = get_file_name)
         response.content_type = get_content_type file_name
@@ -55,7 +54,7 @@ module Kwipper
         mime.content_type
       else
         log.warn "Unknown content type for file: #{file_name}"
-        'text/plain'
+        "text/plain"
       end
     end
 
@@ -63,14 +62,14 @@ module Kwipper
       response.set_status :not_found
       response.status_message = "#{response.status_message}: #{request.info}"
       @view = render :not_found
-      response.body = render :layout
+      response.body = render "shared/layout"
     end
 
     def render_error(e)
       @error = e
       response.set_status :server_error
       @view = render :server_error
-      response.body = render :layout
+      response.body = render "shared/layout"
     end
 
     def verbose_error(e)

@@ -41,9 +41,12 @@ describe Kwipper::UsersController do
     it "creates a new user" do
       username = "test-#{Time.now.to_f}"
       controller = Fixtures.controller_with_session({
-        path: "/users",
+        path: "/users/create",
+        method: "POST",
         query: {
-          username: username, email: "test1@test.com", hashed_password: "42"
+          "user" => {
+            username: username, email: "test-#{Time.now.to_f}@test.com", hashed_password: "42"
+          }
         }
       })
 
@@ -55,7 +58,9 @@ describe Kwipper::UsersController do
       controller = Fixtures.controller_with_session({
         path: "/users",
         query: {
-          username: "test", email: "test1@test.com", hashed_password: "42"
+          "user" => {
+            username: "test", email: "test1@test.com", hashed_password: "42"
+          }
         }
       })
       controller.create
@@ -104,7 +109,6 @@ describe Kwipper::UsersController do
       controller = Fixtures.controller_with_session({
         method: "POST",
         path: "/users/destroy",
-        post_data: {},
         query: { "id" => user.id }
       })
 

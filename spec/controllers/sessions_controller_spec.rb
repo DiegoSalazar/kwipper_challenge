@@ -1,6 +1,7 @@
 require "spec_helper"
 
 describe Kwipper::SessionsController do
+  before(:each) { Kwipper::Session.delete_all  }
   let(:user) { Fixtures.user }
 
   context "#create" do
@@ -20,7 +21,7 @@ describe Kwipper::SessionsController do
 
     context "authenticates" do
       it "creates a session" do
-        controller = Fixtures.controller_with_session({
+        request = Fixtures.request({
           method: "POST",
           path: "/sessions/create",
           user: user,
@@ -28,6 +29,7 @@ describe Kwipper::SessionsController do
             "username" => user.username, "password" => user.hashed_password
           }
         })
+        controller = Fixtures.controller request, Kwipper::Response.new(request)
         expect(Kwipper::User).to receive(:authenticate).with(user.username, user.hashed_password).and_return user
 
         expect { controller.create }.to change { Kwipper::Session.count }.by 1
@@ -84,7 +86,7 @@ describe Kwipper::SessionsController do
       })
       controller.destroy
 
-      expect(controller.response.headers["Set-Cookie"]).to match "deleted"
+      expect(controller.response.headers["Set-Cookie"]).to match "x; expires"
     end
 
     it "redirects to root" do

@@ -1,8 +1,9 @@
 module Kwipper
   class User < Model
-    column 'username', :to_s
-    column 'email', :to_s
-    column 'hashed_password', :to_s
+    column "username", :to_s
+    column "email", :to_s
+    column "hashed_password", :to_s
+    column "created_at", :to_s
 
     def self.authenticate(username, password)
       user = where(username: username).first
@@ -11,7 +12,7 @@ module Kwipper
 
     def favorite?(post)
       result = sql("SELECT COUNT(id) FROM post_favorites WHERE user_id = #{id} AND post_id = #{post.id} LIMIT 1").first
-      result.first && result.first > 0
+      result.respond_to?(:[]) && result["count"].to_i > 0
     end
 
     def posts

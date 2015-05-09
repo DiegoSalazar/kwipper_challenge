@@ -2,7 +2,7 @@ require "simplecov"
 SimpleCov.start
 
 ENV["LOG_LEVEL"] = "5" # suppress kwipper logs
-ENV["KWIPPER_DB_NAME"] = "test"
+ENV["KWIPPER_DB_NAME"] = "kwipper_test"
 
 require "kwipper"
 Kwipper.load_models
@@ -12,6 +12,16 @@ Dir["./spec/support/*.rb"].each { |f| require f }
 require "fileutils"
 
 RSpec.configure do |config|
+  config.before :all do
+    puts "[Kwipper::Model] Creating tables..."
+    Kwipper::Model.sql File.read Kwipper.file "db/create_tables.sql"
+  end
+
+  config.after :all do
+    puts "[Kwipper::Model] Dropping tables..."
+    Kwipper::Model.sql File.read Kwipper.file "db/drop_tables.sql"
+  end
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

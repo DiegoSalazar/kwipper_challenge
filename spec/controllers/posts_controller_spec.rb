@@ -14,6 +14,7 @@ describe Kwipper::PostsController do
     end
 
     it "gets posts" do
+      Fixtures.post
       controller = Fixtures.controller_with_session({
         method: "GET",
         path:   "/kwips"
@@ -25,6 +26,7 @@ describe Kwipper::PostsController do
     end
 
     it "renders the posts list" do
+      Fixtures.post # create at least one post to show the correct view
       controller = Fixtures.controller_with_session({
         method: "GET",
         path:   "/kwips"

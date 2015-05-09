@@ -1,16 +1,12 @@
 module Kwipper
   class Model
-    DEFAULT_DB = "development"
+    DEFAULT_DB = "kwipper_development"
     DB_NAME = ENV.fetch "KWIPPER_DB_NAME", DEFAULT_DB
     ID_COLUMN = "id"
 
     class << self
-      def db_file_name(name = DB_NAME, dir = "db")
-        Kwipper.file dir, "#{name}.db"
-      end
-
       def db
-        @db ||= SQLite3::Database.open db_file_name
+        @db ||= PG.connect dbname: DB_NAME
       end
 
       # Declare columns in the model subclass in the same order the columns
@@ -26,7 +22,7 @@ module Kwipper
       # All SQL statements should be executed through this method
       def sql(statement)
         start_time = Time.now.to_f
-        db.execute(statement).tap do
+        db.exec(statement).tap do
           log.debug "#{statement.red} #{sprintf '%.8f', Time.now.to_f - start_time}s"
         end
       end
@@ -34,7 +30,7 @@ module Kwipper
       # Get records from a single table and instantiate them
       def all(statement = "SELECT * FROM #{table_name}")
         sql(statement).each_with_object [] do |attrs, models|
-          models << new(attr_array_to_hash attrs)
+          models << new(attrs)
         end
       end
 
@@ -47,11 +43,20 @@ module Kwipper
       end
 
       def create(attrs)
-        db_attrs = attrs.map(&:first).join ", "
-        db_values = attrs.map { |k, v| normalize_value_for_db v, columns[k] }.join ", "
+        attrs.reject! { |_, v| v.nil? }
 
-        sql "INSERT INTO #{table_name} (#{db_attrs}) VALUES(#{db_values})"
-        new attrs.merge id: attrs.fetch(:id, db.last_insert_row_id)
+        db_attrs = attrs.map(&:first).join ", "
+        db_values = attrs.map { |k, v| db_value_quote v, columns[k] }.join ", "
+        statement = "INSERT INTO #{table_name} (#{db_attrs}) VALUES(#{db_values}) RETURNING id"
+
+        if (result = sql statement)
+          new attrs.merge id: attrs.fetch(:id, get_id_from_create(result))
+        else
+          false
+        end
+      rescue PG::Error => e
+        log.warn e.message
+        false
       end
 
       def update(id, attrs)
@@ -62,14 +67,18 @@ module Kwipper
         sql "DELETE FROM #{table_name} WHERE id=#{id}"
       end
 
+      def delete_all
+        sql "DELETE FROM #{table_name}"
+      end
+
       def exists?(id)
-        id = normalize_value_for_db id, columns['id']
+        id = db_value_quote id, columns["id"]
         result = sql "SELECT id FROM #{table_name} WHERE id = #{id} LIMIT 1"
         !!(result.first && result.first.any?)
       end
 
-      def count(statement = "SELECT COUNT(id) FROM #{table_name}")
-        sql(statement).first.first
+      def count(statement = "SELECT COUNT(id) AS count FROM #{table_name}")
+        sql(statement).first["count"].to_i
       end
     end
 
@@ -77,15 +86,16 @@ module Kwipper
 
     # Takes a hash of model attributes and sets them via accessors if they exists
     def initialize(attrs = {})
-      attrs.each do |name, value|
+      Hash(attrs).each do |name, value|
         name = name.to_s
+        type = self.class.columns[name]
 
         unless self.class.columns.key? name
           log.warn "Unknown attribute #{name} for #{self}"
           next
         end
 
-        send "#{name}=", value
+        send "#{name}=", value.send(type)
       end
     end
 
@@ -94,12 +104,15 @@ module Kwipper
       if id
         self.class.update id, attrs_for_db
       else
-        self.class.create attrs_for_db
-        @id ||= self.class.db.last_insert_row_id
+        attrs = attrs_for_db
+        attrs["created_at"] ||= Time.now
+        model = self.class.create attrs
+        
+        model ? @id ||= model.id : (return false)
       end
 
       true
-    rescue SQLite3::SQLException, SQLite3::ConstraintException => e
+    rescue PG::Error => e
       log.warn e.message
       false
     end
@@ -107,7 +120,7 @@ module Kwipper
     def update(attrs)
       self.class.update id, attrs
       true
-    rescue SQLite3::SQLException, KeyError => e
+    rescue PG::Error, KeyError => e
       log.warn "Error: \"#{e.class} #{e.message}\" in #{self}"
       false
     end
@@ -136,10 +149,8 @@ module Kwipper
         Inflect.new(name).demodulize.pluralize.underscore
       end
 
-      def attr_array_to_hash(attrs)
-        attrs.each_with_index.inject({}) do |hash, (attr_val, i)|
-          hash.merge! @columns.keys[i] => attr_val
-        end
+      def get_id_from_create(result)
+        result.first.fetch ID_COLUMN
       end
 
       # Turn a hash of attributes into a comma separated string that's
@@ -147,18 +158,18 @@ module Kwipper
       # TODO: add SQL sanitation.
       def hash_to_key_vals(hash)
         hash.inject [] do |a, (k, v)|
-          v = normalize_value_for_db v, columns[k]
+          v = db_value_quote v, columns[k]
           a << "#{k}=#{v}"
         end.join ", "
       end
 
       # Non int values should be quoted when putting in a SQL statement
       # TODO: we should probably do SQL sanitation here too
-      def normalize_value_for_db(value, type)
+      def db_value_quote(value, type)
         case type when :to_i
           value.to_i
         else
-          "\"#{value}\""
+          "'#{value}'"
         end
       end
     end

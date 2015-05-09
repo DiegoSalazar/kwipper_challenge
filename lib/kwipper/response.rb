@@ -49,14 +49,16 @@ HTTP
     end
 
     def current_session
-      @current_session ||= Session.find session_cookie_value if has_session?
+      if has_session?
+        @current_session ||= Session.where(session_id: session_cookie_value).first
+      end
     end
-
+    
     # For the server to remove a browser cookie we need to set a cookie of the 
     # same name with an expires value to now (or in the past) so that the browser
     # will expire it and remove it. The value is also voided.
     def remove_session_cookie
-      headers['Set-Cookie'] = session_cookie "deleted; expires=#{Time.now.httpdate}"
+      headers['Set-Cookie'] = session_cookie "x; expires=#{Time.at(0).httpdate}"
     end
 
     def session_cookie_value

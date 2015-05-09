@@ -7,9 +7,15 @@ module Kwipper
       "GET /" => [self, :home]
     }
 
-    def self.add_routes(routes)
-      routes.each do |info, action|
-        ROUTES.merge! info => [self, action]
+    class << self
+      def add_routes(routes)
+        routes.each do |info, action|
+          ROUTES.merge! info => [self, action]
+        end
+      end
+
+      def layout(name = "shared/layout")
+        @layout ||= name
       end
     end
 
@@ -20,11 +26,16 @@ module Kwipper
     end
 
     def process(action)
-      send @action = action
+      @view = send @action = action
+      render self.class.layout
     end
 
     def home
       render :home
+    end
+
+    def static
+      render @request.path
     end
 
     protected

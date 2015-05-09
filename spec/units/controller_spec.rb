@@ -8,15 +8,23 @@ describe Kwipper::Controller do
 
   context ".add_routes" do
     it "merges the hash argument with the ROUTES constant hash" do
-      described_class.add_routes [:GET, "/test"] => :test
+      described_class.add_routes "GET /test" => :home
 
-      expect(described_class::ROUTES.keys.last).to eq [:GET, "/test"]
+      expect(described_class::ROUTES.keys.last).to eq "GET /test"
     end
 
     it "sets the values of the ROUTES hash to an array of the controller class and action name" do
-      described_class.add_routes [:GET, "/test"] => :test
+      described_class.add_routes "GET /test" => :home
 
-      expect(described_class::ROUTES.values.last).to eq [Kwipper::Controller, :test]
+      expect(described_class::ROUTES.values.last).to eq [Kwipper::Controller, :home]
+    end
+  end
+
+  context ".layout" do
+    it "sets the layout name" do
+      described_class.layout :home
+
+      expect(described_class.layout).to be :home
     end
   end
 
@@ -30,7 +38,7 @@ describe Kwipper::Controller do
     it "calls a method of the same name as the action on itself" do
       expect(controller).to receive(:home)
 
-      controller.process :home      
+      controller.process :home
     end
   end
 

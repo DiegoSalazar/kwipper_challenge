@@ -16,14 +16,14 @@ module Kwipper
       require_login!
 
       post = Post.find params["id"]
-      comment = Comment.new({
-        "user_id"    => current_user.id,
-        "post_id"    => post.id,
-        "created_at" => Time.now.httpdate,
-        "content"    => params.fetch("content", nil)
-      })
+      comment = Comment.create({
+        user_id:    current_user.id,
+        post_id:    post.id,
+        created_at: Time.now.httpdate,
+        content:    params.fetch("content", nil)
+      })  
 
-      if comment.save
+      if comment
         redirect "/kwips/show?id=#{post.id}"
       else
         redirect "/kwips/comments/new?id=#{post.id}", :bad_request

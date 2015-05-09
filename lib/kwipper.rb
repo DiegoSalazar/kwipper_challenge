@@ -1,7 +1,7 @@
 $START_TIME = Time.now.to_f
 require "socket"
 require "securerandom"
-require "sqlite3"
+require "pg"
 require "erb"
 require "uri"
 require "logger"
@@ -13,6 +13,10 @@ require "pry"
 module Kwipper
   ROOT = Dir.pwd
   module_function
+
+  def run
+    HttpServer.run
+  end
 
   def load_models
     Dir[File.join(ROOT, 'app/models/**/*.rb')].each do |model|
@@ -27,7 +31,7 @@ module Kwipper
   end
 
   def log_startup_time
-    log.debug "Started in #{sprintf '%.2f', Time.now.to_f - $START_TIME}s"
+    log.info "Started in #{sprintf '%.2f', Time.now.to_f - $START_TIME}s"
   end
 
   def file(*args)
@@ -62,4 +66,4 @@ require "kwipper/model"
 # Extensions
 require "kwipper/paginator"
 
-Kwipper::HttpServer.run if __FILE__ == $0
+Kwipper.run if __FILE__ == $0

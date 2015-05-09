@@ -21,7 +21,7 @@
         </div>
 
           <div class="btn-group pull-right">
-            <%= render :fave_button, post: post if current_user %>
+            <%= render "shared/fave_button", post: post if current_user %>
 
             <a href="/kwips/show?id=<%= post.id %>" class="btn btn-xs btn-info">
               <span class="fa fa-comments-o">&nbsp;</span>
@@ -31,7 +31,7 @@
               </span>
             </a>
 
-            <%= render :reply_button, post: post if current_user %>
+            <%= render "shared/reply_button", post: post if current_user %>
           </div>
         </div>
       </div>
@@ -40,5 +40,5 @@
     </li>
   <% end %>
 
-  <%= render :pagination if @posts.any? %>
+  <%= render "shared/pagination" if @posts.any? %>
 </ul>

@@ -10,7 +10,7 @@ module Kwipper
     def initialize(bind, port)
       @bind, @port = bind, port
       @host = "#@bind#{":#@port" unless port.to_i == DEFAULT_PORT}"
-      log.debug "Starting server on #@host"
+      log.info "Starting server on #@host"
       super
     end
 

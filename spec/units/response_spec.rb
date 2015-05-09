@@ -44,7 +44,7 @@ describe Kwipper::Response do
     let(:session) { Fixtures.session id: session_cookie_value, user_id: user.id }
 
     it "returns a user instance when there's a user_id in the session" do
-      subject.request.cookies[session_cookie_name] = session.id
+      subject.request.cookies[session_cookie_name] = session.session_id
 
       expect(subject.current_user.id).to be user.id
     end
@@ -58,9 +58,9 @@ describe Kwipper::Response do
     let(:session) { Fixtures.session id: session_cookie_value }
 
     it "returns a session instance when there's a session cookie in the request" do
-      subject.request.cookies[session_cookie_name] = session.id
+      subject.request.cookies[session_cookie_name] = session.session_id
 
-      expect(subject.current_session.id).to eq session.id
+      expect(subject.current_session.session_id).to eq session.session_id
     end
 
     it "returns nil when theres no session cookie in the request" do
@@ -102,7 +102,7 @@ Nice
     it "sets a session cookie destroyer in the response headers" do
       subject.remove_session_cookie
 
-      expect(subject.headers["Set-Cookie"]).to match "deleted"
+      expect(subject.headers["Set-Cookie"]).to match "x; expires"
     end
   end
 end

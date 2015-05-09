@@ -1,0 +1,89 @@
+<ul class="nav nav-stacked nav-pills">
+  <li role="presentation" class="<%= "active" if current_view? :tutorials %>">
+    <a href="/tutorials">Introduction</a>
+  </li>
+  <li role="presentation" class="<%= "active" if current_view? "writing-an-http-server" %>">
+    <a href="/tutorials/writing-an-http-server">The Server</a>
+
+    <% if current_view? "writing-an-http-server" %>
+      <ul class="nav nav-stacked">
+        <li class="<%= "active" if current_view? "what-an-http-server-is" %>">
+          <a href="#">What An HTTP Server Is</a>
+        </li>
+        <li class="<%= "active" if current_view? "socket-basics" %>">
+          <a href="#">Socket Basics</a>
+        </li>
+        <li class="<%= "active" if current_view? "the-http-protocol" %>">
+          <a href="#">The HTTP Protocol</a>
+        </li>
+        <li class="<%= "active" if current_view? "the-main-loop" %>">
+          <a href="#">The Main Loop</a>
+        </li>
+        <li class="<%= "active" if current_view? "parsing-http" %>">
+          <a href="#">Parsing HTTP</a>
+        </li>
+        <li class="<%= "active" if current_view? "the-http-response" %>">
+          <a href="#">The HTTP Response</a>
+        </li>
+        <li class="<%= "active" if current_view? "exiting-gracefully" %>">
+          <a href="#">Exiting Gracefully</a>
+        </li>
+      </ul>
+    <% end %>
+  </li>
+  <li role="presentation" class="<%= "active" if current_view? "writing-an-app-framework" %>">
+    <a href="/tutorials/writing-an-app-framework">The Framework</a>
+
+    <% if current_view? "writing-an-app-framework" %>
+      <ul class="nav nav-stacked">
+        <li class="<%= "active" if current_view? "the-application-object" %>">
+          <a href="#">The Application Object</a>
+        </li>
+        <li class="<%= "active" if current_view? "the-controller" %>">
+          <a href="#">The Controller</a>
+        </li>
+        <li class="<%= "active" if current_view? "database-interaction" %>">
+          <a href="#">Database Interaction</a>
+        </li>
+        <li class="<%= "active" if current_view? "the-model" %>">
+          <a href="#">The Model</a>
+        </li>
+        <li class="<%= "active" if current_view? "rendering-views" %>">
+          <a href="#">Rendering Views</a>
+        </li>
+        <li class="<%= "active" if current_view? "managing-sessions" %>">
+          <a href="#">Managing Sessions</a>
+        </li>
+        <li class="<%= "active" if current_view? "authentication" %>">
+          <a href="#">Authentication</a>
+        </li>
+      </ul>
+    <% end %>
+  </li>
+  <li role="presentation" class="<%= "active" if current_view? "implementing-app-features" %>">
+    <a href="/tutorials/implementing-app-features">The Features</a>
+
+    <% if current_view? "implementing-app-features" %>
+      <ul class="nav nav-stacked">
+        <li class="<%= "active" if current_view? "sign-up-and-log-in-out" %>">
+          <a href="#">Sign Up And Log In/Out</a>
+        </li>
+        <li class="<%= "active" if current_view? "creating-users" %>">
+          <a href="#">Managing Users</a>
+        </li>
+        <li class="<%= "active" if current_view? "posting-comments" %>">
+          <a href="#">Posting Comments</a>
+        </li>
+        <li class="<%= "active" if current_view? "liking-comments" %>">
+          <a href="#">Liking Comments</a>
+        </li>
+        <li class="<%= "active" if current_view? "comment-replies" %>">
+          <a href="#">Comment Replies</a>
+        </li>
+        <li class="<%= "active" if current_view? "pagination" %>">
+          <a href="#">Pagination</a>
+        </li>
+      </ul>
+    <% end %>
+  </li>
+</ul>
