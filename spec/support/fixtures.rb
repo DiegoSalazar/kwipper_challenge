@@ -58,4 +58,12 @@ module Fixtures
       created_at: attrs.fetch(:created_at, Time.now.httpdate)
     })
   end
+
+  def routes_hash
+    {
+      "GET /" => [Kwipper::Controller, :home],
+      "GET /kwips/comments/new" => [Kwipper::CommentsController, :new],
+      "GET /tutorials/:page" => [Kwipper::TutorialsController, :show],
+    }
+  end
 end

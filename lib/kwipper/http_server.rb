@@ -11,18 +11,18 @@ module Kwipper
       @bind, @port = bind, port
       @host = "#@bind#{":#@port" unless port.to_i == DEFAULT_PORT}"
       log.info "Starting server on #@host"
+      Kwipper.load_models
+      Kwipper.load_controllers
+      @http_parser = HttpParser.new
       super
     end
 
     def serve
-      Kwipper.load_models
-      Kwipper.load_controllers
-      parser = HttpParser.new
       Kwipper.log_startup_time
 
       while socket = accept
         begin
-          request = parser.parse socket
+          request = @http_parser.parse socket
 
           log.info "#{request.info} #{request.params.inspect unless request.params.empty?}".strip.green
 

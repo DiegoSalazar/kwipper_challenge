@@ -62,6 +62,7 @@ require "kwipper/controller_helpers"
 # Micro framework
 require "kwipper/application"
 require "kwipper/controller"
+require "kwipper/router"
 require "kwipper/model"
 # Extensions
 require "kwipper/paginator"

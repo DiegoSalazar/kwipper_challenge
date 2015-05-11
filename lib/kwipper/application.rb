@@ -8,6 +8,7 @@ module Kwipper
     def respond_to(request)
       @request = request
       @response = Response.new request
+      @router = Router.new Controller::ROUTES
 
       begin
         start_time = Time.now.to_f
@@ -27,8 +28,8 @@ module Kwipper
     private
 
     def process!
-      if Controller::ROUTES.key? request.info
-        controller_class, @action = Controller::ROUTES[request.info]
+      if @router.route? request.info
+        controller_class, @action = @router.dispatch
         controller = controller_class.new request, response
 
         response.body = controller.process @action
