@@ -1,6 +1,6 @@
 module Kwipper
   class Router
-    # match a word with dashes in it prefixed by a colon:
+    # matches words with dashes in it prefixed by a colon:
     # e.g. "/hey/:page/yo" matches ":page"
     SEGMENT_KEY_REGEX = /(:[a-z\-?]+)/
     
@@ -39,7 +39,10 @@ module Kwipper
     private
 
     def find_match(request_info)
-      match = @routes.select { |info, _| route_root(info) == route_root(request_info) }
+      match = @routes.select do |info, _|
+        route_root(info) == route_root(request_info) &&
+          info.scan("/").size == request_info.scan("/").size
+      end
       match.to_a.flatten.empty? ? nil : match.to_a.flatten
     end
 

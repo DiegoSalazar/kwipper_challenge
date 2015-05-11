@@ -30,7 +30,7 @@ describe Kwipper::Router do
   end
 
   context "#find_match" do
-    it "returns the matching internal route given the incoming route info" do
+    it "returns the matching internal route given the incoming request info" do
       found_route = subject.send :find_match, "GET /tutorials/the-page"
 
       expect(found_route).to eq ["GET /tutorials/:page", Kwipper::TutorialsController, :show]

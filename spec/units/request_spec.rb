@@ -44,4 +44,14 @@ describe Kwipper::Request do
       expect(subject.content_length).to be 0
     end
   end
+
+  context "#merge_params!" do
+    it "merges a hash into the request's params" do
+      subject.merge_params! merged: true
+
+      expect(subject.params).to eq({
+        query: :hash, post_data: :hash, merged: true
+      })
+    end
+  end
 end

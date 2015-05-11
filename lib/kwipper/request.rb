@@ -26,5 +26,9 @@ module Kwipper
     def content_length
       @headers['CONTENT_LENGTH'].to_i
     end
+
+    def merge_params!(hash)
+      params.merge! hash
+    end
   end
 end

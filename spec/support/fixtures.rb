@@ -63,6 +63,7 @@ module Fixtures
     {
       "GET /" => [Kwipper::Controller, :home],
       "GET /kwips/comments/new" => [Kwipper::CommentsController, :new],
+      "GET /tutorials" => [Kwipper::TutorialsController, :index],
       "GET /tutorials/:page" => [Kwipper::TutorialsController, :show],
     }
   end
