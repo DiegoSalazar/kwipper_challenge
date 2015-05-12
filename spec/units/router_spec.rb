@@ -29,7 +29,9 @@ describe Kwipper::Router do
 
   context "#dispatch" do
     it "returns an array of the matching controller and action name" do
-      expect(subject.dispatch "GET /tutorials/the-page").to eq [Kwipper::TutorialsController, :show]
+      subject.route? "GET /tutorials/the-page" # this sets the dispatch ivar
+
+      expect(subject.dispatch).to eq [Kwipper::TutorialsController, :show]
     end
   end
 

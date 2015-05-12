@@ -28,7 +28,6 @@ module Kwipper
     private
 
     def process!
-      binding.pry # debug
       if @router.route? request.info
         controller_class, @action = @router.dispatch
         request.merge_params! @router.segments

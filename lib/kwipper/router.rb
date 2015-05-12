@@ -12,7 +12,7 @@ module Kwipper
     # e.g. "GET /tutorials/the-page" matches the "/" before "the-page"
     INNER_SLASH_REGEX = /(?<!\s)\//
 
-    attr_reader :segments
+    attr_reader :dispatch, :segments
 
     def initialize(routes)
       @routes = routes
@@ -21,21 +21,18 @@ module Kwipper
 
     def route?(request_info)
       @request_info = request_info
-      
+
       if @routes.key? request_info # plain route
+        @dispatch = @routes[request_info]
         true
       elsif (route = find_match request_info)
+        @dispatch = route.last 2
         # overwrite the segments hash for every request
         @segments = extract_segments request_info, route.first.to_s.dup
         true
       else
         false
       end
-    end
-
-    # returns the controller_class and action name
-    def dispatch(request_info = @request_info)
-      find_match(request_info).last 2
     end
 
     private

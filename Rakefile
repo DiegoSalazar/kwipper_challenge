@@ -17,8 +17,10 @@ namespace :generate do
 
     File.open Kwipper.file("app/models/#{model_lower}.rb"), "w" do |f|
       f.write <<-RUBY
-class #{args[:model_name]} < Model
-  column :field1, :to_s
+module Kwipper
+  class #{args[:model_name]} < Model
+    column :field1, :to_s
+  end
 end
       RUBY
     end
