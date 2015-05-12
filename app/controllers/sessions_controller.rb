@@ -1,9 +1,7 @@
 module Kwipper
   class SessionsController < Controller
-    add_routes({
-      "POST /sessions/create"  => :create,
-      "GET /logout"            => :destroy
-    })
+    add_routes "POST /sessions/create" => :create,
+               "GET /logout" => :destroy
 
     def create
       @user = User.authenticate params["username"], params["password"]

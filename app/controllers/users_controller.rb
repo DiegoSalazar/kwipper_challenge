@@ -1,15 +1,13 @@
 module Kwipper
   class UsersController < Controller
-    add_routes({
-      "GET /users"          => :users,
-      "GET /users/show"     => :show,
-      "GET /users/new"      => :new,
-      "POST /users/create"  => :create,
-      "GET /users/edit"     => :edit,
-      "POST /users/update"  => :update,
-      "POST /users/destroy" => :destroy,
-      "GET /login"          => :login
-    })
+    add_routes "GET /users" => :users,
+               "GET /users/show" => :show,
+               "GET /users/new" => :new,
+               "POST /users/create" => :create,
+               "GET /users/edit" => :edit,
+               "POST /users/update" => :update,
+               "POST /users/destroy" => :destroy,
+               "GET /login" => :login
 
     def users
       require_login!

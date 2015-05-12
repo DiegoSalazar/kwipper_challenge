@@ -2,12 +2,10 @@ module Kwipper
   class PostsController < Controller
     PER_PAGE = 10
 
-    add_routes({
-      "GET /kwips"         => :posts,
-      "GET /kwips/show"    => :show,
-      "GET /kwips/new"     => :new,
-      "POST /kwips/create" => :create
-    })
+    add_routes "GET /kwips" => :posts,
+               "GET /kwips/show" => :show,
+               "GET /kwips/new" => :new,
+               "POST /kwips/create" => :create
 
     def posts
       @paginator = Paginator.new Post, page: params["page"], per: PER_PAGE, path: "/kwips"
