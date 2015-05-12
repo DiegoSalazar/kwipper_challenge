@@ -21,19 +21,21 @@ module Kwipper
 
     def route?(request_info)
       @request_info = request_info
-      return true if @routes.key? request_info # plain route
-
-      if (@route = find_match request_info)
-        @segments.merge! extract_segments(request_info)
+      
+      if @routes.key? request_info # plain route
+        true
+      elsif (route = find_match request_info)
+        # overwrite the segments hash for every request
+        @segments = extract_segments request_info, route.first.to_s.dup
         true
       else
         false
       end
     end
 
+    # returns the controller_class and action name
     def dispatch(request_info = @request_info)
-      @route ||= find_match request_info
-      @route[-2, 2] # last 2
+      find_match(request_info).last 2
     end
 
     private
@@ -43,20 +45,21 @@ module Kwipper
         route_root(info) == route_root(request_info) &&
           info.scan("/").size == request_info.scan("/").size
       end
-      match.to_a.flatten.empty? ? nil : match.to_a.flatten
+
+      (m = match.to_a.flatten).empty? ? nil : m
     end
 
-    def extract_segments(request_info, route = @route)
-      route_info = route.first.to_s.dup
+    def extract_segments(request_info, route_info)
       segment_keys = route_info.scan(SEGMENT_KEY_REGEX).flatten
       
       segment_keys.each do |key|
         route_info.gsub! key, SEGMENT_VALUE_REGEX.to_s
       end
-      segment_keys = segment_keys.map { |k| k.sub ":", "" }
+
+      segment_keys.map! { |k| k.sub ":", "" }
 
       matched_segments = request_info.match(Regexp.new(route_info)).to_a
-      matched_segments.shift # Get rid of first match which is the whole string
+      matched_segments.shift # Get rid of first match, only need the group matches
 
       Hash[segment_keys.zip(matched_segments)]
     end

@@ -65,6 +65,7 @@ module Fixtures
       "GET /kwips/comments/new" => [Kwipper::CommentsController, :new],
       "GET /tutorials" => [Kwipper::TutorialsController, :index],
       "GET /tutorials/:page" => [Kwipper::TutorialsController, :show],
+      "GET /posts/:slug/comments/:id/edit" => [Kwipper::TutorialsController, :edit],
     }
   end
 end

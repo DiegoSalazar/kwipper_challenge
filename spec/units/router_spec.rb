@@ -4,12 +4,16 @@ describe Kwipper::Router do
   subject { described_class.new Fixtures.routes_hash }
 
   context "#route?" do
-    it "returns true for plain old routes" do
+    it "returns true for static routes" do
       expect(subject.route? "GET /kwips/comments/new").to be true
     end
 
-    it "returns true for named segment routes" do
+    it "returns true for named segment routes e.g. /tutorials/:page" do
       expect(subject.route? "GET /tutorials/the-page").to be true
+    end
+
+    it "supports multiple named segments" do
+      expect(subject.route? "GET /posts/the-page/comments/12/edit").to be true
     end
 
     it "populates segments when a named route is found" do
@@ -40,10 +44,10 @@ describe Kwipper::Router do
   context "#extract_segments" do
     it "returns a hash of the route segments with the segment names as keys" do
       request_info = "GET /tutorials/the-page/new/12/edit"
-      route = ["GET /tutorials/:page/new/:id/edit", Kwipper::TutorialsController, :show]
+      route_info = "GET /tutorials/:page/new/:id/edit"
 
-      expect(subject.send :extract_segments, request_info, route).to eq({
-        "page"=> "the-page", "id" => "12"
+      expect(subject.send :extract_segments, request_info, route_info).to eq({
+        "page" => "the-page", "id" => "12"
       })
     end
   end
