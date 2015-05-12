@@ -45,4 +45,13 @@ CREATE TABLE IF NOT EXISTS submissions(
   created_at TIMESTAMP NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS pages(
+  id serial PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  slug VARCHAR (255) NOT NULL,
+  body TEXT NOT NULL,
+  position INTEGER NOT NULL,
+  created_at TIMESTAMP NOT NULL
+);
+
 COMMIT;
