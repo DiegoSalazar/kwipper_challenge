@@ -9,19 +9,22 @@ require "mime-types"
 require "rack/utils"
 require "colorize"
 require "pry"
+require "kwipper/util"
 
 module Kwipper
   ROOT = Dir.pwd
+  extend Util
+
   module_function
 
   def run
     HttpServer.run
   end
 
-  def load_framework
-    load_models
+  def load_app
     load_controllers
     load_decorators
+    load_models
   end
 
   def load_models
@@ -41,26 +44,6 @@ module Kwipper
       require decorator
     end
   end
-
-  def log_startup_time
-    log.info "Started in #{sprintf "%.2f", Time.now.to_f - $START_TIME}s"
-  end
-
-  def file(*args)
-    File.join Kwipper::ROOT, *args
-  end
-
-  def benchmark(text)
-    s = Time.now.to_f
-    yield.tap { log.info text % "#{sprintf("%.8f", Time.now.to_f - s)}s" }
-  end
-end
-
-def log
-  @logger ||= Logger.new(STDOUT).tap do |logger|
-    logger.datetime_format = "%Y-%m-%d %H:%M:%S "
-    logger.level = ENV.fetch("LOG_LEVEL", Logger::DEBUG).to_i
-  end
 end
 
 # Constants
@@ -71,13 +54,12 @@ require "kwipper/http_parser"
 require "kwipper/http_server"
 require "kwipper/request"
 require "kwipper/response"
-
 # Helpers
 require "kwipper/inflect"
 require "kwipper/renders_views"
 require "kwipper/controller_helpers"
 require "kwipper/decorator"
-# Micro framework
+# Framework
 require "kwipper/application"
 require "kwipper/controller"
 require "kwipper/router"

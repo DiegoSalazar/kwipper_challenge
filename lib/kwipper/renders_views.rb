@@ -11,8 +11,12 @@ module Kwipper
         template = File.read view_path
         vars.each { |name, val| instance_variable_set "@#{name}", val }
 
-        ERB.new(template).result binding
+        render_template template
       end
+    end
+
+    def render_template(template)
+      ERB.new(template).result binding
     end
 
     private

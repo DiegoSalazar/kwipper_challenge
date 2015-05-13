@@ -4,12 +4,12 @@
 
 <p>
   <code>
-    <%= @error.class %> <%= CGI.escapeHTML @error.message %>
+    <%= @error.class %> <%= Kwipper.html_escape @error.message %>
   </code>
 </p>
 
 <pre>
-<%= @error.backtrace.map { |line| CGI.escapeHTML line }.join "\n" %>
+<%= @error.backtrace.map { |line| Kwipper.html_escape line }.join "\n" %>
 </pre>
 
 <p>Params:</p>

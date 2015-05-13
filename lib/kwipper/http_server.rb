@@ -8,11 +8,11 @@ module Kwipper
     end
 
     def initialize(bind, port)
+      log.info "Starting server on #@host"
       @bind, @port = bind, port
       @host = "#@bind#{":#@port" unless port.to_i == DEFAULT_PORT}"
-      log.info "Starting server on #@host"
-      Kwipper.load_framework
       @http_parser = HttpParser.new
+      Kwipper.load_app
       super
     end
 

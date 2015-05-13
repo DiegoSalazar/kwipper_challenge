@@ -45,7 +45,7 @@ module Kwipper
         attrs.reject! { |_, v| v.nil? }
 
         db_attrs = attrs.map(&:first).join ", "
-        db_values = attrs.map { |k, v| db_value_quote v, columns[k] }.join ", "
+        db_values = attrs.map { |k, v| db_value_quote v, columns[k.to_s] }.join ", "
         statement = "INSERT INTO #{table_name} (#{db_attrs}) VALUES(#{db_values}) RETURNING id"
 
         if (result = sql statement)
@@ -157,18 +157,17 @@ module Kwipper
       # TODO: add SQL sanitation.
       def hash_to_key_vals(hash)
         hash.inject [] do |a, (k, v)|
-          v = db_value_quote v, columns[k]
+          v = db_value_quote v, columns[k.to_s]
           a << "#{k}=#{v}"
         end.join ", "
       end
 
       # Non int values should be quoted when putting in a SQL statement
-      # TODO: we should probably do SQL sanitation here too
       def db_value_quote(value, type)
         case type when :to_i
           value.to_i
         else
-          "'#{value}'"
+          "'#{db.escape value.to_s}'"
         end
       end
     end

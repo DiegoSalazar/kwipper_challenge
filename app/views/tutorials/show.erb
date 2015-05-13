@@ -1,0 +1,8 @@
+<%= render_template @page.body %>
+
+<% if current_user.admin? %>
+  <hr>
+  <a href="/pages/<%= @page.id %>/edit" class="btn btn-primary">
+    Edit Page
+  </a>
+<% end %>

@@ -7,12 +7,18 @@ module Kwipper
     column :created_at, :to_s
     column :position, :to_i
 
-    def self.find_by_slug(slug)
-      where(slug: slug).first
-    end
+    class << self
+      def find_by_slug(slug)
+        where(slug: slug).first
+      end
 
-    def self.parents
-      all "SELECT * FROM pages WHERE parent_id IS NULL OR parent_id = '0'"
+      def parents
+        all "SELECT * FROM pages WHERE parent_id IS NULL OR parent_id = '0' ORDER BY position"
+      end
+
+      def all(statement = "SELECT * FROM pages ORDER BY parent_id, position")
+        super
+      end
     end
 
     def parent
@@ -20,7 +26,7 @@ module Kwipper
     end
 
     def sub_pages
-      @sub_pages ||= self.class.where parent_id: id
+      @sub_pages ||= self.class.all "SELECT * FROM pages WHERE parent_id = #{id} ORDER BY position"
     end
 
     def parent_title
@@ -28,12 +34,16 @@ module Kwipper
     end
 
     def update(attrs)
-      attrs["body"] = CGI.escapeHTML attrs["body"]
+      attrs["body"] = Kwipper.html_escape attrs["body"].strip
       super
     end
 
     def body=(html)
-      @body = CGI.escapeHTML html
+      @body = Kwipper.html_escape html.strip
+    end
+
+    def body
+      Kwipper.html_unescape @body.gsub("&amp;", "&")
     end
   end
 end
