@@ -18,6 +18,12 @@ module Kwipper
     HttpServer.run
   end
 
+  def load_framework
+    load_models
+    load_controllers
+    load_decorators
+  end
+
   def load_models
     Dir[File.join(ROOT, "app/models/**/*.rb")].each do |model|
       require model
@@ -27,6 +33,12 @@ module Kwipper
   def load_controllers
     Dir[File.join(ROOT, "app/controllers/**/*.rb")].each do |controller|
       require controller
+    end
+  end
+
+  def load_decorators
+    Dir[File.join(ROOT, "app/decorators/**/*.rb")].each do |decorator|
+      require decorator
     end
   end
 
@@ -64,6 +76,7 @@ require "kwipper/response"
 require "kwipper/inflect"
 require "kwipper/renders_views"
 require "kwipper/controller_helpers"
+require "kwipper/decorator"
 # Micro framework
 require "kwipper/application"
 require "kwipper/controller"

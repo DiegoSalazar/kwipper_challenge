@@ -28,9 +28,9 @@ module Kwipper
 
     def process!
       if @router.route? request.info
-        controller_class, @action = @router.dispatch
+        @controller_class, @action = @router.dispatch
         request.merge_params! @router.segments
-        controller = controller_class.new request, response
+        controller = @controller_class.new request, response
 
         response.body = controller.process @action
         

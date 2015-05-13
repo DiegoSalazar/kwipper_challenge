@@ -11,16 +11,29 @@ module Kwipper
       where(slug: slug).first
     end
 
+    def self.parents
+      all "SELECT * FROM pages WHERE parent_id IS NULL OR parent_id = '0'"
+    end
+
     def parent
       @parent ||= self.class.find parent_id if parent_id
     end
 
     def sub_pages
-      self.class.where parent_id: id
+      @sub_pages ||= self.class.where parent_id: id
     end
 
     def parent_title
       parent.title if parent
+    end
+
+    def update(attrs)
+      attrs["body"] = CGI.escapeHTML attrs["body"]
+      super
+    end
+
+    def body=(html)
+      @body = CGI.escapeHTML html
     end
   end
 end

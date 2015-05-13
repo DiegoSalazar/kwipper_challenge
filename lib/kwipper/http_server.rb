@@ -11,8 +11,7 @@ module Kwipper
       @bind, @port = bind, port
       @host = "#@bind#{":#@port" unless port.to_i == DEFAULT_PORT}"
       log.info "Starting server on #@host"
-      Kwipper.load_models
-      Kwipper.load_controllers
+      Kwipper.load_framework
       @http_parser = HttpParser.new
       super
     end

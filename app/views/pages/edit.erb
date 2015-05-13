@@ -2,7 +2,7 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <form action="/pages/update" method="post">
+    <form action="/pages/<%= @page.id %>/update" method="post">
       <div class="form-group">
         <label>Title</label>
         <input type="text" name="page[title]" class="form-control" value="<%= @page.title %>">

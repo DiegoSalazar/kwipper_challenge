@@ -3,7 +3,7 @@ module Kwipper
     add_routes "GET /pages" => :index,
                "GET /pages/new" => :new,
                "POST /pages/create" => :create,
-               "POST /pages/update" => :update,
+               "POST /pages/:id/update" => :update,
                "GET /pages/:id/edit" => :edit
 
     def index
@@ -40,7 +40,7 @@ module Kwipper
       require_login!
       page = Page.find params["id"]
 
-      if page.save
+      if page.update params["page"]
         @flash = { notice: "Updated page successfully!" }
         redirect "/pages"
       else

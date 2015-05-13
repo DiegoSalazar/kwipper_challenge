@@ -1,5 +1,7 @@
 <h1><%= response.info %></h1>
 
+<p><%= @controller_class.name %>#<%= @action %></p>
+
 <p>
   <code>
     <%= @error.class %> <%= CGI.escapeHTML @error.message %>
