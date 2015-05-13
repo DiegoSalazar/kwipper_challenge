@@ -2,6 +2,28 @@
   <li role="presentation" class="<%= "active" if current_view? :tutorials %>">
     <a href="/tutorials">Introduction</a>
   </li>
+
+  <% @pages.each do |page| %>
+    <li role="presentation" class="<%= "active" if current_view? page.slug %>">
+      <a href="/tutorials/<%= page.slug %>">
+        <%= page.title %>
+      </a>
+
+      <% if current_view? page.slug %>
+        <ul class="nav nav-stacked">
+          <% page.sub_pages.each do |sub_page| %>
+            <li class="<%= "active" if current_view? sub_page.slug %>">
+              <a href="/tutorials/<%= sub_page.slug %>">
+                <%= sub_page.title %>
+              </a>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    </li>
+  <% end %>
+
+<!-- 
   <li role="presentation" class="<%= "active" if current_view? "writing-an-http-server" %>">
     <a href="/tutorials/writing-an-http-server">The Server</a>
 
@@ -85,5 +107,5 @@
         </li>
       </ul>
     <% end %>
-  </li>
+  </li> -->
 </ul>

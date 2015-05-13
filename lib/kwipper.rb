@@ -19,30 +19,35 @@ module Kwipper
   end
 
   def load_models
-    Dir[File.join(ROOT, 'app/models/**/*.rb')].each do |model|
+    Dir[File.join(ROOT, "app/models/**/*.rb")].each do |model|
       require model
     end
   end
 
   def load_controllers
-    Dir[File.join(ROOT, 'app/controllers/**/*.rb')].each do |controller|
+    Dir[File.join(ROOT, "app/controllers/**/*.rb")].each do |controller|
       require controller
     end
   end
 
   def log_startup_time
-    log.info "Started in #{sprintf '%.2f', Time.now.to_f - $START_TIME}s"
+    log.info "Started in #{sprintf "%.2f", Time.now.to_f - $START_TIME}s"
   end
 
   def file(*args)
     File.join Kwipper::ROOT, *args
   end
+
+  def benchmark(text)
+    s = Time.now.to_f
+    yield.tap { log.info text % "#{sprintf("%.8f", Time.now.to_f - s)}s" }
+  end
 end
 
 def log
   @logger ||= Logger.new(STDOUT).tap do |logger|
-    logger.datetime_format = '%Y-%m-%d %H:%M:%S '
-    logger.level = ENV.fetch('LOG_LEVEL', Logger::DEBUG).to_i
+    logger.datetime_format = "%Y-%m-%d %H:%M:%S "
+    logger.level = ENV.fetch("LOG_LEVEL", Logger::DEBUG).to_i
   end
 end
 

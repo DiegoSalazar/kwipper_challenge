@@ -14,16 +14,15 @@ module Kwipper
       # from arrays of field values from the db. ID columns is defaulted.
       def column(name, type)
         @columns ||= { ID_COLUMN => :to_i }
-        @columns[name] = type
+        @columns[name.to_s] = type
         attr_accessor name
       end
       attr_reader :columns
 
       # All SQL statements should be executed through this method
       def sql(statement)
-        start_time = Time.now.to_f
-        db.exec(statement).tap do
-          log.debug "#{statement.red} #{sprintf '%.8f', Time.now.to_f - start_time}s"
+        Kwipper.benchmark "#{statement.red}; in %s".red do
+          db.exec statement
         end
       end
 

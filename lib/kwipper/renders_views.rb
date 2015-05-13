@@ -7,12 +7,12 @@ module Kwipper
       view_path = file_path_of_view view
       raise Kwipper::NoSuchViewError unless File.exists? view_path
 
-      template = File.read view_path
-      vars.each { |name, val| instance_variable_set "@#{name}", val }
+      Kwipper.benchmark "Rendered #{view} in %s".blue do
+        template = File.read view_path
+        vars.each { |name, val| instance_variable_set "@#{name}", val }
 
-      ERB.new(template).result binding
-    rescue 
-      binding.pry # debug
+        ERB.new(template).result binding
+      end
     end
 
     private

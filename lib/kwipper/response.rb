@@ -1,15 +1,15 @@
 module Kwipper
   class Response
     STATUSES = {
-      ok:           [200, 'OK'],
-      created:      [201, 'Created'],
-      found:        [302, 'Found'],
-      bad_request:  [400, 'Bad Request'],
-      unauthorized: [401, 'Unauthorized'],
-      not_found:    [404, 'Not Found'],
-      server_error: [500, 'Server Error']
+      ok:           [200, "OK"],
+      created:      [201, "Created"],
+      found:        [302, "Found"],
+      bad_request:  [400, "Bad Request"],
+      unauthorized: [401, "Unauthorized"],
+      not_found:    [404, "Not Found"],
+      server_error: [500, "Server Error"]
     }
-    SESSION_COOKIE_NAME = 'kwipper_session'
+    SESSION_COOKIE_NAME = "kwipper_session"
 
     attr_accessor :status_code, :status_message, :content_type, :redirect, :body
     attr_reader :request
@@ -36,7 +36,7 @@ HTTP
 
     def headers
       @headers ||= {}.tap do |h|
-        h['Set-Cookie'] = session_cookie unless has_session?
+        h["Set-Cookie"] = session_cookie unless has_session?
       end
     end
 
@@ -58,7 +58,7 @@ HTTP
     # same name with an expires value to now (or in the past) so that the browser
     # will expire it and remove it. The value is also voided.
     def remove_session_cookie
-      headers['Set-Cookie'] = session_cookie "x; expires=#{Time.at(0).httpdate}"
+      headers["Set-Cookie"] = session_cookie "x; expires=#{Time.at(0).httpdate}"
     end
 
     def session_cookie_value
@@ -70,10 +70,10 @@ HTTP
 
     def headers_for_response
       headers.merge({
-        'Content-Length' => body.size,
-        'Content-Type' => content_type
+        "Content-Length" => body.size,
+        "Content-Type" => content_type
       }).tap do |h|
-        h['Location'] = redirect if redirect
+        add_location_header h if redirect
       end.map { |k, v| "#{k}: #{v}" }.join "\r\n"
     end
 
@@ -83,6 +83,11 @@ HTTP
 
     def session_cookie(value = "#{session_cookie_value}; HttpOnly")
       "#{SESSION_COOKIE_NAME}=#{value}"
+    end
+
+    def add_location_header(headers)
+      log.info "Redirecting to #{redirect}".blue
+      headers["Location"] = redirect
     end
   end
 end

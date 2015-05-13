@@ -38,6 +38,11 @@
               <li>
                 <a href="/users/edit?id=<%= current_user.id %>">Profile</a>
               </li>
+
+              <% if current_user.admin? %>
+                <li><a href="/pages">Pages</a></li>
+              <% end %>
+
               <li>
                 <a href="/logout">
                   <span class="fa fa-sign-out">&nbsp;</span>

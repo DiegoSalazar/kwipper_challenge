@@ -27,7 +27,6 @@ module Kwipper
         true
       elsif (route = find_match request_info)
         @dispatch = route.last 2
-        # overwrite the segments hash for every request
         @segments = extract_segments request_info, route.first.to_s.dup
         true
       else

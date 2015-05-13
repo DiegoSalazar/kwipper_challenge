@@ -22,13 +22,13 @@ describe Kwipper::Model do
       expect(described_class.columns).to be nil
       described_class.column :name, :to_s # 
 
-      expect(described_class.columns).to eq "id" => :to_i, :name => :to_s
+      expect(described_class.columns).to eq "id" => :to_i, "name" => :to_s
     end
 
     it "adds the column name and type to the columns property" do
       described_class.column :name, :to_s
 
-      expect(described_class.columns.keys.last).to be :name
+      expect(described_class.columns.keys.last).to eq "name"
     end
 
     it "creates attr accessors with the column name" do

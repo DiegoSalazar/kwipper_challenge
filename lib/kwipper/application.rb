@@ -11,11 +11,10 @@ module Kwipper
       @router = Router.new Controller::ROUTES
 
       begin
-        start_time = Time.now.to_f
-        process!
-
-        log.info "#{"Processed #{request.info}".blue} in #{sprintf '%.8f', Time.now.to_f - start_time}s"
-      rescue Kwipper::AuthenticationRequired
+        Kwipper.benchmark "Processed #{request.info} in %s".blue do
+          process!
+        end
+      rescue Kwipper::AuthenticationRequired # TODO move this into a filter
         log.debug "401 Not Authorized".yellow
         redirect ?/, :unauthorized
       rescue => e

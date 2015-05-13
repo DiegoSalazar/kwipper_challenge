@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS pages(
   id serial PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
   slug VARCHAR (255) NOT NULL,
+  parent_id INTEGER,
   body TEXT NOT NULL,
   position INTEGER NOT NULL,
   created_at TIMESTAMP NOT NULL

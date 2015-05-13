@@ -1,0 +1,44 @@
+<h1>Pages</h1>
+ 
+<% if @pages.empty? %>
+  <p>No pages yet! <a href="/pages/new">Create one</a>.</p>
+<% else %>
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Slug</th>
+        <th>Parent</th>
+        <th>Position</th>
+        <th>
+          <a href="/pages/new" class="btn btn-xs btn-primary pull-right">
+            <span class="fa fa-file-text-o">&nbsp;</span>
+            New Page
+          </a>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @pages.each do |page| %>
+        <tr>
+          <td><%= page.title %></td>
+          <td><%= page.slug %></td>
+          <td><%= page.parent_title %></td>
+          <td><%= page.position %></td>
+          <td>
+            <div class="text-right">
+              <a href="/pages/<%= page.id %>/edit" class="btn btn-xs btn-primary">
+                Edit
+              </a>
+              <form action="/pages/destroy" method="post" class="pull-right">
+                <input type="hidden" name="id" value="<%= page.id %>">
+                <input type="submit" value="Destroy" class="btn btn-xs btn-danger">
+              </form>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

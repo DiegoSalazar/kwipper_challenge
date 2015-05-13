@@ -4,6 +4,7 @@ module Kwipper
     column "email", :to_s
     column "hashed_password", :to_s
     column "created_at", :to_s
+    column "last_login", :to_s
 
     def self.authenticate(username, password)
       user = where(username: username).first
@@ -21,7 +22,7 @@ module Kwipper
 
     # TODO
     def admin?
-      false
+      true
     end
   end
 end

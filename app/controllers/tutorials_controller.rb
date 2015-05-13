@@ -1,15 +1,18 @@
 module Kwipper
   class TutorialsController < Controller
-    layout "tutorials/layout"
+    layout "shared/layout_wide"
     add_routes "GET /tutorials" => :index,
                "GET /tutorials/:slug" => :show
 
     def index
-      render "tutorials/index"
+      @pages = Page.all
+      render "tutorials/index"  
     end
 
     def show
-      @page = Page.find params["slug"]
+      @pages = Page.all
+      page = @pages.find { |p| p.slug == params["slug"] }
+      page.body
     end
   end
 end
