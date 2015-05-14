@@ -61,7 +61,7 @@ describe Kwipper::SessionsController do
           user: user
         })
         
-        expect(controller.create).to match "Access Denied"
+        expect(controller.create).to match "Login"
         expect(controller.response.info).to eq "401 Unauthorized"
       end
     end

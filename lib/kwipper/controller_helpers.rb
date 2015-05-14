@@ -31,6 +31,10 @@ module Kwipper
       response.set_status status
     end
 
+    def controller_class
+      @controller_class ||= self.class
+    end
+
     def current_user
       response.current_user
     end
