@@ -12,6 +12,10 @@ module Kwipper
       "/pages/#{id}/edit"
     end
 
+    def destroy_path
+      "/pages/#{id}/destroy"
+    end
+
     def slug_path(root = "/tutorials/")
       "#{root}#{slug}"
     end

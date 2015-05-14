@@ -5,14 +5,20 @@ module Kwipper
     }
     attr_reader :from, :to
 
-    def initialize(from, to, options = DEFAULTS)
-      @from, @to = from, to
+    def initialize(from, to, orig_from = "", options = DEFAULTS)
+      @from, @to, @orig_from = from, to, orig_from
       @renderer = Redcarpet::Markdown.new HighlightsCode, options
     end
 
     def process(attrs)
-      return attrs if attrs[from].to_s.empty?
+      return attrs if skip_processing? attrs
       attrs.merge to => @renderer.render(attrs[from])
+    end
+
+    private
+
+    def skip_processing?(attrs)
+      attrs[from].to_s.empty? || attrs[from].to_s.strip == @orig_from.to_s.strip
     end
   end
 

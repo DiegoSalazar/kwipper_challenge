@@ -44,7 +44,7 @@ module Kwipper
     end
 
     def body
-      Kwipper.html_unescape @body.gsub("&amp;", "&")
+      Kwipper.html_unescape @body.gsub("&amp;", "&") if @body
     end
   end
 end

@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS users(
   email VARCHAR (355) UNIQUE NOT NULL,
   hashed_password VARCHAR (255) NOT NULL,
   created_at TIMESTAMP NOT NULL,
-  last_login TIMESTAMP
+  last_login TIMESTAMP,
   is_admin BOOLEAN
 );
 

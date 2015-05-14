@@ -11,42 +11,25 @@ end
 namespace :generate do
   desc "generate a model file"
   task :model, :name do |t, args|
-    raise ArgumentError, ":name arg required" if args[:name].to_s.empty?
-    file_name = Kwipper::Inflect.new(args[:name]).underscore
-
-    File.open Kwipper.file("app/models/#{file_name}.rb"), "w" do |f|
-      f.write <<-RUBY
-module Kwipper
-  class #{args[:name]} < Model
-    column :field1, :to_s
-  end
-end
-      RUBY
-    end
+    name = get_file_name args
+    write_template "app/models/#{name}.rb", MODEL_TEMPLATE.call(args[:name])
   end
 
   desc "generate a controller file"
   task :controller, :name do |t, args|
-    raise ArgumentError, ":name arg required" if args[:name].to_s.empty?
-    file_name = Kwipper::Inflect.new(args[:name]).underscore
-
-    File.open Kwipper.file("app/controllers/#{file_name}_controller.rb"), "w" do |f|
-      f.write <<-RUBY
-module Kwipper
-  class #{args[:name]}Controller < Controller
-    add_routes "GET /#{file_name}" => :index
-
-    def index
-      
-    end
+    name = get_file_name args
+    write_template "app/controllers/#{name}_controller.rb", CONTROLLER_TEMPLATE.call(args[:name], name)
   end
-end
-      RUBY
-    end
+
+  desc "generate a spec file"
+  task :spec, :name, :type do |t, args|
+    name = get_file_name args    
+    type = args[:type] || "units"
+    write_template "spec/#{type}/#{name}_spec.rb", SPEC_TEMPLATE.call(args[:name])
   end
 end
 
-namespace :schema do
+namespace :db do
   desc "run the create_tables.sql file"
   task :create do
     file = Kwipper.file "db/create_tables.sql"
@@ -55,7 +38,63 @@ namespace :schema do
 
   desc "run the drop_tables.sql file"
   task :drop do
+    binding.pry # debug
     file = Kwipper.file "db/drop_tables.sql"
     Kwipper::Model.sql File.read file
   end
 end
+
+#
+# Helpers
+#
+
+def write_template(path, template)
+  File.open Kwipper.file(path), "w" do |f|
+    f.write template
+  end
+end
+
+def get_file_name(args)
+  raise ArgumentError, ":name required" if args[:name].to_s.empty?
+  Kwipper::Inflect.new(args[:name]).underscore
+end
+
+#
+# Templates
+#
+
+MODEL_TEMPLATE = ->(name) {
+<<-RUBY
+module Kwipper
+  class #{name} < Model
+    column :field1, :to_s
+  end
+end
+RUBY
+}
+
+CONTROLLER_TEMPLATE = ->(name, name_lower) {
+<<-RUBY
+module Kwipper
+  class #{name}Controller < Controller
+    add_routes "GET /#{name_lower}" => :index
+
+    def index
+      
+    end
+  end
+end
+RUBY
+}
+
+SPEC_TEMPLATE = ->(name) {
+<<-RUBY
+require "spec_helper"
+
+describe Kwipper::#{name} do
+  context "" do
+    it ""
+  end
+end
+RUBY
+}

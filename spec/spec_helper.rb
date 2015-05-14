@@ -5,7 +5,7 @@ ENV["LOG_LEVEL"] = "5" # suppress kwipper logs
 ENV["KWIPPER_DB_NAME"] = "kwipper_test"
 
 require "kwipper"
-Kwipper.load_framework # sets the routes
+Kwipper.load_app # sets the routes
 
 Dir["./spec/support/*.rb"].each { |f| require f }
 require "fileutils"

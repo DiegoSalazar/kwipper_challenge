@@ -39,7 +39,8 @@ module Kwipper
     def find_match(request_info)
       match = @routes.select do |info, _|
         route_root(info) == route_root(request_info) &&
-          info.scan("/").size == request_info.scan("/").size
+          info.scan("/").size == request_info.scan("/").size &&
+            route_matches?(info, request_info)
       end
 
       (m = match.to_a.flatten).empty? ? nil : m
@@ -62,6 +63,11 @@ module Kwipper
 
     def route_root(request_info)
       request_info.split(INNER_SLASH_REGEX).first
+    end
+
+    def route_matches?(route_info, request_info)
+      r = route_info.gsub SEGMENT_KEY_REGEX, SEGMENT_VALUE_REGEX.to_s
+      Regexp.new(r).match request_info
     end
   end
 end

@@ -28,12 +28,11 @@
           <td><%= page.position %></td>
           <td>
             <div class="text-right">
-              <a href="/pages/<%= page.id %>/edit" class="btn btn-xs btn-primary">
+              <a href="<%= page.edit_path %>" class="btn btn-xs btn-primary">
                 Edit
               </a>
-              <form action="/pages/destroy" method="post" class="pull-right">
-                <input type="hidden" name="id" value="<%= page.id %>">
-                <input type="submit" value="Destroy" class="btn btn-xs btn-danger">
+              <form action="<%= page.destroy_path %>" method="post" class="pull-right">
+                <input type="submit" value="Destroy" data-confirm="Are you sure?" class="btn btn-xs btn-danger">
               </form>
             </div>
           </td>
