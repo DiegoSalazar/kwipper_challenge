@@ -1,7 +1,7 @@
 <ul class="nav nav-stacked nav-pills">
   <% @pages.each do |page| %>
     <li role="presentation" class="<%= "active" if page.slug == params["slug"] %>">
-      <a href="/tutorials/<%= page.slug %>">
+      <a href="<%= page.slug_path %>">
         <%= page.title %>
       </a>
 
@@ -9,7 +9,7 @@
         <ul class="nav nav-stacked nav-pills">
           <% PageDecorator.wrap(page.sub_pages).each do |sub_page| %>
             <li class="<%= "active" if sub_page.current? params["slug"] %>">
-              <a href="/tutorials/<%= sub_page.slug %>">
+              <a href="<%= sub_page.slug_path %>">
                 <%= sub_page.title %>
               </a>
             </li>
@@ -19,3 +19,10 @@
     </li>
   <% end %>
 </ul>
+
+<hr>
+
+<a href="/pages/new" class="btn btn-primary">
+  <span class="fa fa-plus-square"></span>
+  New Page
+</a>

@@ -5,6 +5,7 @@ module Kwipper
     column "hashed_password", :to_s
     column "created_at", :to_s
     column "last_login", :to_s
+    column "is_admin", :to_s
 
     def self.authenticate(username, password)
       user = where(username: username).first
@@ -20,9 +21,8 @@ module Kwipper
       Post.recent "SELECT * FROM posts WHERE user_id = #{id}"
     end
 
-    # TODO
     def admin?
-      true
+      is_admin == "t"
     end
   end
 end

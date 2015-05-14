@@ -5,7 +5,7 @@ module Kwipper
 
     def show
       @pages = PageDecorator.wrap Page.parents
-      @page = Page.find_by_slug params["slug"]
+      @page = PageDecorator.new Page.find_by_slug(params["slug"])
 
       if @page
         render "tutorials/show"
