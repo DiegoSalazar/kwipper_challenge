@@ -9,10 +9,13 @@ require "mime-types"
 require "rack/utils"
 require "colorize"
 require "pry"
+require "redcarpet"
+require "pygments"
 require "kwipper/util"
 
 module Kwipper
   ROOT = Dir.pwd
+  APP_TITLE = ENV.fetch "APP_TITLE", "Kwipper"
   extend Util
 
   module_function
@@ -66,5 +69,6 @@ require "kwipper/router"
 require "kwipper/model"
 # Extensions
 require "kwipper/paginator"
+require "kwipper/markdown_renderer"
 
 Kwipper.run if __FILE__ == $0

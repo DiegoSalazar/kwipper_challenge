@@ -1,46 +1,44 @@
 <h1>Edit Page</h1>
 
-<div class="row">
-  <div class="col-sm-12">
-    <form action="/pages/<%= @page.id %>/update" method="post">
-      <div class="form-group">
-        <label>Title</label>
-        <input type="text" name="page[title]" class="form-control" value="<%= @page.title %>">
-      </div>
+<form action="/pages/<%= @page.id %>/update" method="post">
+  <div class="col-sm-2">
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" name="page[title]" class="form-control" value="<%= @page.title %>">
+    </div>
 
-      <div class="form-group">
-        <label>Parent page</label>
-        <select name="page[parent_id]" class="form-control">
-          <option></option>
-          
-          <% Page.all.each do |page| %>
-            <option value="<%= page.id %>">
-              <%= page.title %>
-            </option>
-          <% end %>
-        </select>
-      </div>
+    <div class="form-group">
+      <label>Parent page</label>
+      <select name="page[parent_id]" class="form-control">
+        <option></option>
+        
+        <% Page.all.each do |page| %>
+          <option value="<%= page.id %>">
+            <%= page.title %>
+          </option>
+        <% end %>
+      </select>
+    </div>
 
-      <div class="form-group">
-        <label>Slug</label>
-        <input type="text" name="page[slug]" class="form-control" value="<%= @page.slug %>">
-      </div>
+    <div class="form-group">
+      <label>Slug</label>
+      <input type="text" name="page[slug]" class="form-control" value="<%= @page.slug %>">
+    </div>
 
-      <div class="form-group">
-        <label>Position</label>
-        <input type="text" name="page[position]" class="form-control" value="<%= @page.position %>">
-      </div>
-
-      <div class="form-group">
-        <label>Body</label>
-        <textarea name="page[body]" class="form-control" rows="20">
-        <%= @page.body %>
-        </textarea>
-      </div>
-
-      <div class="form-group">
-        <input type="submit" value="Update" class="btn btn-primary">
-      </div>
-    </form>
+    <div class="form-group">
+      <label>Position</label>
+      <input type="text" name="page[position]" class="form-control" value="<%= @page.position %>">
+    </div>
   </div>
-</div>
+
+  <div class="col-sm-10">
+    <div class="form-group">
+      <label>Raw Body</label>
+      <textarea name="page[raw_body]" class="form-control" rows="20"><%= @page.raw_body.strip %></textarea>
+    </div>
+
+    <div class="form-group">
+      <input type="submit" value="Update" class="btn btn-primary">
+    </div>
+  </div>
+</form>

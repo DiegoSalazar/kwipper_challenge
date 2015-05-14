@@ -13,13 +13,24 @@ module Kwipper
     end
 
     def new
+      layout "pages/layout"
       require_login!
       render "pages/new"
     end
 
+    def edit
+      layout "pages/layout"
+      require_login!
+
+      @page = Page.find params["id"]
+      render "pages/edit"
+    end
+
     def create
       require_login!
-      page = Page.new params["page"]
+
+      renderer = MarkdownRenderer.new "raw_body", "body"
+      page = Page.new renderer.process(params["page"])
 
       if page.save
         @flash = { notice: "Created page successfully!" }
@@ -30,21 +41,15 @@ module Kwipper
       end
     end
 
-    def edit
-      require_login!
-      @page = Page.find params["id"]
-      render "pages/edit"
-    end
-
     def update
       require_login!
+      
       page = Page.find params["id"]
+      renderer = MarkdownRenderer.new "raw_body", "body"
 
-      if page.update params["page"]
-        @flash = { notice: "Updated page successfully!" }
+      if page.update renderer.process(params["page"])
         redirect "/pages"
       else
-        @flash = { error: "Problems, yo" }
         redirect "/pages/new"
       end
     end

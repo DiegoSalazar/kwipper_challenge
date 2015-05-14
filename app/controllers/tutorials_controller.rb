@@ -7,10 +7,12 @@ module Kwipper
       @pages = PageDecorator.wrap Page.parents
       @page = PageDecorator.new Page.find_by_slug(params["slug"])
 
+      title @page.full_title
+
       if @page
         render "tutorials/show"
       else
-        @flash = { danger: "Page \"#{params["slug"]}\" not found" }
+        @flash = { danger: "Page \"%s\" not found" % params["slug"] }
         render "tutorials/index"
       end
     end

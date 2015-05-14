@@ -3,9 +3,10 @@ module Kwipper
     column :title, :to_s
     column :slug, :to_s
     column :body, :to_s
+    column :raw_body, :to_s
+    column :position, :to_i
     column :parent_id, :to_i
     column :created_at, :to_s
-    column :position, :to_i
 
     class << self
       def find_by_slug(slug)
