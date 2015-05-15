@@ -22,7 +22,16 @@
 
 <hr>
 
-<a href="/pages/new" class="btn btn-primary">
-  <span class="fa fa-plus-square"></span>
-  New Page
-</a>
+<% if current_user.admin? %>
+  <a href="/pages/new" class="btn btn-success">
+    <span class="fa fa-plus-square"></span>
+    New
+  </a>
+
+  <% if @page %>
+    <a href="<%= @page.edit_path %>" class="btn btn-primary">
+      <span class="fa fa-edit"></span>
+      Edit
+    </a>
+  <% end %>
+<% end %>

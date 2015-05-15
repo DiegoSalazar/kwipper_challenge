@@ -1,9 +1,10 @@
 <%= render_template @page.body %>
 
+<hr>
+
 <% if current_user.admin? %>
-  <hr>
-  <a href="/pages/<%= @page.id %>/edit" class="btn btn-primary">
+  <a href="<%= @page.edit_path %>" class="btn btn-primary">
     <span class="fa fa-edit"></span>
-    Edit Page
+    Edit
   </a>
 <% end %>

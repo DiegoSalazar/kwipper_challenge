@@ -48,7 +48,7 @@ module Kwipper
       renderer = MarkdownRenderer.new "raw_body", "body", page.raw_body
 
       if page.update renderer.process(params["page"])
-        redirect "/pages"
+        redirect PageDecorator.new(page).show_path
       else
         redirect "/pages/new"
       end
