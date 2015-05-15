@@ -21,6 +21,8 @@ describe Kwipper::MarkdownRenderer do
       expect(subject.process(attrs)[:to]).to match "class=\"highlight"
     end
 
+    it "renders custom github header links"
+
     it "doesn't render if :from is nil or empty" do
       expect(subject.process(from: nil)).to_not have_key :to
     end

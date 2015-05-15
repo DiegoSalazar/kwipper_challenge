@@ -7,7 +7,7 @@ module Kwipper
 
     def initialize(from, to, orig_from = "", options = DEFAULTS)
       @from, @to, @orig_from = from, to, orig_from
-      @renderer = Redcarpet::Markdown.new HighlightsCode, options
+      @renderer = Redcarpet::Markdown.new CustomRenderer, options
     end
 
     def process(attrs)
@@ -22,9 +22,43 @@ module Kwipper
     end
   end
 
-  class HighlightsCode < Redcarpet::Render::HTML
+  class CustomRenderer < Redcarpet::Render::HTML
+    # Usage: [github-link](http://link.to.github/repo "Header")
+    def link(url, title, content)
+      if content == "github-link"
+        GITHUB_LINK_TEMPLATE.call url, title
+      else
+        "<a href=\"#{url}\" title=\"#{title}\">#{content}</a>"
+      end
+    end
+
     def block_code(code, language)
       Pygments.highlight code, lexer: language
     end
   end
+
+  #
+  # Custom Markdown Syntax Templates
+  #
+
+  GITHUB_LINK_TEMPLATE = ->(url, title) {
+<<-HTML
+<div class="row">
+  <div class="col-sm-9">
+    <h3>#{title}</h3>
+  </div>
+  <div class="col-sm-3">
+    <div class="alert alert-info pull-right">
+      <span class="fa fa-github"></span>
+      See the
+      <a href="#{url}" target="_blank">
+        code
+        <span class="fa fa-external-link"></span>
+      </a>
+    </div>
+  </div>
+</div>
+HTML
+  }
+
 end
