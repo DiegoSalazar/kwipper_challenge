@@ -1,7 +1,7 @@
 <h1>Edit Page</h1>
 
 <form action="/pages/<%= @page.id %>/update" method="post">
-  <div class="col-sm-2">
+  <div class="col-sm-3">
     <div class="form-group">
       <label>Title</label>
       <input type="text" name="page[title]" class="form-control" value="<%= @page.title %>" required>
@@ -10,10 +10,10 @@
     <div class="form-group">
       <label>Parent page</label>
       <select name="page[parent_id]" class="form-control">
-        <option></option>
+        <option>None</option>
         
         <% Page.all.each do |page| %>
-          <option value="<%= page.id %>">
+          <option <%= " selected=\"selected\"" if @page.is_parent? page %> value="<%= page.id %>">
             <%= page.title %>
           </option>
         <% end %>
@@ -31,14 +31,15 @@
     </div>
   </div>
 
-  <div class="col-sm-10">
+  <div class="col-sm-9">
     <div class="form-group">
-      <label>Raw Body</label>
-      <textarea name="page[raw_body]" class="form-control" rows="20" required><%= @page.raw_body.strip %></textarea>
+      <label>Markdown</label>
+      <textarea name="page[raw_body]" class="form-control" rows="23" required><%= @page.raw_body.strip %></textarea>
     </div>
 
     <div class="form-group">
       <input type="submit" value="Update" class="btn btn-primary">
+      <a href="/pages" class="btn btn-default">Cancel</a>
     </div>
   </div>
 </form>

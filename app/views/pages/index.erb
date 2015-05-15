@@ -22,7 +22,7 @@
     <tbody>
       <% @pages.each do |page| %>
         <tr>
-          <td><%= page.title %></td>
+          <td><a href="<%= page.show_path %>"><%= page.title %></a></td>
           <td><%= page.slug %></td>
           <td><%= page.parent_title %></td>
           <td><%= page.position %></td>

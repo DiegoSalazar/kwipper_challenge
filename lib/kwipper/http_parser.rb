@@ -2,11 +2,13 @@ module Kwipper
   class HttpParser
     HEADER_DELIMITER = "\r\n"
 
+    attr_reader :first_line
+
     def parse(raw_request)
       @first_line = raw_request.gets || raise(Kwipper::EmptyRequestError)
       
       Request.new do |r|
-        r.http_method = @first_line.split(' ').first
+        r.http_method = first_line.split(' ').first
         r.path        = parse_path
         r.query       = parse_query
         r.headers     = parse_headers raw_request
@@ -20,12 +22,12 @@ module Kwipper
     private
 
     def parse_path
-      p = @first_line.split(' ')[1]
+      p = first_line.split(' ')[1]
       p ? p.split('?').first : '/'
     end
 
     def parse_query
-      p = @first_line.split(' ')[1]
+      p = first_line.split(' ')[1]
       q = p && !p['?'].nil? ? p.split('?').last.chomp : nil
       parse_query_string q
     end

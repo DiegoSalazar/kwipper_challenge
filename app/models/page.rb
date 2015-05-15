@@ -26,6 +26,10 @@ module Kwipper
       @parent ||= self.class.find parent_id if parent_id
     end
 
+    def is_parent?(page)
+      parent_id == page.id
+    end
+
     def sub_pages
       @sub_pages ||= self.class.all "SELECT * FROM pages WHERE parent_id = #{id} ORDER BY position"
     end
