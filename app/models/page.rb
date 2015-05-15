@@ -35,7 +35,7 @@ module Kwipper
     end
 
     def update(attrs)
-      attrs["body"] = Kwipper.html_escape attrs["body"].strip
+      attrs["body"] = Kwipper.html_escape attrs["body"].strip if attrs["body"]
       super
     end
 

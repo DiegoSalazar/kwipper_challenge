@@ -8,6 +8,10 @@ module Kwipper
       slug == current_slug || sub_pages.map(&:slug).include?(current_slug)
     end
 
+    def show_path
+      "/tutorials/#{slug}"
+    end
+
     def edit_path
       "/pages/#{id}/edit"
     end

@@ -11,7 +11,7 @@ module Kwipper
       @router = Router.new Controller::ROUTES
 
       begin
-        Kwipper.benchmark "Processed #{request.info} in %s".blue do
+        Kwipper.benchmark "Processed #{request.info}".blue do
           process!
         end
       rescue Kwipper::AuthenticationRequired # TODO move this into a filter

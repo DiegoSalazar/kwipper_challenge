@@ -7,7 +7,7 @@ module Kwipper
       view_path = file_path_of_view view
       raise Kwipper::NoSuchViewError unless File.exists? view_path
 
-      Kwipper.benchmark "Rendered #{view} in %s".blue do
+      Kwipper.benchmark "Rendered #{view}".blue do
         template = File.read view_path
         vars.each { |name, val| instance_variable_set "@#{name}", val }
 

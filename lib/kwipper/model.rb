@@ -21,7 +21,7 @@ module Kwipper
 
       # All SQL statements should be executed through this method
       def sql(statement)
-        Kwipper.benchmark "#{statement.red}; in %s".red do
+        Kwipper.benchmark "#{statement.red};".red do
           db.exec statement
         end
       end
