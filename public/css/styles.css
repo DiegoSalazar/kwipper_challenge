@@ -47,6 +47,10 @@ code {
   margin-left: 20px;
 }
 
+.alert {
+  padding: 10px 15px;
+}
+
 /* Nested Stacked Nav */
 
 ul.nav-stacked > li > a > i {

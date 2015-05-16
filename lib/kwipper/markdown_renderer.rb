@@ -28,7 +28,9 @@ module Kwipper
       if content == "github-link"
         GITHUB_LINK_TEMPLATE.call url, title
       else
-        "<a href=\"#{url}\" title=\"#{title}\">#{content}</a>"
+        # make external links open in a new window
+        target = url.match(/^http:\/\//) ? " target=\"_blank\"" : ""
+        "<a href=\"#{url}\" title=\"#{title}\"#{target}>#{content}</a>"
       end
     end
 

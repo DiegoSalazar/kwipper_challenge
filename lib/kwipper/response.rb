@@ -24,7 +24,7 @@ module Kwipper
     def to_http_response
 <<-HTTP
 HTTP/1.1 #{status_code} #{status_message}
-#{headers_for_response}
+#{serialize_headers}
 
 #{body}
 HTTP
@@ -68,7 +68,7 @@ HTTP
 
     private
 
-    def headers_for_response
+    def serialize_headers
       headers.merge({
         "Content-Length" => body.size,
         "Content-Type" => content_type
