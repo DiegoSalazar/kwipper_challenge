@@ -18,34 +18,19 @@ module Kwipper
   APP_TITLE = ENV.fetch "APP_TITLE", "Kwipper"
   extend Util
 
-  module_function
-
-  def run
+  def self.run
     HttpServer.run
   end
 
-  def load_app
-    load_controllers
-    load_decorators
-    load_models
+  def self.load_app
+    load_files "app/models/**/*.rb"
+    load_files "app/controllers/**/*.rb"
+    load_files "app/decorators/**/*.rb"
+    load_files "app/services/**/*.rb"
   end
 
-  def load_models
-    Dir[File.join(ROOT, "app/models/**/*.rb")].each do |model|
-      require model
-    end
-  end
-
-  def load_controllers
-    Dir[File.join(ROOT, "app/controllers/**/*.rb")].each do |controller|
-      require controller
-    end
-  end
-
-  def load_decorators
-    Dir[File.join(ROOT, "app/decorators/**/*.rb")].each do |decorator|
-      require decorator
-    end
+  def self.load_files(glob)
+    Dir[File.join ROOT, glob].each { |file| require file }
   end
 end
 
@@ -53,22 +38,19 @@ end
 require "kwipper/version"
 require "kwipper/errors"
 # Server
-require "kwipper/http_parser"
 require "kwipper/http_server"
+require "kwipper/http_parser"
 require "kwipper/request"
 require "kwipper/response"
 # Helpers
-require "kwipper/inflect"
-require "kwipper/renders_views"
 require "kwipper/controller_helpers"
-require "kwipper/decorator"
+require "kwipper/renders_views"
+require "kwipper/inflect"
 # Framework
 require "kwipper/application"
 require "kwipper/controller"
+require "kwipper/decorator"
 require "kwipper/router"
 require "kwipper/model"
-# Extensions
-require "kwipper/paginator"
-require "kwipper/markdown_renderer"
 
 Kwipper.run if __FILE__ == $0

@@ -1,11 +1,19 @@
 module Kwipper
   class PageDecorator < Decorator
-    def full_title
+    def header_title
       "#{title} - #{Kwipper::APP_TITLE}"
     end
 
-    def current?(current_slug)
+    def open_subnav?(current_slug)
       slug == current_slug || sub_pages.map(&:slug).include?(current_slug)
+    end
+
+    def next
+      @next ||= PageDecorator.new navigator.next if navigator.next
+    end
+
+    def prev
+      @prev ||= PageDecorator.new navigator.prev if navigator.prev
     end
 
     def show_path
@@ -22,6 +30,12 @@ module Kwipper
 
     def slug_path(root = "/tutorials/")
       "#{root}#{slug}"
+    end
+
+    private
+
+    def navigator
+      @navigator ||= PageNavigator.new @object, Page.all_pages
     end
   end
 end

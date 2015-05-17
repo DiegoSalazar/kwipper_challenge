@@ -7,7 +7,7 @@ module Kwipper
       @pages = PageDecorator.wrap Page.parents
       @page = PageDecorator.new Page.find_by_slug(params["slug"])
 
-      title @page.full_title
+      title @page.header_title
 
       if @page
         render "tutorials/show"

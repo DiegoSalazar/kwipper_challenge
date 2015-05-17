@@ -2,9 +2,16 @@
 
 <hr>
 
-<% if current_user.admin? %>
-  <a href="<%= @page.edit_path %>" class="btn btn-primary">
-    <span class="fa fa-edit"></span>
-    Edit
+<% if @page.prev %>
+  <a href="<%= @page.prev.show_path %>" class="btn btn-info">
+    <span class="fa fa-chevron-circle-left"></span>
+    <%= @page.prev.title %>
+  </a>
+<% end %>
+
+<% if @page.next %>
+  <a href="<%= @page.next.show_path %>" class="btn btn-info pull-right">
+    <%= @page.next.title %>
+    <span class="fa fa-chevron-circle-right"></span>
   </a>
 <% end %>

@@ -8,14 +8,8 @@ describe Kwipper::HttpServer do
   end
 
   context '#serve' do
-    it "loads models" do
-      expect(Kwipper).to receive(:load_models)
-
-      http_server.serve
-    end
-
-    it "loads controllers" do
-      expect(Kwipper).to receive(:load_controllers)
+    it "loads the app code" do
+      expect(Kwipper).to receive(:load_app)
 
       http_server.serve
     end

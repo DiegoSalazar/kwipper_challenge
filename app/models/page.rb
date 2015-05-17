@@ -17,6 +17,10 @@ module Kwipper
         all "SELECT * FROM pages WHERE parent_id IS NULL OR parent_id = '0' ORDER BY position"
       end
 
+      def all_pages
+        parents.map(&:all_pages).flatten
+      end
+
       def all(statement = "SELECT * FROM pages ORDER BY parent_id, position")
         super
       end
@@ -32,6 +36,10 @@ module Kwipper
 
     def sub_pages
       @sub_pages ||= self.class.all "SELECT * FROM pages WHERE parent_id = #{id} ORDER BY position"
+    end
+
+    def all_pages
+      [self, *self.sub_pages]
     end
 
     def parent_title

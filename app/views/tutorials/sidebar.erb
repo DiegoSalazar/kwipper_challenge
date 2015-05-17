@@ -5,10 +5,10 @@
         <%= page.title %>
       </a>
 
-      <% if page.current?(params["slug"]) && !page.sub_pages.empty? %>
+      <% if page.open_subnav?(params["slug"]) && !page.sub_pages.empty? %>
         <ul class="nav nav-stacked nav-pills">
           <% PageDecorator.wrap(page.sub_pages).each do |sub_page| %>
-            <li class="<%= "active" if sub_page.current? params["slug"] %>">
+            <li class="<%= "active" if sub_page.slug == params["slug"] %>">
               <a href="<%= sub_page.slug_path %>">
                 <%= sub_page.title %>
               </a>
