@@ -29,12 +29,12 @@ module Kwipper
         GITHUB_LINK_TEMPLATE.call url, title
       else
         # make external links open in a new window
-        target = url.match(/^http:\/\//) ? " target=\"_blank\"" : ""
+        target = url.match(/^https?:\/\//) ? " target=\"_blank\"" : ""
         "<a href=\"#{url}\" title=\"#{title}\"#{target}>#{content}</a>"
       end
     end
 
-    def block_code(code, language)
+    def block_code(code, language = "ruby")
       Pygments.highlight code, lexer: language
     end
   end
@@ -62,5 +62,4 @@ module Kwipper
 </div>
 HTML
   }
-
 end

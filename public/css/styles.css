@@ -7,6 +7,7 @@ html {
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
+  font-size: 160%;
 }
 .footer {
   position: absolute;
@@ -80,12 +81,18 @@ ul.nav-stacked ul.nav-stacked > li:last-child:visible > a {
 
 /* Pygments Code Highlight - .highlight */
 
+code {
+  color: #333;
+  background-color: #ebebeb;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
 .highlight pre {
   background-color: #333;
 }
 
 .highlight .hll { background-color: #49483e }
-.highlight  { background: #272822; color: #f8f8f2 }
+.highlight  { color: #f8f8f2 }
 .highlight .c { color: #75715e } /* Comment */
 .highlight .err { color: #960050; background-color: #1e0010 } /* Error */
 .highlight .k { color: #66d9ef } /* Keyword */
