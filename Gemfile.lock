@@ -5,6 +5,7 @@ PATH
       colorize
       mime-types
       pg
+      pry
       pygments.rb
       rack
       redcarpet
@@ -41,27 +42,27 @@ GEM
       rb-inotify (>= 0.9)
     lumberjack (1.0.9)
     method_source (0.8.2)
-    mime-types (2.4.3)
+    mime-types (2.6.2)
     multi_json (1.11.0)
     nenv (0.2.0)
     notiffany (0.0.6)
       nenv (~> 0.1)
       shellany (~> 0.0)
-    pg (0.18.1)
-    posix-spawn (0.3.9)
+    pg (0.18.3)
+    posix-spawn (0.3.11)
     pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    pygments.rb (0.6.2)
+    pygments.rb (0.6.3)
       posix-spawn (~> 0.3.6)
       yajl-ruby (~> 1.2.0)
-    rack (1.6.0)
+    rack (1.6.4)
     rake (10.4.2)
     rb-fsevent (0.9.4)
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)
-    redcarpet (3.2.2)
+    redcarpet (3.2.3)
     rspec (3.2.0)
       rspec-core (~> 3.2.0)
       rspec-expectations (~> 3.2.0)
@@ -94,7 +95,6 @@ DEPENDENCIES
   bundler (~> 1.7)
   guard-rspec
   kwipper!
-  pry
   rake (~> 10.0)
   rspec
   simplecov
