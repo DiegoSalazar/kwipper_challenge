@@ -38,7 +38,6 @@ namespace :db do
 
   desc "run the drop_tables.sql file"
   task :drop do
-    binding.pry # debug
     file = Kwipper.file "db/drop_tables.sql"
     Kwipper::Model.sql File.read file
   end

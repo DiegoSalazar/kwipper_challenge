@@ -14,7 +14,8 @@ require "kwipper/util"
 
 begin
   require "pry"
-rescue
+rescue => e
+  puts e.message
   puts "pry not installed"
 end
 
