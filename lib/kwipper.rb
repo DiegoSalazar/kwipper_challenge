@@ -8,10 +8,15 @@ require "logger"
 require "mime-types"
 require "rack/utils"
 require "colorize"
-require "pry"
 require "redcarpet"
 require "pygments"
 require "kwipper/util"
+
+begin
+  require "pry"
+rescue
+  puts "pry not installed"
+end
 
 module Kwipper
   ROOT = Dir.pwd
