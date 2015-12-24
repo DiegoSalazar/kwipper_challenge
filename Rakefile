@@ -52,8 +52,8 @@ namespace :db do
     `pg_dump --inserts --data-only -d kwipper_development > ./db/kwipper.sql`
   end
 
-  desc "run the sql dumpf ile"
-  task restore: :only_in_dev do
+  desc "run the kwipper.sql dump file"
+  task :restore do
     file = Kwipper.file "db/kwipper.sql"
     Kwipper::Model.sql File.read file
   end
@@ -63,10 +63,6 @@ namespace :db do
     file = Kwipper.file "db/schema.sql"
     Kwipper::Model.sql File.read file
   end
-end
-
-task :only_in_dev do
-  raise "not in this environment" if ENV["RACK_ENV"] == "production"
 end
 
 #
