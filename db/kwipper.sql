@@ -1,3 +1,12 @@
+-- When deployed to Heroku, the database owner must be changed here.
+-- Change all instances of text "OWNER TO x" to reflect the heroku 
+-- database username.
+-- To find the heroku db user, run bash, load kwipper and run:
+-- SELECT u.usename
+-- FROM pg_database d
+-- JOIN pg_user u ON (d.datdba = u.usesysid)
+-- WHERE d.datname = (SELECT current_database());
+
 --
 -- PostgreSQL database dump
 --
@@ -50,7 +59,7 @@ CREATE TABLE comments (
 );
 
 
-ALTER TABLE comments OWNER TO diego;
+ALTER TABLE comments OWNER TO tmcedmfitfrprp;
 
 --
 -- TOC entry 176 (class 1259 OID 612536)
@@ -65,7 +74,7 @@ CREATE SEQUENCE comments_id_seq
     CACHE 1;
 
 
-ALTER TABLE comments_id_seq OWNER TO diego;
+ALTER TABLE comments_id_seq OWNER TO tmcedmfitfrprp;
 
 --
 -- TOC entry 2285 (class 0 OID 0)
@@ -93,7 +102,7 @@ CREATE TABLE pages (
 );
 
 
-ALTER TABLE pages OWNER TO diego;
+ALTER TABLE pages OWNER TO tmcedmfitfrprp;
 
 --
 -- TOC entry 182 (class 1259 OID 694410)
@@ -108,7 +117,7 @@ CREATE SEQUENCE pages_id_seq
     CACHE 1;
 
 
-ALTER TABLE pages_id_seq OWNER TO diego;
+ALTER TABLE pages_id_seq OWNER TO tmcedmfitfrprp;
 
 --
 -- TOC entry 2286 (class 0 OID 0)
@@ -132,7 +141,7 @@ CREATE TABLE post_favorites (
 );
 
 
-ALTER TABLE post_favorites OWNER TO diego;
+ALTER TABLE post_favorites OWNER TO tmcedmfitfrprp;
 
 --
 -- TOC entry 178 (class 1259 OID 612547)
@@ -147,7 +156,7 @@ CREATE SEQUENCE post_favorites_id_seq
     CACHE 1;
 
 
-ALTER TABLE post_favorites_id_seq OWNER TO diego;
+ALTER TABLE post_favorites_id_seq OWNER TO tmcedmfitfrprp;
 
 --
 -- TOC entry 2287 (class 0 OID 0)
@@ -171,7 +180,7 @@ CREATE TABLE posts (
 );
 
 
-ALTER TABLE posts OWNER TO diego;
+ALTER TABLE posts OWNER TO tmcedmfitfrprp;
 
 --
 -- TOC entry 174 (class 1259 OID 612525)
@@ -186,7 +195,7 @@ CREATE SEQUENCE posts_id_seq
     CACHE 1;
 
 
-ALTER TABLE posts_id_seq OWNER TO diego;
+ALTER TABLE posts_id_seq OWNER TO tmcedmfitfrprp;
 
 --
 -- TOC entry 2288 (class 0 OID 0)
@@ -210,7 +219,7 @@ CREATE TABLE sessions (
 );
 
 
-ALTER TABLE sessions OWNER TO diego;
+ALTER TABLE sessions OWNER TO tmcedmfitfrprp;
 
 --
 -- TOC entry 172 (class 1259 OID 612515)
@@ -225,7 +234,7 @@ CREATE SEQUENCE sessions_id_seq
     CACHE 1;
 
 
-ALTER TABLE sessions_id_seq OWNER TO diego;
+ALTER TABLE sessions_id_seq OWNER TO tmcedmfitfrprp;
 
 --
 -- TOC entry 2289 (class 0 OID 0)
@@ -249,7 +258,7 @@ CREATE TABLE submissions (
 );
 
 
-ALTER TABLE submissions OWNER TO diego;
+ALTER TABLE submissions OWNER TO tmcedmfitfrprp;
 
 --
 -- TOC entry 180 (class 1259 OID 612555)
@@ -264,7 +273,7 @@ CREATE SEQUENCE submissions_id_seq
     CACHE 1;
 
 
-ALTER TABLE submissions_id_seq OWNER TO diego;
+ALTER TABLE submissions_id_seq OWNER TO tmcedmfitfrprp;
 
 --
 -- TOC entry 2290 (class 0 OID 0)
@@ -291,7 +300,7 @@ CREATE TABLE users (
 );
 
 
-ALTER TABLE users OWNER TO diego;
+ALTER TABLE users OWNER TO tmcedmfitfrprp;
 
 --
 -- TOC entry 170 (class 1259 OID 612500)
@@ -306,7 +315,7 @@ CREATE SEQUENCE users_id_seq
     CACHE 1;
 
 
-ALTER TABLE users_id_seq OWNER TO diego;
+ALTER TABLE users_id_seq OWNER TO tmcedmfitfrprp;
 
 --
 -- TOC entry 2291 (class 0 OID 0)
