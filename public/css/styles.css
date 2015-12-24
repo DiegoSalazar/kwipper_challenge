@@ -52,6 +52,10 @@ code {
   padding: 10px 15px;
 }
 
+p img {
+  width: 100%;
+}
+
 /* Nested Stacked Nav */
 
 ul.nav-stacked > li > a > i {

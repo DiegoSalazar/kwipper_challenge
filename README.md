@@ -23,9 +23,9 @@ User.create username: "shtuff", email: "some@email.com", hashed_password: "123"
 
 ## Usage
 
-Start the server:
+From the `kwipper_challenge` directory, start the server:
 
-    $ ruby lib/kwipper.rb
+    $ ruby ./lib/kwipper.rb
 
 Open the app in a browser at [http://localhost:7335](http://localhost:7335) and login with your user. There's no data seed right now so you'll have to create everything yourself.
 

@@ -10,7 +10,7 @@ require "rack/utils"
 require "colorize"
 require "redcarpet"
 require "pygments"
-require "kwipper/util"
+require "./lib/kwipper/util"
 
 begin
   require "pry"
