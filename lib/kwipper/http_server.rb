@@ -3,7 +3,7 @@ module Kwipper
     DEFAULT_PORT = 80
     attr_reader :host
 
-    def self.run(bind = '127.0.0.1', port = 7335)
+    def self.run(bind = '127.0.0.1', port = ENV.fetch("PORT", 7335))
       HttpServer.new(bind, port).serve
     end
 
