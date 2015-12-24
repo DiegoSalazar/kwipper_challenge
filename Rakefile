@@ -42,16 +42,31 @@ namespace :db do
     Kwipper::Model.sql File.read file
   end
 
-  desc "dump database to the db directory"
+  desc "dump the database schema to the db directory"
   task do
-    `pg_dump --inserts --data-only -d kwipper_development`
+    `pg_dump --schema-only --no-owner -d kwipper_development > ./db/schema.sql`
+  end
+
+  desc "dump data to the db directory"
+  task do
+    `pg_dump --inserts --data-only -d kwipper_development > ./db/kwipper.sql`
   end
 
   desc "run the sql dumpf ile"
-  task :restore do
+  task restore: :only_in_dev do
     file = Kwipper.file "db/kwipper.sql"
     Kwipper::Model.sql File.read file
   end
+
+  desc "run the schema.sql file"
+  task do
+    file = Kwipper.file "db/schema.sql"
+    Kwipper::Model.sql File.read file
+  end
+end
+
+task :only_in_dev do
+  raise "not in this environment" if ENV["RACK_ENV"] == "production"
 end
 
 #
