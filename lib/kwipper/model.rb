@@ -4,9 +4,14 @@ module Kwipper
     DB_NAME = ENV.fetch "KWIPPER_DB_NAME", DEFAULT_DB
     ID_COLUMN = "id"
 
+    DB_INIT = {
+      "development" => { dbname: DB_NAME },
+      "production" => ENV["KWIPPER_DB_NAME"]
+    }
+
     class << self
       def db
-        @db ||= PG.connect dbname: DB_NAME
+        @db ||= PG.connect DB_INIT[ENV["RACK_ENV"]]
       end
 
       # Declare columns in the model subclass in the same order the columns
