@@ -1,6 +1,5 @@
 $START_TIME = Time.now.to_f
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+$LOAD_PATH.unshift("./lib") unless $LOAD_PATH.include?("./lib")
 
 require "socket"
 require "securerandom"
