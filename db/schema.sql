@@ -388,8 +388,8 @@ ALTER TABLE ONLY users
 --
 
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM diego;
-GRANT ALL ON SCHEMA public TO diego;
+REVOKE ALL ON SCHEMA public FROM tmcedmfitfrprp;
+GRANT ALL ON SCHEMA public TO tmcedmfitfrprp;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
