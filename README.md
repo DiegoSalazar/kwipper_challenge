@@ -29,23 +29,18 @@ From the `kwipper_challenge` directory, start the server:
 
 Open the app in a browser at [http://localhost:7335](http://localhost:7335) and login with your user. There's no data seed right now so you'll have to create everything yourself.
 
-## Backing up your local database
+## Backup/restore up your local database
 
-`pg_dump --inserts -d kwipper_development`
+`rake db:backup`
+`rake db:restore`
 
 ## Deploy on Heroku
 
 For the Model to be able to connect to the database the `KWIPPER_DB_NAME` env var must be set. On Heroku this value can be found in the config (heroku env vars) it's called `DATABASE_URL`. The database connection options depend on RACK_ENV being either `development` or `production`.
 
-When dumping a local database, the sql file's `OWNER TO x` statements have to be modified and `x` should be changed to the Heroku database username. That can be found by:
+## Create tables
 
-```SQL
--- to get Heroku db user, run bash, load kwipper, and run:
-SELECT u.usename
-FROM pg_database d
-JOIN pg_user u ON (d.datdba = u.usesysid)
-WHERE d.datname = (SELECT current_database());
-```
+`rake db:create`
 
 ## Contributing
 

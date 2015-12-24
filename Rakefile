@@ -42,6 +42,11 @@ namespace :db do
     Kwipper::Model.sql File.read file
   end
 
+  desc "dump database to the db directory"
+  task do
+    `pg_dump --inserts --data-only -d kwipper_development`
+  end
+
   desc "run the sql dumpf ile"
   task :restore do
     file = Kwipper.file "db/kwipper.sql"
