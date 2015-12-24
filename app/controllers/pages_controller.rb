@@ -9,7 +9,6 @@ module Kwipper
                "POST /pages/:id/destroy" => :destroy
 
     def index
-      require_login!
       @pages = PageDecorator.wrap Page.all
       render "pages/index"
     end
@@ -21,14 +20,12 @@ module Kwipper
 
     def edit
       require_login!
-
       @page = Page.find params["id"]
       render "pages/edit"
     end
 
     def create
       require_login!
-
       renderer = MarkdownRenderer.new "raw_body", "body"
       page = Page.new renderer.process(params["page"])
 
@@ -43,7 +40,6 @@ module Kwipper
 
     def update
       require_login!
-      
       page = Page.find params["id"]
       renderer = MarkdownRenderer.new "raw_body", "body", page.raw_body
 

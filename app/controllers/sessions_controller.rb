@@ -14,13 +14,12 @@ module Kwipper
         })
         redirect "/users"
       else
-        @flash = { danger: "Access Denied" }
-        response.set_status :unauthorized
-        render :login_user
+        render_access_denied
       end
     end
 
     def destroy
+      require_login!
       if current_session
         current_session.destroy
         response.remove_session_cookie

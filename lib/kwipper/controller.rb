@@ -35,7 +35,7 @@ module Kwipper
     protected
 
     def require_login!
-      raise Kwipper::AuthenticationRequired unless current_user
+      raise Kwipper::AuthenticationRequired if current_user.nil?
     end
   end
 end

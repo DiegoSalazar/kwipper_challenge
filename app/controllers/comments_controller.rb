@@ -5,14 +5,12 @@ module Kwipper
 
     def new
       require_login!
-
       @post = Post.find params["id"]
       render :new_comment
     end
 
     def create
       require_login!
-
       post = Post.find params["id"]
       comment = Comment.create({
         user_id:    current_user.id,

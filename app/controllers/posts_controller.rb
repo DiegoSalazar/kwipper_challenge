@@ -20,14 +20,10 @@ module Kwipper
     end
 
     def new
-      require_login!
-
       render :new_post
     end
 
     def create
-      require_login!
-
       post = Post.new params.merge({
         "user_id"    => current_user.id,
         "created_at" => Time.now.httpdate

@@ -16,6 +16,7 @@ module Kwipper
     end
 
     def show
+      require_login!
       @user = User.find params["id"]
       @posts = @user.posts
       render :show_user

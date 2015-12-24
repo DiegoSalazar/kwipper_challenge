@@ -4,6 +4,7 @@ module Kwipper
     add_routes "GET /tutorials/:slug" => :show
 
     def show
+      require_login!
       @pages = PageDecorator.wrap Page.parents
       @page = PageDecorator.new Page.find_by_slug(params["slug"])
 

@@ -16,7 +16,7 @@ module Kwipper
         end
       rescue Kwipper::AuthenticationRequired # TODO move this into a filter
         log.debug "401 Not Authorized".yellow
-        redirect ?/, :unauthorized
+        render_access_denied
       rescue => e
         log.fatal "#{@response.info.red}\n#{verbose_error(e)}"
         render_error e
@@ -57,20 +57,6 @@ module Kwipper
         log.warn "Unknown content type for file: #{file_name}"
         "text/plain"
       end
-    end
-
-    def render_not_found
-      response.set_status :not_found
-      response.status_message = "#{response.status_message}: #{request.info}"
-      @view = render :not_found
-      response.body = render "shared/layout"
-    end
-
-    def render_error(e)
-      @error = e
-      response.set_status :server_error
-      @view = render :server_error
-      response.body = render "shared/layout"
     end
 
     def verbose_error(e)

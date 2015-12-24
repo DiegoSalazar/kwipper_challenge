@@ -4,7 +4,6 @@ module Kwipper
 
     def create
       require_login!
-      
       post = Post.find params["id"]
       fave = PostFavorite.create({
         user_id: current_user.id,

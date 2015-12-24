@@ -3,6 +3,7 @@ module Kwipper
     add_routes "GET /submissions" => :index
 
     def index
+      require_login!
       render "submissions/index"
     end
   end

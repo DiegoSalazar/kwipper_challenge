@@ -46,5 +46,28 @@ module Kwipper
     def current_view?(view)
       @request.path.split(?/).last.match view.to_s
     end
+
+    def render_not_found
+      response.set_status :not_found
+      response.status_message = "#{response.status_message}: #{request.info}"
+      render_response :not_found
+    end
+
+    def render_error(e)
+      @error = e
+      response.set_status :server_error
+      render_response :server_error
+    end
+
+    def render_access_denied
+      @flash = { danger: "Access Denied" }
+      response.set_status :unauthorized
+      render_response :login_user
+    end
+
+    def render_response(view_name, layout = "shared/layout")
+      @view = render view_name
+      response.body = render layout
+    end
   end
 end
