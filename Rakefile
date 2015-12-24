@@ -41,6 +41,12 @@ namespace :db do
     file = Kwipper.file "db/drop_tables.sql"
     Kwipper::Model.sql File.read file
   end
+
+  desc "run the sql dumpf ile"
+  task :restore do
+    file = Kwipper.file "db/kwipper.sql"
+    Kwipper::Model.sql File.read file
+  end
 end
 
 #
