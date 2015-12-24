@@ -28,7 +28,7 @@ module Kwipper
             log.info "#{request.info} #{request.params.inspect unless request.params.empty?}".strip.green
 
             response = Application.new.respond_to request
-            socket.write response.to_http_response
+            socket.write response.to_http
             socket.flush
 
           rescue Errno::ECONNRESET, Errno::EPIPE => e
@@ -36,7 +36,9 @@ module Kwipper
           rescue Kwipper::EmptyRequestError => e
             log.warn "#{e.class} #{e.message}".yellow
           ensure
-            socket.close unless socket.closed?
+            unless socket.closed?
+              socket.close if ENV["KWIPPER_CLOSE_SOCKET"] == "1"
+            end
           end
         end
       end

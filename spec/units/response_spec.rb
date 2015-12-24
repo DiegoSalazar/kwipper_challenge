@@ -68,13 +68,13 @@ describe Kwipper::Response do
     end
   end
 
-  context "#to_http_response" do
+  context "#to_http" do
     it "outputs the HTTP response string with headers and a nice body" do
       subject.redirect = "/test"
       subject.set_status :found
       subject.body = "Nice"
 
-      expect(subject.to_http_response).to eq <<-HTTP
+      expect(subject.to_http).to eq <<-HTTP
 HTTP/1.1 302 Found
 Set-Cookie: kwipper_session=#{subject.session_cookie_value}; HttpOnly\r
 Content-Length: 4\r

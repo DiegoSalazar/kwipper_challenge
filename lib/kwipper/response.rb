@@ -21,7 +21,7 @@ module Kwipper
       @content_type = "text/html"
     end
 
-    def to_http_response
+    def to_http
 <<-HTTP
 HTTP/1.1 #{status_code} #{status_message}
 #{serialize_headers}
