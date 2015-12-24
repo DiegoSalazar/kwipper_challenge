@@ -1,4 +1,7 @@
 $START_TIME = Time.now.to_f
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
 require "socket"
 require "securerandom"
 require "pg"
@@ -10,7 +13,7 @@ require "rack/utils"
 require "colorize"
 require "redcarpet"
 require "pygments"
-require "./lib/kwipper/util"
+require "kwipper/util"
 
 begin
   require "pry"
