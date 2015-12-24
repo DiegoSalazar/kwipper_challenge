@@ -1,1 +1,1 @@
-web: ./lib/kwipper.rb
+web: ruby ./lib/kwipper.rb
