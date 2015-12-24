@@ -59,7 +59,7 @@ namespace :db do
   end
 
   desc "run the schema.sql file"
-  task do
+  task :schema do
     file = Kwipper.file "db/schema.sql"
     Kwipper::Model.sql File.read file
   end
