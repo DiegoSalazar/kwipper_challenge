@@ -3,13 +3,13 @@ module Kwipper
     DEFAULT_PORT = 80
     attr_reader :host
 
-    def self.run(bind = '127.0.0.1', port = ENV.fetch("PORT", 7335))
-      HttpServer.new(bind, port).serve
+    def self.start(host, port)
+      HttpServer.new(host, port).serve
     end
 
-    def initialize(bind, port)
-      @bind, @port = bind, port
-      @host = "#@bind#{":#@port" unless port.to_i == DEFAULT_PORT}"
+    def initialize(host, port)
+      @host, @port = host, port
+      @host = "#@host#{":#@port" unless port.to_i == DEFAULT_PORT}"
       log.info "Starting server on #@host"
       @http_parser = HttpParser.new
       Kwipper.load_app

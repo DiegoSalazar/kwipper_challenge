@@ -22,22 +22,25 @@ rescue => e
 end
 
 module Kwipper
-  ROOT = Dir.pwd
-  APP_TITLE = ENV.fetch "APP_TITLE", "Kwipper"
   extend Util
 
+  ROOT = Dir.pwd
+  APP_TITLE = ENV.fetch "APP_TITLE", "Kwipper"
+  HOST = ENV.fetch "HOST", "localhost"
+  PORT = ENV.fetch "PORT", "7335"
+
   def self.run
-    HttpServer.run
+    HttpServer.start HOST, PORT
   end
 
   def self.load_app
-    load_files "app/models/**/*.rb"
-    load_files "app/controllers/**/*.rb"
-    load_files "app/decorators/**/*.rb"
-    load_files "app/services/**/*.rb"
+    %w(app/models/**/*.rb
+       app/controllers/**/*.rb
+       app/decorators/**/*.rb
+       app/services/**/*.rb).each { |path| load_files_at path }
   end
 
-  def self.load_files(glob)
+  def self.load_files_at(glob)
     Dir[File.join ROOT, glob].each { |file| require file }
   end
 end

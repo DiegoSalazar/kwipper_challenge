@@ -52,7 +52,7 @@ describe Kwipper::Controller do
 
   context "#require_login!" do
     it "raises an authentication required error if there is no current user" do
-      expect(controller.response).to receive(:current_user).and_return false
+      expect(controller.response).to receive(:current_user).and_return nil
 
       expect { controller.send :require_login! }.to raise_error Kwipper::AuthenticationRequired
     end
