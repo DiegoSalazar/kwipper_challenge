@@ -27,6 +27,7 @@ module Kwipper
 
           response = Application.new.respond_to request
           socket.write response.to_http_response
+          socket.flush
 
         rescue Errno::ECONNRESET, Errno::EPIPE => e
           log.info "#{e.class} #{e.message}".yellow
