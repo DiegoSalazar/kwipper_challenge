@@ -19,7 +19,7 @@ module Kwipper
     def serve
       Kwipper.log_startup_time
 
-      while socket = accept
+      while socket = accept_nonblock
         begin
           request = @http_parser.parse socket
 
@@ -29,6 +29,9 @@ module Kwipper
           socket.send response.to_http, 0
           socket.flush
 
+        rescue IO::WaitReadable, Errno::EINTR
+          IO.select [self]
+          retry
         rescue Errno::ECONNRESET, Errno::EPIPE => e
           log.info "#{e.class} #{e.message}".yellow
         rescue Kwipper::EmptyRequestError => e
