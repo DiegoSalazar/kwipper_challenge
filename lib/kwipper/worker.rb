@@ -9,7 +9,7 @@ module Kwipper
       clean_pool!
 
       if @pool.size < @size
-        @pool << Thread.new(value, &block)
+        @pool << (@klass.new { block.call value })
       else
         block.call value
       end
