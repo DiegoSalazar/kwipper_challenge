@@ -28,7 +28,6 @@ module Kwipper
   APP_TITLE = ENV.fetch "APP_TITLE", "Kwipper"
   HOST = ENV.fetch "HOST", "localhost"
   PORT = ENV.fetch "PORT", "7335"
-  CONCURRENCY = ENV.fetch "CONCURRENCY", 4
 
   def self.run
     HttpServer.start HOST, PORT
