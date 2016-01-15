@@ -3,11 +3,7 @@ require "spec_helper"
 describe Kwipper::HttpServer do
   let :http_server do
     server = described_class.new 'localhost', 9000
-    req = double "request", gets: Kwipper::HttpParser::HEADER_DELIMITER, 
-                            closed?: true,
-                            send: nil,
-                            flush: nil
-    expect(server).to receive(:accept).and_return req
+    expect(server).to receive(:accept).and_return nil
     server
   end
 

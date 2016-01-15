@@ -51,7 +51,6 @@ require "kwipper/version"
 require "kwipper/errors"
 # Server
 require "kwipper/http_server"
-require "kwipper/worker"
 require "kwipper/http_parser"
 require "kwipper/request"
 require "kwipper/response"

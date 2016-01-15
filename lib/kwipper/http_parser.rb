@@ -36,7 +36,7 @@ module Kwipper
       lines = []
 
       while (line = raw_request.gets) != HEADER_DELIMITER
-        
+        binding.pry # debug
         lines << line.chomp
       end
 

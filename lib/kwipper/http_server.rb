@@ -20,27 +20,24 @@ module Kwipper
     def serve
       Kwipper.log_startup_time
 
-      loop do
-        @worker.will accept do |socket|
-          begin
-            request = @http_parser.parse socket
+      while socket = accept_nonblock
+        begin
+          request = @http_parser.parse socket
 
-            log.info "#{request.info} #{request.params.inspect unless request.params.empty?}".strip.green
+          log.info "#{request.info} #{request.params.inspect unless request.params.empty?}".strip.green
 
-            response = Application.new.respond_to request
-            socket.send response.to_http, 0
-            socket.flush
+          response = Application.new.respond_to request
+          socket.send response.to_http, 0
+          socket.flush
 
-          rescue Errno::ECONNRESET, Errno::EPIPE => e
-            log.info "#{e.class} #{e.message}".yellow
-          rescue Kwipper::EmptyRequestError => e
-            log.warn "#{e.class} #{e.message}".yellow
-          ensure
-            sleep(ENV.fetch("SOCKET_SLEEP", 0).to_i) and socket.close unless socket.closed?
-          end
+        rescue Errno::ECONNRESET, Errno::EPIPE => e
+          log.info "#{e.class} #{e.message}".yellow
+        rescue Kwipper::EmptyRequestError => e
+          log.warn "#{e.class} #{e.message}".yellow
+        ensure
+          sleep(ENV.fetch("SOCKET_SLEEP", 0).to_i) and socket.close unless socket.closed?
         end
       end
-
     rescue Interrupt
       Model.db.close
       log.debug "Ok bye."
