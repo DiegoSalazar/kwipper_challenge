@@ -36,7 +36,7 @@ module Kwipper
           rescue Kwipper::EmptyRequestError => e
             log.warn "#{e.class} #{e.message}".yellow
           ensure
-            socket.close unless ENV["LEAVE_SOCKET_OPEN"] == "1" || socket.closed?
+            sleep(1) and socket.close unless socket.closed?
           end
         end
       end
