@@ -12,7 +12,6 @@ module Kwipper
       @host = "#@host#{":#@port" unless port.to_i == DEFAULT_PORT}"
       log.info "Starting server on #@host"
       @http_parser = HttpParser.new
-      @worker = Worker.new CONCURRENCY
       Kwipper.load_app
       super
     end
