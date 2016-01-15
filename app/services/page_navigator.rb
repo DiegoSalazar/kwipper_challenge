@@ -8,8 +8,6 @@ module Kwipper
     def prev
       return nil if @current_index == 0
       @all_pages[@current_index - 1]
-    rescue
-      binding.pry # debug
     end
 
     def next

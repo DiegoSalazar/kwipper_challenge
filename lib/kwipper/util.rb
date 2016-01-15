@@ -13,8 +13,6 @@ module Kwipper
       yield.tap do
         log.info "#{text} in #{sprintf("%.8f", Time.now.to_f - s)}"
       end
-    rescue ArgumentError
-      binding.pry # debug
     end
 
     def html_escape(string)
