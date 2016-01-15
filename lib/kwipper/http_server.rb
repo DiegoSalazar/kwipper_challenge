@@ -19,7 +19,7 @@ module Kwipper
     def serve
       Kwipper.log_startup_time
 
-      while socket = accept_nonblock
+      while socket = accept
         begin
           request = @http_parser.parse socket
 
